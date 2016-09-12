@@ -5,6 +5,7 @@ Drive ShelfLab 2pt0 with Arduino
 
 // Setup for LEDs
 
+//external library that is used for LED animations
 #include "FastLED.h"
 
 // How many leds in your strip?
@@ -85,11 +86,12 @@ long recal_t=millis()+5000;
 void setup() {
   
   // Setup LEDs
-  
+  	//rsgisters to the FastLED library that there is a string of type NEOPIXEL on pin DATA_PIN
+  	//and that this object is referenced by the leds variable and that there are NUM_LEDS
   	FastLED.addLeds<NEOPIXEL,DATA_PIN>(leds, NUM_LEDS);
   
   // Setup alarm
-  pinMode(13, OUTPUT); 
+  pinMode(13, OUTPUT);  //this function is used to set pin 13 to output. pinMode is a system call
   
   // set prescale to 16
   sbi(ADCSRA,ADPS2) ;
