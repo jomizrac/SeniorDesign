@@ -125,13 +125,14 @@ active = false;
 strcpy(packet, "");
 
   // set poll high for first sensor only
+  //sets voltage for pin poll to HIGH
    digitalWrite(poll, HIGH);   
    
   int i = 0;
   
-  for (int shelf = 1; shelf<nshelves+1; shelf++)
+  for (int shelf = 1; shelf<nshelves+1; shelf++)	//iterates over number of shelves
   {
-    for (int pos = 1; pos <(nfacings+1); pos++)
+    for (int pos = 1; pos <(nfacings+1); pos++) 	//??iterates over number of positions on a shelf??
     {
 
     // advance clock by one
