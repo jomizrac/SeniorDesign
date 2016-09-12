@@ -31,3 +31,8 @@ C:\Users\Patrick\Desktop\temp\Video_on_demand\SimpleSerial\obj\Debug\SimpleSeria
 C:\Users\Patrick\Desktop\temp\Video_on_demand\SimpleSerial\obj\Debug\SimpleSerial.Form1.resources
 C:\Users\Patrick\Desktop\temp\Video_on_demand\SimpleSerial\obj\Debug\SimpleSerial.Properties.Resources.resources
 C:\Users\Patrick\Desktop\temp\Video_on_demand\SimpleSerial\obj\Debug\SimpleSerial.csproj.GenerateResource.Cache
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\Interop.WMPLib.dll
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\AxInterop.WMPLib.dll
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.ResolveComReference.cache
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.exe
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.pdb
