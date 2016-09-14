@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace SimpleSerial {
-	class ShelfInventory {
+
+	internal class ShelfInventory {
 	}
 }
