@@ -5,6 +5,9 @@ using System.Text;
 
 namespace SimpleSerial {
 
+	/// <summary>
+	/// This class serves as the main point of logic for the ShelfRokr.
+	/// </summary>
 	internal class MainLoop {
 
 		#region Singleton

@@ -8,6 +8,9 @@ using System.Text;
 
 namespace SimpleSerial {
 
+	/// <summary>
+	/// This class is responsible for syncing the device's local storage contents with objects from the cloud.
+	/// </summary>
 	internal class LocalStorage {
 
 		#region Singleton
@@ -25,7 +28,7 @@ namespace SimpleSerial {
 		private static string filePath = "*** Provide file name ***";
 
 		public void SyncVideos() {
-			// Download all missing videos
+			// Download all missing videos (detect if files have diff modified date?)
 			// Delete unused local videos
 		}
 

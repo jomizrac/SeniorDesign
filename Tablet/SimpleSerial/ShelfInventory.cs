@@ -16,5 +16,11 @@ namespace SimpleSerial {
 		}
 
 		#endregion Singleton
+
+		private List<Product> products = new List<Product>();
+
+		public void UpdateSlot( int slotNumber, Product newProduct ) {
+			products[slotNumber] = newProduct;
+		}
 	}
 }

@@ -8,6 +8,9 @@ using System.Text;
 
 namespace SimpleSerial {
 
+	/// <summary>
+	/// This class is responsible for storing the global AmazonDynamoDBClient connection.
+	/// </summary>
 	internal class DB {
 
 		#region Singleton
@@ -27,7 +30,7 @@ namespace SimpleSerial {
 		// The sample uses the following id PK value to add book item.
 		private static int sampleBookId = 555;
 
-		private static void CreateBookItem( Table productCatalog ) {
+		public static void CreateBookItem( Table productCatalog ) {
 			Console.WriteLine( "\n*** Executing CreateBookItem() ***" );
 			var book = new Document();
 			book["Id"] = sampleBookId;
