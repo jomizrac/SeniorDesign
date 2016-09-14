@@ -5,6 +5,7 @@ Drive ShelfLab 2pt0 with Arduino
 
 // Setup for LEDs
 
+//external library that is used for LED animations
 #include "FastLED.h"
 
 // How many leds in your strip?
@@ -36,8 +37,8 @@ long recal_t=millis()+5000;
 #define illum 10
 #define sensorpin A0
 #define threshold -1
-#define nshelves 1
-#define nfacings 7
+#define nshelves 1	//number of shelves
+#define nfacings 7	//number of facings on a shelf
 
 // defines for setting and clearing register bits
 #ifndef cbi
@@ -47,7 +48,7 @@ long recal_t=millis()+5000;
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-  int timer = 1000;           // The higher the number, the slower the timing.
+  int timer = 1000;           // The higher the number, the slower the timing. being used to pause the process
   int n=4;
   long count=0;
   int sensorill=0;
@@ -85,11 +86,12 @@ long recal_t=millis()+5000;
 void setup() {
   
   // Setup LEDs
-  
+  	//rsgisters to the FastLED library that there is a string of type NEOPIXEL on pin DATA_PIN
+  	//and that this object is referenced by the leds variable and that there are NUM_LEDS
   	FastLED.addLeds<NEOPIXEL,DATA_PIN>(leds, NUM_LEDS);
   
   // Setup alarm
-  pinMode(13, OUTPUT); 
+  pinMode(13, OUTPUT);  //this function is used to set pin 13 to output. pinMode is a system call
   
   // set prescale to 16
   sbi(ADCSRA,ADPS2) ;
@@ -123,13 +125,14 @@ active = false;
 strcpy(packet, "");
 
   // set poll high for first sensor only
+  //sets voltage for pin poll to HIGH
    digitalWrite(poll, HIGH);   
    
   int i = 0;
   
-  for (int shelf = 1; shelf<nshelves+1; shelf++)
+  for (int shelf = 1; shelf<nshelves+1; shelf++)	//iterates over number of shelves
   {
-    for (int pos = 1; pos <(nfacings+1); pos++)
+    for (int pos = 1; pos <(nfacings+1); pos++) 	//??iterates over number of positions on a shelf??
     {
 
     // advance clock by one
@@ -153,11 +156,11 @@ strcpy(packet, "");
  
      // unilluminate
     digitalWrite(illum, LOW);
-    delayMicroseconds(timer);  
+    delayMicroseconds(timer)	//delay by time in micro 
     //  read AIN illum goes here
     sensorunill = analogRead(sensorpin);    
     
-    delay(1);
+    delay(1);	//delay by time in millis
     
     diff = max(0,sensorill-sensorunill);
     
@@ -295,7 +298,7 @@ void illuminate (int facing)
 {
   	for(int l = start_led[facing]; l < end_led[facing]; l++) 
         {
-	// Set the i'th led to red 
+	// Set the i'th led to white 
 	leds[l] = CRGB::White;
         }
 FastLED.show();
@@ -305,7 +308,7 @@ void unilluminate (int facing)
 {
   	for(int l = start_led[facing]; l < end_led[facing]; l++) 
         {
-	// Set the i'th led to red 
+	// Set the i'th led to black (turn off)
 	leds[l] = CRGB::Black;
         }
 FastLED.show();
@@ -353,7 +356,6 @@ for (int i=0; i<3; i++)
     int range = analogRead(sensorpin);    
 
     if (range > 200) new_present = true;
-
 
     tempstr+= "R";
     tempstr+= i+1;
