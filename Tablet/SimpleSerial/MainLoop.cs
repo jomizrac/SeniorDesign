@@ -7,8 +7,25 @@ namespace SimpleSerial {
 
 	internal class MainLoop {
 
+		#region Singleton
+
+		private static MainLoop m_instance;
+
+		public static MainLoop Instance {
+			get { return m_instance ?? ( m_instance = new MainLoop() ); }
+		}
+
+		#endregion Singleton
+
 		private static void Main() {
-			// TODO
+			ArduinoParser.Instance.ProductPickedUpEvent += Instance.OnProductPickup;
+
+			while ( true ) {
+				// NOOP
+			}
+		}
+
+		private void OnProductPickup( int productID ) {
 		}
 	}
 }

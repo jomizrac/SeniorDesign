@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 namespace SimpleSerial {
-	class Product {
+
+	internal class Product {
+		public int productID { get; private set; }
 	}
 }
