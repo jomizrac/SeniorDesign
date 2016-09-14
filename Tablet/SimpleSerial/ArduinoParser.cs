@@ -9,7 +9,13 @@ namespace SimpleSerial {
 
 		public delegate void ProductPickedUp( int productID );
 
+		public delegate void ProductPlacedDown( int productID );
+
 		public event ProductPickedUp ProductPickedUpEvent;
+
+		public event ProductPlacedDown ProductPlacedDownEvent;
+
+		#region Singleton
 
 		private static ArduinoParser m_instance;
 
@@ -17,12 +23,6 @@ namespace SimpleSerial {
 			get { return m_instance ?? ( m_instance = new ArduinoParser() ); }
 		}
 
-		private void SampleUsage() {
-			ArduinoParser.Instance.ProductPickedUpEvent += OnPickup;
-		}
-
-		private void OnPickup( int productID ) {
-			// Do something with productID
-		}
+		#endregion Singleton
 	}
 }

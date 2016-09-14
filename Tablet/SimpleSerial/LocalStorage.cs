@@ -9,6 +9,17 @@ using System.Text;
 namespace SimpleSerial {
 
 	internal class LocalStorage {
+
+		#region Singleton
+
+		private static LocalStorage m_instance;
+
+		public static LocalStorage Instance {
+			get { return m_instance ?? ( m_instance = new LocalStorage() ); }
+		}
+
+		#endregion Singleton
+
 		private static string existingBucketName = "*** Provide bucket name ***";
 		private static string keyName = "*** Provide your object key ***";
 		private static string filePath = "*** Provide file name ***";

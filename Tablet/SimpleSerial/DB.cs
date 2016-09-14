@@ -9,7 +9,16 @@ using System.Text;
 namespace SimpleSerial {
 
 	internal class DB {
+
+		#region Singleton
+
 		private static DB m_instance;
+
+		public static DB Instance {
+			get { return m_instance ?? ( m_instance = new DB() ); }
+		}
+
+		#endregion Singleton
 
 		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
@@ -17,10 +26,6 @@ namespace SimpleSerial {
 
 		// The sample uses the following id PK value to add book item.
 		private static int sampleBookId = 555;
-
-		public static DB Instance {
-			get { return m_instance ?? ( m_instance = new DB() ); }
-		}
 
 		private static void CreateBookItem( Table productCatalog ) {
 			Console.WriteLine( "\n*** Executing CreateBookItem() ***" );

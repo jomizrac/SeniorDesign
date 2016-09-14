@@ -9,5 +9,15 @@ using System.Text;
 namespace SimpleSerial {
 
 	internal class VideoManager {
+
+		#region Singleton
+
+		private static VideoManager m_instance;
+
+		public static VideoManager Instance {
+			get { return m_instance ?? ( m_instance = new VideoManager() ); }
+		}
+
+		#endregion Singleton
 	}
 }
