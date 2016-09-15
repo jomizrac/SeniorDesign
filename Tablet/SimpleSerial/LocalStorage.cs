@@ -24,14 +24,11 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
-		private static string bucketName = "*** Provide bucket name ***";
-		private static string keyName = "*** Provide your object key ***";
-		private static string filePath = "*** Provide file name ***";
-
 		private static AmazonS3Client client;
 		private static TransferUtility fileTransferUtility;
 
-		private static string tmpDir = "C:\tmp";
+		private static string productVideoBucket = "shelfrokr-product-videos";
+		private static string videoDirectory = @"C:\ShelfRokr\ProductVideos\";
 		private static string fileExtension = ".wmv";
 
 		public LocalStorage() {
@@ -41,23 +38,23 @@ namespace SimpleSerial {
 
 		public void SyncVideos() {
 			// Delete any videos for products that are no longer present
-			if ( Directory.Exists( tmpDir ) ) {
-				string[] fileEntries = Directory.GetFiles( tmpDir );
-				foreach ( string filePath in fileEntries ) {
+			if ( Directory.Exists( videoDirectory ) ) {
+				string[] filePaths = Directory.GetFiles( videoDirectory );
+				foreach ( string filePath in filePaths ) {
 					string fileName = Path.GetFileNameWithoutExtension( filePath );
-					bool contains = ShelfInventory.Instance.products.Any( p => p.productID.ToString() == fileName );
-					if ( !contains ) {
-						File.Delete( fileName );
+					bool productPresent = ShelfInventory.Instance.products.Exists( p => p.productID.ToString() == fileName );
+					if ( !productPresent ) {
+						File.Delete( filePath );
 					}
 				}
 			}
 
 			// Download any missing videos for the current product lineup
 			foreach ( var product in ShelfInventory.Instance.products ) {
-				string filePath = tmpDir + product + fileExtension;
+				string filePath = videoDirectory + product.productID + fileExtension;
 				if ( !File.Exists( filePath ) ) {
-					string key = product + fileExtension;
-					fileTransferUtility.Download( filePath, bucketName, key );
+					string key = product.productID + fileExtension;
+					fileTransferUtility.Download( filePath, productVideoBucket, key );
 				}
 			}
 		}
