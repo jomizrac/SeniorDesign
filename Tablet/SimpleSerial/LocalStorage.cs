@@ -32,7 +32,6 @@ namespace SimpleSerial {
 		private static TransferUtility fileTransferUtility;
 
 		private static string tmpDir = "C:\tmp";
-
 		private static string fileExtension = ".wmv";
 
 		public LocalStorage() {
