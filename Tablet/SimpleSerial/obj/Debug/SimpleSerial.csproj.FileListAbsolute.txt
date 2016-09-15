@@ -36,3 +36,8 @@ C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\AxInt
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.ResolveComReference.cache
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.exe
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.pdb
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\Interop.WMPLib.dll
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\AxInterop.WMPLib.dll
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.ResolveComReference.cache
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.exe
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.pdb
