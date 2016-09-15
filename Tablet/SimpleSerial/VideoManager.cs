@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+
 namespace SimpleSerial {
 
 	internal class VideoManager {
@@ -18,6 +19,10 @@ namespace SimpleSerial {
 			get { return m_instance ?? ( m_instance = new VideoManager() ); }
 		}
 
-		#endregion Singleton
+        #endregion Singleton  
+        while (playables[0] != null ){
+            //playvid(playables[0]);
+        }
+            
 	}
 }
