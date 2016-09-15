@@ -2,9 +2,7 @@
 Drive ShelfLab 2pt0 with Arduino
 
  */
-
-// Setup for LEDs
-
+///////////////////*********** LED Stuff *************///////////////////
 //external library that is used for LED animations
 #include "FastLED.h"
 
@@ -23,23 +21,37 @@ const int end_led[7]= {2, 6, 9, 12, 15, 19, 24};
 // Define the array of leds
 CRGB leds[NUM_LEDS];
 
+/////////////////////////******************************/////////////////////
+
 // Setup for Screen
 
+//initial values to check the sensorpin against. 15 values is from an old version of the product
 int thresh[15]= {1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000,1000,1000,1000};
+//not sure if this is still needed. patrick didnt speak much on it
 const int planogram[15]={6,16,26,36,46,56,66,76,90,100,110,120,130,140,150};
 
+//used in conjunction with threshold array and recalibrate functionality
 long weight[40]= {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+//used to determine if recalibration is needed
 byte recal=false;
 long recal_t=millis()+5000;
 
-#define poll 8
-#define clock 9
+//pin 8 reading part of the sensor. must be made active before it can be read from. this is the entire sensor being made active
+#define poll 8	
+//pin 9 cycle for which poll operates from. must manuall increment the clock. each incremement moves to the next sensor
+#define clock 9	
+//pin 10 emitting part of the sensor. emits the signal. must be turned on in order to read from it
 #define illum 10
+//analog pin A0. reading part of the sensor.used to detect what illum is emitting on 
 #define sensorpin A0
+//unused variable
 #define threshold -1
-#define nshelves 1	//number of shelves
-#define nfacings 7	//number of facings on a shelf
+//number of shelves
+#define nshelves 1
+//number of facings on a shelf
+#define nfacings 7	
 
+//boilerplate stuff that must be used with arduino
 // defines for setting and clearing register bits
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
@@ -48,6 +60,7 @@ long recal_t=millis()+5000;
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
+///////////******* variables used with playing videos and coordinating LED effects ************/////////////
   int timer = 1000;           // The higher the number, the slower the timing. being used to pause the process
   int n=4;
   long count=0;
@@ -68,6 +81,7 @@ long recal_t=millis()+5000;
   int facing=0;
   int show_next=0;
   char play_vid='a';
+  ////////////////////////////////*****************************************/////////////////////////////////
   
   char packet[300] ="";
   char temp[40]="";
@@ -91,8 +105,9 @@ void setup() {
   	FastLED.addLeds<NEOPIXEL,DATA_PIN>(leds, NUM_LEDS);
   
   // Setup alarm
-  pinMode(13, OUTPUT);  //this function is used to set pin 13 to output. pinMode is a system call
+  pinMode(13, OUTPUT);
   
+  //boilerplate stuff that needs to be included
   // set prescale to 16
   sbi(ADCSRA,ADPS2) ;
   cbi(ADCSRA,ADPS1) ;
@@ -117,29 +132,29 @@ void loop() {
     Serial.print(","); 
     */
 
-for (int pass =0; pass <3; pass++)
-
-{
-
+//these for loops are used to iterate over all product facings
+for (int pass =0; pass <3; pass++){
+//variable used to determine if the current facing has a product in it
 active = false;
 strcpy(packet, "");
 
-  // set poll high for first sensor only
-  //sets voltage for pin poll to HIGH
+  //sets active current sensor. current sensor is determiend by the clock
+  //i think the default start position is the first sensor
    digitalWrite(poll, HIGH);   
    
   int i = 0;
   
-  for (int shelf = 1; shelf<nshelves+1; shelf++)	//iterates over number of shelves
-  {
-    for (int pos = 1; pos <(nfacings+1); pos++) 	//??iterates over number of positions on a shelf??
-    {
+  for (int shelf = 1; shelf<nshelves+1; shelf++){	//iterates over number of shelves
+    for (int pos = 1; pos <(nfacings+1); pos++){	//??iterates over number of positions on a shelf??
 
+    //used to increment through sensors in conjunction with poll
+    //each increment moves to the next sensor in the system
     // advance clock by one
     digitalWrite(clock, HIGH); 
     //  delayMicroseconds(timer);                  
     digitalWrite(clock, LOW); 
     
+    //turn off poll so that only one sensor is on at a time
     // switch off poll
     digitalWrite(poll, LOW);       
     
@@ -148,53 +163,44 @@ strcpy(packet, "");
     //  delayMicroseconds(timer);                  
 //    digitalWrite(clock, LOW); 
 
-    // illuminate
+//////////////////******* sets up value to check for on the sensor *********////////////////
+    //activate the LED of the current sensor and wait for it to light up product
     digitalWrite(illum, HIGH); 
     delayMicroseconds(timer);    
-    //  read AIN unillum goes here
+    //read the value from the sensor while illuminated and store for reference
     sensorill = analogRead(sensorpin);    
  
-     // unilluminate
+     //turn off the led on the sensor and wait for light to disipate from product
     digitalWrite(illum, LOW);
     delayMicroseconds(timer)	//delay by time in micro 
-    //  read AIN illum goes here
+    //read value from sensor while there is no light in order to account for any value due to background noise
     sensorunill = analogRead(sensorpin);    
     
     delay(1);	//delay by time in millis
     
+    //subtracts the value of the sensor when its off from the value of when its on. this is an attempt
+    //to compensate for background noise. 
     diff = max(0,sensorill-sensorunill);
     
     diff=1024-diff;
+//////////////////******* sets up value to check for on the sensor *********////////////////
 
+    //not sure what this is doing
     tempstr ="";
- /*tempstr += i + 1;
-    tempstr += ",";
-    tempstr += sensorill;
-    tempstr += ",";
-    tempstr += sensorunill;
-    tempstr += ",";
-    tempstr += thresh[i];
-    tempstr += ",";
-  */  
     
+    //detecting if what the sensor is picking up is greater than the threshold
     if (diff > thresh[i]) {  
     weight[i] += diff;
     weight[i] -= thresh[i];
-    // tempstr += "*,";
-        
-    // packet = packet + (i + 1) + "," + diff + ",";
-    // Serial.print(i + 1);
-    // Serial.print(",");
-    // Serial.print(diff);
-    // Serial.print(",");
     active = true;
   } 
 
     //tempstr.toCharArray(temp,20);
     //strcat(packet, temp);
 
+    //recallibration routine for the threshold values as they change over time
     if (recal==true) thresh[i]=diff+90;    
-    // math goes here
+    //math goes here
      count++;  
      i++;
 
@@ -209,15 +215,14 @@ if (brightness>240) brightness_inc=-15;
 FastLED.setBrightness(brightness);
 FastLED.show();
 
-if (millis()>time_off)
-{
+//i think this plays a background vid
+if (millis()>time_off){
   for (int i=0; i<7; i++) unilluminate(i);
   time_off=millis()+300000;
   play_background(play_vid);
   play_vid++;
   if (play_vid=='i') play_vid='a';
 }
-
 
 //   Serial.print(packet);
 //   Serial.println(",x1");
