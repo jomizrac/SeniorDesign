@@ -27,24 +27,33 @@ namespace SimpleSerial {
 
 		private static string tableName = "ProductCatalog";
 
-		// The sample uses the following id PK value to add book item.
-		private static int sampleBookId = 555;
+		// The sample uses the following id PK value to add product item.
+		private static int sampleproductId = 555;
 
-		public static void CreateBookItem( Table productCatalog ) {
-			Console.WriteLine( "\n*** Executing CreateBookItem() ***" );
-			var book = new Document();
-			book["Id"] = sampleBookId;
-			book["Title"] = "Book " + sampleBookId;
-			book["Price"] = 19.99;
-			book["ISBN"] = "111-1111111111";
-			book["Authors"] = new List<string> { "Author 1", "Author 2", "Author 3" };
-			book["PageCount"] = 500;
-			book["Dimensions"] = "8.5x11x.5";
-			book["InPublication"] = new DynamoDBBool( true );
-			book["InStock"] = new DynamoDBBool( false );
-			book["QuantityOnHand"] = 0;
+		public static void CreateProductItem( Table productCatalog ) {
+			Console.WriteLine( "\n*** Executing CreateProductItem() ***" );
+			var product = new Document();
+            //product["ShelfID"] = currentShelfID;
+			product["Id"] = currentProductId;
+			product["Timestamp"] = timeStamp;
+            product["actionType"] = upOrDown;
 
-			productCatalog.PutItem( book );
+            
+
+			productCatalog.PutItem( product );
 		}
-	}
+        private static void Retrieveproduct(Table productCatalog)
+        {
+            Console.WriteLine("\n*** Executing Retrieveproduct() ***");
+            // Optional configuration.
+            GetItemOperationConfig config = new GetItemOperationConfig
+            {
+                AttributesToGet = new List<string> { "Id", "Timestamp", "actionType" },
+                ConsistentRead = true
+            };
+            Document document = productCatalog.GetItem(sampleproductId, config);
+            Console.WriteLine("Retrieveproduct: Printing product retrieved...");
+            PrintDocument(document);
+        }
+    }
 }
