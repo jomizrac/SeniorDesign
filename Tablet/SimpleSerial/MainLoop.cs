@@ -21,14 +21,18 @@ namespace SimpleSerial {
 		#endregion Singleton
 
 		private static void Main() {
-			ArduinoParser.Instance.ProductPickedUpEvent += Instance.OnProductPickup;
+			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickUp;
+			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 
 			while ( true ) {
 				// NOOP
 			}
 		}
 
-		private void OnProductPickup( int productID ) {
+		private void OnProductPickUp( int productID ) {
+		}
+
+		private void OnProductPutDown( int productID ) {
 		}
 	}
 }

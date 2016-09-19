@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.IO.Ports;
-using System.IO;
 
 namespace SimpleSerial {
 
@@ -12,20 +12,23 @@ namespace SimpleSerial {
 	/// This class is responsible for reading serial output from the Arduino and converting it into more intelliglbe events.
 	/// </summary>
 	internal class ArduinoParser {
-        #region global Variables
-        SerialPort currentPort;
-        bool portFound;
-        #endregion global Variables
 
-        #region Events
+		#region global Variables
 
-        public delegate void ProductPickedUp( int productID );
+		private SerialPort currentPort;
+		private bool portFound;
 
-		public delegate void ProductPlacedDown( int productID );
+		#endregion global Variables
 
-		public event ProductPickedUp ProductPickedUpEvent;
+		#region Events
 
-		public event ProductPlacedDown ProductPlacedDownEvent;
+		public delegate void ProductPickUp( int productID );
+
+		public delegate void ProductPutDown( int productID );
+
+		public event ProductPickUp ProductPickUpEvent;
+
+		public event ProductPutDown ProductPutDownEvent;
 
 		#endregion Events
 
@@ -37,61 +40,50 @@ namespace SimpleSerial {
 			get { return m_instance ?? ( m_instance = new ArduinoParser() ); }
 		}
 
-        #endregion Singleton
-        //This sets up the communication between the arduino and the tablet
-        private void SetComPort()
-        {
-            try
-            {
-                string[] ports = SerialPort.GetPortNames();
-                foreach (string port in ports)
-                {
-                    currentPort = new SerialPort(port, 9600);
-                    if (DetectArduino())
-                    {
-                        portFound = true;
-                        break;
-                    }
-                    else
-                    {
-                        portFound = false;
-        
-            }
-                }
-            }
-            catch (Exception e)
-            {
-            }
-        }
-        
-        public void Main ()
-        {
-            currentPort.Open();
-            int productASCII = 0;
-            char upOrDown; //is it a pick up or put down, either 'u' or 'd'
-                           //guess which is which
-            while(true)    //while loop only ends when program ends
-            {
-                upOrDown = '\0';
-                productASCII = 0;
-                if (currentPort.BytesToRead != 0) {
-                    productASCII = currentPort.ReadByte(); //If there is something in the read buffer it is the product ID
-                    upOrDown = (char)currentPort.ReadByte(); //The next character is pick up or put down
-                    if (upOrDown == 'u')
-                    { //it's up
-                        ProductPickedUpEvent(productASCII); //picked up event
-                    }
-                    else if (upOrDown == 'd')
-                    { //it's down
-                        ProductPlacedDownEvent(productASCII); //placed down event
-                    }
-                    else
-                    {
-                        //TODO Error handling
-                    }
-                }
-            }
+		#endregion Singleton
 
-        }
+		public void Main() {
+			currentPort.Open();
+			int productASCII = 0;
+			char upOrDown; //is it a pick up or put down, either 'u' or 'd'
+						   //guess which is which
+			while ( true )    //while loop only ends when program ends
+			{
+				upOrDown = '\0';
+				productASCII = 0;
+				if ( currentPort.BytesToRead != 0 ) {
+					productASCII = currentPort.ReadByte(); //If there is something in the read buffer it is the product ID
+					upOrDown = (char)currentPort.ReadByte(); //The next character is pick up or put down
+					if ( upOrDown == 'u' ) { //it's up
+						ProductPickedUpEvent( productASCII ); //picked up event
+					}
+					else if ( upOrDown == 'd' ) { //it's down
+						ProductPlacedDownEvent( productASCII ); //placed down event
+					}
+					else {
+						//TODO Error handling
+					}
+				}
+			}
+		}
+
+		//This sets up the communication between the arduino and the tablet
+		private void SetComPort() {
+			try {
+				string[] ports = SerialPort.GetPortNames();
+				foreach ( string port in ports ) {
+					currentPort = new SerialPort( port, 9600 );
+					if ( DetectArduino() ) {
+						portFound = true;
+						break;
+					}
+					else {
+						portFound = false;
+					}
+				}
+			}
+			catch ( Exception e ) {
+			}
+		}
 	}
 }

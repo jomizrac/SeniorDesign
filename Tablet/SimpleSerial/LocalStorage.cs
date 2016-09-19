@@ -24,12 +24,11 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
+		public static string productVideoBucket = "shelfrokr-product-videos";
+		public static string videoDirectory = @"C:\ShelfRokr\ProductVideos\";
+		public static string fileExtension = ".wmv";
 		private static AmazonS3Client client;
 		private static TransferUtility fileTransferUtility;
-
-		private static string productVideoBucket = "shelfrokr-product-videos";
-		private static string videoDirectory = @"C:\ShelfRokr\ProductVideos\";
-		private static string fileExtension = ".wmv";
 
 		public LocalStorage() {
 			client = new AmazonS3Client( Amazon.RegionEndpoint.USEast1 );
