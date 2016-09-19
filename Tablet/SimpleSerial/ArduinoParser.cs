@@ -47,6 +47,7 @@ namespace SimpleSerial {
 			int productASCII = 0;
 			char upOrDown; //is it a pick up or put down, either 'u' or 'd'
 						   //guess which is which
+
 			while ( true )    //while loop only ends when program ends
 			{
 				upOrDown = '\0';
@@ -55,10 +56,10 @@ namespace SimpleSerial {
 					productASCII = currentPort.ReadByte(); //If there is something in the read buffer it is the product ID
 					upOrDown = (char)currentPort.ReadByte(); //The next character is pick up or put down
 					if ( upOrDown == 'u' ) { //it's up
-						ProductPickedUpEvent( productASCII ); //picked up event
+						ProductPickUpEvent( productASCII ); //picked up event
 					}
 					else if ( upOrDown == 'd' ) { //it's down
-						ProductPlacedDownEvent( productASCII ); //placed down event
+						ProductPutDownEvent( productASCII ); //placed down event
 					}
 					else {
 						//TODO Error handling

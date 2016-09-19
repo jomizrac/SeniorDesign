@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -17,15 +19,28 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
+		public static string jsonFile = @"C:\ShelfRokr\Data\products.json";
+
 		//private Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
 		public List<Product> products = new List<Product>();
 
 		private List<Product> playables = new List<Product>();
 
+		public ShelfInventory() {
+			if ( !File.Exists( jsonFile ) ) {
+				products = JsonConvert.DeserializeObject<List<Product>>( File.ReadAllText( jsonFile ) );
+			}
+		}
+
 		public void UpdateSlot( int slotNumber, Product newProduct ) {
+			// Update the list
 			products[slotNumber] = newProduct;
-			// store locally somehow
+
+			// Serialize the current list to disk
+			File.WriteAllText( jsonFile, JsonConvert.SerializeObject( products ) );
+
 			// sync with cloud db
+			// TODO
 		}
 
 		private static void Main() {
