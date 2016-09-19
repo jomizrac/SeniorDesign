@@ -27,6 +27,7 @@ namespace SimpleSerial {
 		public static string productVideoBucket = "shelfrokr-product-videos";
 		public static string videoDirectory = @"C:\ShelfRokr\ProductVideos\";
 		public static string fileExtension = ".wmv";
+
 		private static AmazonS3Client client;
 		private static TransferUtility fileTransferUtility;
 
@@ -50,12 +51,16 @@ namespace SimpleSerial {
 
 			// Download any missing videos for the current product lineup
 			foreach ( var product in ShelfInventory.Instance.products ) {
-				string filePath = videoDirectory + product.productID + fileExtension;
+				string filePath = GetFilePathForProductID( product.productID );
 				if ( !File.Exists( filePath ) ) {
 					string key = product.productID + fileExtension;
 					fileTransferUtility.Download( filePath, productVideoBucket, key );
 				}
 			}
+		}
+
+		public string GetFilePathForProductID( int id ) {
+			return videoDirectory + id + fileExtension;
 		}
 	}
 }

@@ -33,9 +33,6 @@ namespace SimpleSerial {
 			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 		}
 
-		private void SerializeToDisk() {
-		}
-
 		private void OnProductPickup( int slotID ) {
 			Product current = new Product();
 			current = products[slotID];
