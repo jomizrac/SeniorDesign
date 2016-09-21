@@ -27,8 +27,8 @@ namespace SimpleSerial {
 
 		private static string tableName = "ProductCatalog";
 
-
-		public static void CreateProductItem( Table productCatalog ) {
+        //Creates a new item in the database.
+		public static void CreateProductItem( Table productCatalog, string currentProductID, int upTime, int downTime, string shelfID ) {
 			Console.WriteLine( "\n*** Executing CreateProductItem() ***" );
 			var product = new Document();
 			product["ProductId"] = currentProductId;
