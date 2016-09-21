@@ -27,31 +27,27 @@ namespace SimpleSerial {
 
 		private static string tableName = "ProductCatalog";
 
-		// The sample uses the following id PK value to add product item.
-		private static int sampleproductId = 555;
 
 		public static void CreateProductItem( Table productCatalog ) {
 			Console.WriteLine( "\n*** Executing CreateProductItem() ***" );
 			var product = new Document();
-            //product["ShelfID"] = currentShelfID;
-			product["Id"] = currentProductId;
-			product["Timestamp"] = timeStamp;
-            product["actionType"] = upOrDown;
-
+			product["ProductId"] = currentProductId;
+			product["UpTimestamp"] = upTime;
+            product["DownTimestamp"] = downTime;
+            product["ShelfRokrID"] = shelfID;
             
-
 			productCatalog.PutItem( product );
 		}
-        private static void Retrieveproduct(Table productCatalog)
+        private static void RetrieveProduct(Table productCatalog, int currentProductID)
         {
-            Console.WriteLine("\n*** Executing Retrieveproduct() ***");
+            Console.WriteLine("\n*** Executing RetrieveProduct() ***");
             // Optional configuration.
             GetItemOperationConfig config = new GetItemOperationConfig
             {
-                AttributesToGet = new List<string> { "Id", "Timestamp", "actionType" },
+                AttributesToGet = new List<string> { "ProductId", "UpTimestamp", "DownTimestamp", "ShelfRokrID" },
                 ConsistentRead = true
             };
-            Document document = productCatalog.GetItem(sampleproductId, config);
+            Document document = productCatalog.GetItem(currentProductID, config);
             Console.WriteLine("Retrieveproduct: Printing product retrieved...");
             PrintDocument(document);
         }
