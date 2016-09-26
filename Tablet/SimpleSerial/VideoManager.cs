@@ -14,15 +14,68 @@ namespace SimpleSerial {
 		#region Singleton
 
 		private static VideoManager m_instance;
-
 		public static VideoManager Instance {
 			get { return m_instance ?? ( m_instance = new VideoManager() ); }
 		}
 
+        WMPLib.WindowsMediaPlayer Player;
+        private bool playing = false;
+
         #endregion Singleton  
-        while (playables[0] != null ){
-            //playvid(playables[0]);
-        }
+        private void main()
+        {
             
-	}
+            while (ShelfInventory.Instance.playables[0] != null)
+            {
+                PlayFile(LocalStorage.Instance.videoDirectory + playables[0].productID() + LocalStorage.Instance.fileExtension);
+                playing = true;
+                while (playing) {
+                    if (ShelfInventory.Instance.playables[0].state == false)
+                    {
+                        Player_PlayStateChange(8);
+                    } 
+                    if (config1)
+                    {
+                        //playvids in queue
+                    }
+                    if(config2
+                        //putbacks mean stop vid and start next
+                }
+            }
+        }
+
+      
+
+        private void PlayFile(String url)
+        {
+            Player = new WMPLib.WindowsMediaPlayer();
+            Player.PlayStateChange +=
+                new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(Player_PlayStateChange);
+            Player.MediaError +=
+                new WMPLib._WMPOCXEvents_MediaErrorEventHandler(Player_MediaError);
+            Player.URL = url;
+            Player.controls.play();
+        }
+
+        private void Form1_Load(object sender, System.EventArgs e, )
+        {
+            // TODO  Insert a valid path in the line below.
+            PlayFile(LocalStorage.Instance.videoDirectory + playables[0].productID() + LocalStorage.Instance.fileExtension));
+        }
+
+        private void Player_PlayStateChange(int NewState)
+        {
+            if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsStopped)
+            {
+                playing = false;
+                this.Close();
+            }
+        }
+
+        private void Player_MediaError(object pMediaObject)
+        {
+            MessageBox.Show("Cannot play media file.");
+            this.Close();
+        }
+    }
 }

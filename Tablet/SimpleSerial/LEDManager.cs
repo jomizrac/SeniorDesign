@@ -16,5 +16,8 @@ namespace SimpleSerial {
 		}
 
 		#endregion Singleton
+        //if product picked up, light until put back 
+        //if vid playing, flash maybe?
+        //how do we communicate to the arduino to turn on the light?
 	}
 }
