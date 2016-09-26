@@ -14,15 +14,53 @@ namespace SimpleSerial {
 		#region Singleton
 
 		private static VideoManager m_instance;
-
 		public static VideoManager Instance {
 			get { return m_instance ?? ( m_instance = new VideoManager() ); }
 		}
 
+
         #endregion Singleton  
-        while (playables[0] != null ){
-            //playvid(playables[0]);
-        }
+        private void main()
+        {
             
-	}
+            while (ShelfInventory.Instance.playables[0] != null)
+            {
+                //playvid(playables[0]);
+            }
+        }
+        
+
+        WMPLib.WindowsMediaPlayer Player;
+
+        private void PlayFile(String url)
+        {
+            Player = new WMPLib.WindowsMediaPlayer();
+            Player.PlayStateChange +=
+                new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler(Player_PlayStateChange);
+            Player.MediaError +=
+                new WMPLib._WMPOCXEvents_MediaErrorEventHandler(Player_MediaError);
+            Player.URL = url;
+            Player.controls.play();
+        }
+
+        private void Form1_Load(object sender, System.EventArgs e, )
+        {
+            // TODO  Insert a valid path in the line below.
+            PlayFile(LocalStorage.Instance.videoDirectory + playables[0].productID() + LocalStorage.Instance.fileExtension));
+        }
+
+        private void Player_PlayStateChange(int NewState)
+        {
+            if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsStopped)
+            {
+                this.Close();
+            }
+        }
+
+        private void Player_MediaError(object pMediaObject)
+        {
+            MessageBox.Show("Cannot play media file.");
+            this.Close();
+        }
+    }
 }
