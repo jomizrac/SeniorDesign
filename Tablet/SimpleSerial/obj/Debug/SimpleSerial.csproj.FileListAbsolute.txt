@@ -41,3 +41,4 @@ C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\AxI
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.ResolveComReference.cache
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.exe
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.pdb
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.exe.config
