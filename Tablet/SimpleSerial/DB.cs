@@ -28,13 +28,21 @@ namespace SimpleSerial {
 		private static string tableName = "ProductCatalog";
 
         //Creates a new item in the database.
-		public static void CreateProductItem( Table productCatalog, string currentProductID, int upTime, int downTime, string shelfID ) {
+		public static void CreateProductItem( Table productCatalog, int currentProdLocation, int currentTime, string eventType ) {
 			Console.WriteLine( "\n*** Executing CreateProductItem() ***" );
 			var product = new Document();
-			product["ProductId"] = currentProductId;
-			product["UpTimestamp"] = upTime;
-            product["DownTimestamp"] = downTime;
-            product["ShelfRokrID"] = shelfID;
+            var currentShelfMAC =
+            (
+                from nic in NetworkInterface.GetAllNetworkInterfaces()
+                where nic.OperationalStatus == OperationalStatus.Up
+                select nic.GetPhysicalAddress().ToString()
+            ).FirstOrDefault();
+            product["ProductName"] = currentProductName;
+            product["ProductLocation"] = currentProdLocation;
+			product["ShelfMAC"] = currentShelfMAC;
+            product["DeviceName"] = deviceName;
+            product["Timestamp"] = currentTime;
+            product["EventType"] = eventType;
             
 			productCatalog.PutItem( product );
 		}
@@ -51,5 +59,6 @@ namespace SimpleSerial {
             Console.WriteLine("Retrieveproduct: Printing product retrieved...");
             PrintDocument(document);
         }
+        private static void AddShelf(Table shelfList, )
     }
 }
