@@ -19,6 +19,7 @@ namespace SimpleSerial {
 		}
 
         WMPLib.WindowsMediaPlayer Player;
+        private bool playing = false;
 
         #endregion Singleton  
         private void main()
@@ -26,10 +27,22 @@ namespace SimpleSerial {
             
             while (ShelfInventory.Instance.playables[0] != null)
             {
-                //playvid(playables[0]);
+                PlayFile(LocalStorage.Instance.videoDirectory + playables[0].productID() + LocalStorage.Instance.fileExtension);
+                playing = true;
+                while (playing) {
+                    if (ShelfInventory.Instance.playables[0].state == false)
+                    {
+                        Player_PlayStateChange(8);
+                    } 
+                    if (config1)
+                    {
+                        //playvids in queue
+                    }
+                    if(config2
+                        //putbacks mean stop vid and start next
+                }
             }
         }
-        
 
       
 
@@ -54,6 +67,7 @@ namespace SimpleSerial {
         {
             if ((WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsStopped)
             {
+                playing = false;
                 this.Close();
             }
         }
