@@ -28,9 +28,10 @@ namespace SimpleSerial {
 		private static string tableName = "ProductCatalog";
 
         //Creates a new item in the database.
-		public static void CreateProductItem( Table productCatalog, int currentProdLocation, int currentTime, string eventType ) {
+		public static void CreateProductItem( int currentProdLocation, int currentTime, string eventType ) {
 			Console.WriteLine( "\n*** Executing CreateProductItem() ***" );
-			var product = new Document();
+            Table productCatalog = new Table();
+            var product = new Document();
             var currentShelfMAC =
             (
                 from nic in NetworkInterface.GetAllNetworkInterfaces()
@@ -46,9 +47,10 @@ namespace SimpleSerial {
             
 			productCatalog.PutItem( product );
 		}
-        private static void RetrieveProduct(Table productCatalog, int currentProductID)
+        private static void RetrieveProduct(int currentProductID)
         {
             Console.WriteLine("\n*** Executing RetrieveProduct() ***");
+            Table productCatalog = new Table();
             // Optional configuration.
             GetItemOperationConfig config = new GetItemOperationConfig
             {
@@ -59,6 +61,24 @@ namespace SimpleSerial {
             Console.WriteLine("Retrieveproduct: Printing product retrieved...");
             PrintDocument(document);
         }
-        private static void AddShelf(Table shelfList, )
+        private static void AddShelf( List<Product> productList)
+        {
+            Table shelfList = new Table();
+            List<string> nameList = new List<Product>();
+            foreach (int element in productList)
+            {
+                nameList.Add(productList[element].name);
+            }
+            var shelf = new Document();
+            var currentShelfMAC =
+            (
+                from nic in NetworkInterface.GetAllNetworkInterfaces()
+                where nic.OperationalStatus == OperationalStatus.Up
+                select nic.GetPhysicalAddress().ToString()
+            ).FirstOrDefault();
+            shelf["ShelfMAC"] = currentShelfMAC;
+            shelf["ProductList"] = nameList;
+            shelfList.PutItem(shelf);
+        }
     }
 }

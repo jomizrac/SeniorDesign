@@ -39,7 +39,8 @@ namespace SimpleSerial {
 			// Serialize the current list to disk
 			File.WriteAllText( jsonFile, JsonConvert.SerializeObject( products ) );
 
-			// sync with cloud db
+            // sync with cloud db
+            DB.Instance.addShelf(products);
 			// TODO
 		}
 
