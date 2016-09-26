@@ -18,6 +18,7 @@ namespace SimpleSerial {
 			get { return m_instance ?? ( m_instance = new VideoManager() ); }
 		}
 
+        WMPLib.WindowsMediaPlayer Player;
 
         #endregion Singleton  
         private void main()
@@ -30,7 +31,7 @@ namespace SimpleSerial {
         }
         
 
-        WMPLib.WindowsMediaPlayer Player;
+      
 
         private void PlayFile(String url)
         {
