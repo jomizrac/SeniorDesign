@@ -3,6 +3,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -24,9 +25,9 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
-		public static string productVideoBucket = "shelfrokr-product-videos";
-		public static string videoDirectory = @"C:\ShelfRokr\ProductVideos\";
-		public static string fileExtension = ".wmv";
+		public static string productVideoBucket = ConfigurationManager.AppSettings["productVideoBucket"];
+		public static string videoDirectory = ConfigurationManager.AppSettings["videoDirectory"];
+		public static string videoFileExtension = ConfigurationManager.AppSettings["videoFileExtension"];
 
 		private static AmazonS3Client client;
 		private static TransferUtility fileTransferUtility;
@@ -53,14 +54,14 @@ namespace SimpleSerial {
 			foreach ( var product in ShelfInventory.Instance.products ) {
 				string filePath = GetFilePathForProductID( product.productID );
 				if ( !File.Exists( filePath ) ) {
-					string key = product.productID + fileExtension;
+					string key = product.productID + videoFileExtension;
 					fileTransferUtility.Download( filePath, productVideoBucket, key );
 				}
 			}
 		}
 
 		public string GetFilePathForProductID( int id ) {
-			return videoDirectory + id + fileExtension;
+			return videoDirectory + id + videoFileExtension;
 		}
 	}
 }
