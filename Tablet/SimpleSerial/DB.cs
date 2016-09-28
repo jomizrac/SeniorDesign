@@ -38,6 +38,7 @@ namespace SimpleSerial {
                 where nic.OperationalStatus == OperationalStatus.Up
                 select nic.GetPhysicalAddress().ToString()
             ).FirstOrDefault();
+            deviceName = System.Environment.MachineName;
             product["ProductName"] = currentProductName;
             product["ProductLocation"] = currentProdLocation;
 			product["ShelfMAC"] = currentShelfMAC;
@@ -54,7 +55,7 @@ namespace SimpleSerial {
             // Optional configuration.
             GetItemOperationConfig config = new GetItemOperationConfig
             {
-                AttributesToGet = new List<string> { "ProductId", "UpTimestamp", "DownTimestamp", "ShelfRokrID" },
+                AttributesToGet = new List<string> { "ProductId", "ProductLocation", "ShelfMAC", "DeviceName", "Timestamp", "EventType" },
                 ConsistentRead = true
             };
             Document document = productCatalog.GetItem(currentProductID, config);
