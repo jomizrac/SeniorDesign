@@ -42,3 +42,4 @@ C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\Sim
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.exe
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.pdb
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.exe.config
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.exe.config
