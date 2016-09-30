@@ -27,9 +27,12 @@ namespace SimpleSerial {
 		private List<Product> playables = new List<Product>();
 
 		public ShelfInventory() {
-			if ( !File.Exists( jsonFile ) ) {
+			if ( File.Exists( jsonFile ) ) {
 				products = JsonConvert.DeserializeObject<List<Product>>( File.ReadAllText( jsonFile ) );
 			}
+
+			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickup;
+			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 		}
 
 		public void UpdateSlot( int slotNumber, Product newProduct ) {
@@ -39,29 +42,23 @@ namespace SimpleSerial {
 			// Serialize the current list to disk
 			File.WriteAllText( jsonFile, JsonConvert.SerializeObject( products ) );
 
-            // sync with cloud db
-            DB.Instance.addShelf(products);
-			// TODO
-		}
-
-		private static void Main() {
-			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickup;
-			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+			// sync with cloud db
+			//			DB.Instance.addShelf( products ); // TODO
 		}
 
 		private void OnProductPickup( int slotID ) {
 			Product current = new Product();
 			current = products[slotID];
 
-			current.state = true;
+			//			current.state = true;
 			playables.Add( current );
 		}
 
-		private void OnProductPutDown( int ID ) {
+		private void OnProductPutDown( int slotID ) {
 			Product current = new Product();
 			current = products[slotID];
 
-			current.state = true;
+			//			current.state = true;
 			playables.Remove( current );
 		}
 	}

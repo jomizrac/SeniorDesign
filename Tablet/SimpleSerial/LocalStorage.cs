@@ -46,6 +46,7 @@ namespace SimpleSerial {
 					bool productPresent = ShelfInventory.Instance.products.Exists( p => p.productID.ToString() == fileName );
 					if ( !productPresent ) {
 						File.Delete( filePath );
+						Console.WriteLine( "Deleted unused " + filePath );
 					}
 				}
 			}
@@ -56,6 +57,7 @@ namespace SimpleSerial {
 				if ( !File.Exists( filePath ) ) {
 					string key = product.productID + videoFileExtension;
 					fileTransferUtility.Download( filePath, productVideoBucket, key );
+					Console.WriteLine( "Successfully downloaded " + key );
 				}
 			}
 		}

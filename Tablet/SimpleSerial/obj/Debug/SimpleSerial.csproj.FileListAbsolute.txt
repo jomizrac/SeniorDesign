@@ -43,3 +43,20 @@ C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\Sim
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.pdb
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.exe.config
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.exe.config
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.Properties.Resources.resources
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.GenerateResource.Cache
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.exe
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.pdb
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.Core.dll
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.DynamoDBv2.dll
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.S3.dll
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\Newtonsoft.Json.dll
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.Core.pdb
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.Core.xml
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.DynamoDBv2.pdb
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.DynamoDBv2.xml
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.S3.pdb
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.S3.xml
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\Newtonsoft.Json.xml
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\Interop.WMPLib.dll
+C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AxInterop.WMPLib.dll

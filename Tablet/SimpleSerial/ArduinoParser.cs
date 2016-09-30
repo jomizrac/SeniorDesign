@@ -27,9 +27,9 @@ namespace SimpleSerial {
 
 		#region Events
 
-		public delegate void ProductPickUp( int productID );
+		public delegate void ProductPickUp( int slotID );
 
-		public delegate void ProductPutDown( int productID );
+		public delegate void ProductPutDown( int slotID );
 
 		public event ProductPickUp ProductPickUpEvent;
 
@@ -92,18 +92,25 @@ namespace SimpleSerial {
 			} while ( match.Success );
 		}
 
+		// TODO list:
+		// figure out how to handle losing random bytes from arduino
+		// move consts into app config file
+
 		private void ParseTelegram( string telegram ) {
 			var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)" );
 			var match = numAlpha.Match( telegram );
 			var alpha = match.Groups["Alpha"].Value;
 			var num = match.Groups["Numeric"].Value;
-			var id = int.Parse( num );
+			var slotID = int.Parse( num );
 
 			if ( alpha == PickUp ) {
-				ProductPickUpEvent( id );
+				ProductPickUpEvent( slotID );
 			}
 			else if ( alpha == PutDown ) {
-				ProductPutDownEvent( id );
+				ProductPutDownEvent( slotID );
+			}
+			else {
+				Console.WriteLine( "Unrecognized alpha string: " + alpha );
 			}
 		}
 	}
