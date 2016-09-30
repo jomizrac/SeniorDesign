@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Management;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 
 namespace SimpleSerial {
@@ -13,12 +15,15 @@ namespace SimpleSerial {
 	/// </summary>
 	internal class ArduinoParser {
 
-		#region global Variables
+		#region Singleton
 
-		private SerialPort currentPort;
-		private bool portFound;
+		private static ArduinoParser m_instance;
 
-		#endregion global Variables
+		public static ArduinoParser Instance {
+			get { return m_instance ?? ( m_instance = new ArduinoParser() ); }
+		}
+
+		#endregion Singleton
 
 		#region Events
 
@@ -32,58 +37,73 @@ namespace SimpleSerial {
 
 		#endregion Events
 
-		#region Singleton
+		private const string PickUp = "u";
+		private const string PutDown = "d";
+		private SerialPort serialPort = new SerialPort();
+		private StringBuilder buffer = new StringBuilder();
 
-		private static ArduinoParser m_instance;
+		// Communication protocol
+		private Regex regex = new Regex( @"^\d+^[a-zA-Z]+" ); // 1+ digits followed by 1+ alpha letters
 
-		public static ArduinoParser Instance {
-			get { return m_instance ?? ( m_instance = new ArduinoParser() ); }
+		/// <summary>
+		/// Default constructor.  This will be called immediately upon program startup from MainLoop.cs.
+		/// </summary>
+		public ArduinoParser() {
+			serialPort.PortName = AutodetectArduinoPort() ?? "COM4";
+			serialPort.BaudRate = 9600;
+			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
+			serialPort.Open();
 		}
 
-		#endregion Singleton
+		private string AutodetectArduinoPort() {
+			var connectionScope = new ManagementScope();
+			var serialQuery = new SelectQuery( "SELECT * FROM Win32_SerialPort" );
+			var searcher = new ManagementObjectSearcher( connectionScope, serialQuery );
 
-		public void Main() {
-			currentPort.Open();
-			int productASCII = 0;
-			char upOrDown; //is it a pick up or put down, either 'u' or 'd'
-						   //guess which is which
-
-			while ( true )    //while loop only ends when program ends
-			{
-				upOrDown = '\0';
-				productASCII = 0;
-				if ( currentPort.BytesToRead != 0 ) {
-					productASCII = currentPort.ReadByte(); //If there is something in the read buffer it is the product ID
-					upOrDown = (char)currentPort.ReadByte(); //The next character is pick up or put down
-					if ( upOrDown == 'u' ) { //it's up
-						ProductPickUpEvent( productASCII ); //picked up event
-					}
-					else if ( upOrDown == 'd' ) { //it's down
-						ProductPutDownEvent( productASCII ); //placed down event
-					}
-					else {
-						//TODO Error handling
-					}
-				}
-			}
-		}
-
-		//This sets up the communication between the arduino and the tablet
-		private void SetComPort() {
 			try {
-				string[] ports = SerialPort.GetPortNames();
-				foreach ( string port in ports ) {
-					currentPort = new SerialPort( port, 9600 );
-					if ( DetectArduino() ) {
-						portFound = true;
-						break;
-					}
-					else {
-						portFound = false;
+				foreach ( var item in searcher.Get() ) {
+					var desc = item["Description"].ToString();
+					var deviceId = item["DeviceID"].ToString();
+
+					if ( desc.Contains( "Arduino" ) ) {
+						return deviceId;
 					}
 				}
 			}
-			catch ( Exception e ) {
+			catch ( ManagementException ) {
+				// NOOP
+			}
+
+			return null;
+		}
+
+		private void OnDataReceived( object sender, SerialDataReceivedEventArgs e ) {
+			// Append the new data to the buffer
+			buffer.Append( serialPort.ReadExisting() );
+
+			// See if we have sufficient data in the buffer to parse a complete telegram
+			Match match;
+			do {
+				match = regex.Match( buffer.ToString() );
+				if ( match.Success ) {
+					ParseTelegram( match.Captures[0].Value );
+					buffer.Remove( match.Captures[0].Index, match.Captures[0].Length );
+				}
+			} while ( match.Success );
+		}
+
+		private void ParseTelegram( string telegram ) {
+			var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)" );
+			var match = numAlpha.Match( telegram );
+			var alpha = match.Groups["Alpha"].Value;
+			var num = match.Groups["Numeric"].Value;
+			var id = int.Parse( num );
+
+			if ( alpha == PickUp ) {
+				ProductPickUpEvent( id );
+			}
+			else if ( alpha == PutDown ) {
+				ProductPutDownEvent( id );
 			}
 		}
 	}
