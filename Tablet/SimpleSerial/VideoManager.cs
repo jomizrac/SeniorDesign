@@ -23,6 +23,8 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
+		public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
+
 		//        private void main()
 
 		//        {

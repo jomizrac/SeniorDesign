@@ -49,10 +49,11 @@ namespace SimpleSerial {
 		/// Default constructor.  This will be called immediately upon program startup from MainLoop.cs.
 		/// </summary>
 		public ArduinoParser() {
-			serialPort.PortName = AutodetectArduinoPort() ?? "COM4";
-			serialPort.BaudRate = 9600;
-			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
-			serialPort.Open();
+			//			serialPort.PortName = AutodetectArduinoPort() ?? "COM4";
+			//			serialPort.BaudRate = 9600;
+			//			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
+			//			serialPort.Open();
+			//			Console.WriteLine( "Successfully opened port: " + serialPort.PortName );
 		}
 
 		private string AutodetectArduinoPort() {
@@ -81,6 +82,8 @@ namespace SimpleSerial {
 			// Append the new data to the buffer
 			buffer.Append( serialPort.ReadExisting() );
 
+			Console.WriteLine( buffer.ToString() );
+
 			// See if we have sufficient data in the buffer to parse a complete telegram
 			Match match;
 			do {
@@ -90,11 +93,15 @@ namespace SimpleSerial {
 					buffer.Remove( match.Captures[0].Index, match.Captures[0].Length );
 				}
 			} while ( match.Success );
+
+			// TODO Temp:
+			//			buffer.Clear();
 		}
 
 		// TODO list:
 		// figure out how to handle losing random bytes from arduino
 		// move consts into app config file
+		// Consider some kind of delim to separate telegrams, maybe ; and ,
 
 		private void ParseTelegram( string telegram ) {
 			var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)" );

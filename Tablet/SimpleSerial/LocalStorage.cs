@@ -38,32 +38,44 @@ namespace SimpleSerial {
 		}
 
 		public void SyncVideos() {
+			if ( !Directory.Exists( videoDirectory ) ) {
+				Directory.CreateDirectory( videoDirectory );
+				Console.WriteLine( "Created new video directory: " + videoDirectory );
+			}
+
 			// Delete any videos for products that are no longer present
-			if ( Directory.Exists( videoDirectory ) ) {
-				string[] filePaths = Directory.GetFiles( videoDirectory );
-				foreach ( string filePath in filePaths ) {
-					string fileName = Path.GetFileNameWithoutExtension( filePath );
-					bool productPresent = ShelfInventory.Instance.products.Exists( p => p.productID.ToString() == fileName );
-					if ( !productPresent ) {
-						File.Delete( filePath );
-						Console.WriteLine( "Deleted unused " + filePath );
-					}
+			string[] filePaths = Directory.GetFiles( videoDirectory );
+			foreach ( string filePath in filePaths ) {
+				string fileName = Path.GetFileNameWithoutExtension( filePath );
+				bool productPresent = ShelfInventory.Instance.products.Exists( p => p.productID.ToString() == fileName );
+				if ( !productPresent ) {
+					File.Delete( filePath );
+					Console.WriteLine( "Deleted unused " + filePath );
 				}
 			}
 
 			// Download any missing videos for the current product lineup
+			//			foreach ( var product in ShelfInventory.Instance.products ) {
 			foreach ( var product in ShelfInventory.Instance.products ) {
-				string filePath = GetFilePathForProductID( product.productID );
+				string filePath = GetFilePathForProduct( product );
 				if ( !File.Exists( filePath ) ) {
 					string key = product.productID + videoFileExtension;
-					fileTransferUtility.Download( filePath, productVideoBucket, key );
-					Console.WriteLine( "Successfully downloaded " + key );
+					try {
+						Console.Write( "Downloading " + key + "... " );
+						fileTransferUtility.Download( filePath, productVideoBucket, key );
+						Console.WriteLine( "Download complete" );
+					}
+					catch ( Exception ) {
+						Console.WriteLine( "Error retrieving object with key: " + key );
+					}
 				}
 			}
+
+			Console.WriteLine( "Video cloud sync complete" );
 		}
 
-		public string GetFilePathForProductID( int id ) {
-			return videoDirectory + id + videoFileExtension;
+		public string GetFilePathForProduct( Product product ) {
+			return videoDirectory + product.productID + videoFileExtension;
 		}
 	}
 }

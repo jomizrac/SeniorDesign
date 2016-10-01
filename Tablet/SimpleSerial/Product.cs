@@ -5,10 +5,20 @@ using System.Text;
 
 namespace SimpleSerial {
 
-    
-	internal class Product {
-        public string name { get; private set;  }
-		public int productID { get; private set; } //The ID of the product (duh)
-        public bool state { get; private set; } //false means product is in display, true means it is picked up
-    }
+	public class Product {
+
+		public enum Status { PutDown, PickedUp }
+
+		public string name { get; private set; }
+
+		public int productID { get; private set; }
+
+		public Status status { get; private set; }
+
+		public Product( string name, int productID, Status status = Status.PutDown ) {
+			this.name = name;
+			this.productID = productID;
+			this.status = status;
+		}
+	}
 }

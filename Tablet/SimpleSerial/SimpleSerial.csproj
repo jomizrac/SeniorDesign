@@ -68,7 +68,6 @@
     <Compile Include="DB.cs" />
     <Compile Include="LEDManager.cs" />
     <Compile Include="LocalStorage.cs" />
-    <Compile Include="Loggable.cs" />
     <Compile Include="MainProgram.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
