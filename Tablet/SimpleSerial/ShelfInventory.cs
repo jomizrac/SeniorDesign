@@ -22,7 +22,7 @@ namespace SimpleSerial {
 
 		public static string shelfInventoryFile = ConfigurationManager.AppSettings["shelfInventoryFile"];
 
-		private Dictionary<int, Product> shelfSlots = new Dictionary<int, Product>();
+		public Dictionary<int, Product> shelfSlots = new Dictionary<int, Product>();
 
 		//private Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
 		//		public List<Product> products = new List<Product>();
