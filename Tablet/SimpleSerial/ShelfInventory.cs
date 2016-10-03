@@ -23,7 +23,7 @@ namespace SimpleSerial {
 		//private Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
 		public List<Product> products = new List<Product>();
 
-		private List<Product> playables = new List<Product>();
+		public List<Product> playables = new List<Product>();
 
 		public ShelfInventory() {
 			if ( File.Exists( ConfigurationManager.AppSettings["shelfInventoryFile"] ) ) {
