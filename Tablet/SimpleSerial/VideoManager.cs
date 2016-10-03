@@ -41,17 +41,21 @@ namespace SimpleSerial
 
         private void PlayVideos()
         {
+            string directory = LocalStorage.videoDirectory;
+
             while (playables[0] != null)
             {
-                string temp = LocalStorage.videoDirectory;
                 string prodID = playables[0].productID.ToString();
-                PlayFile(temp + prodID + LocalStorage.videoFileExtension);
+                PlayFile(directory + prodID + LocalStorage.videoFileExtension);
                 playing = true;
+                int current = 0;
                 while (playing)
                 {
-                    if (playables[0].status == Product.Status.PickedUp)
+                    current++;
+                    if (playables[current].status == Product.Status.PickedUp)
                     {
-                        Player_PlayStateChange(8);
+                        prodID = playables[current].productID.ToString();
+                        PlayFile(directory + prodID + LocalStorage.videoFileExtension);
                     }
                 }
             }
