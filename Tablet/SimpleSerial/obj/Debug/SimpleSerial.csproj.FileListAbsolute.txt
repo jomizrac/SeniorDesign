@@ -61,3 +61,21 @@ C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\Newto
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\Interop.WMPLib.dll
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AxInterop.WMPLib.dll
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csprojResolveAssemblyReference.cache
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.exe
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.pdb
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.Core.dll
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.DynamoDBv2.dll
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.S3.dll
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.Core.pdb
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.Core.xml
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.DynamoDBv2.pdb
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.DynamoDBv2.xml
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.S3.pdb
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AWSSDK.S3.xml
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\Interop.WMPLib.dll
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\AxInterop.WMPLib.dll
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csprojResolveAssemblyReference.cache
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.Properties.Resources.resources
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.GenerateResource.Cache

@@ -13,7 +13,7 @@ namespace SimpleSerial {
 
 		public int productID { get; private set; }
 
-		public Status status { get; private set; }
+		public Status status { get; set; }
 
 		public Product( string name, int productID, Status status = Status.PutDown ) {
 			this.name = name;
