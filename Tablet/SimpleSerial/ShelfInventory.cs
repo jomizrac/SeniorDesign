@@ -20,30 +20,49 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
-		//private Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
-		public List<Product> products = new List<Product>();
+		public static string shelfInventoryFile = ConfigurationManager.AppSettings["shelfInventoryFile"];
 
 		public List<Product> playables = new List<Product>();
+		private Dictionary<int, Product> shelfSlots = new Dictionary<int, Product>();
 
+		//private Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
+		//		public List<Product> products = new List<Product>();
 		public ShelfInventory() {
-			if ( File.Exists( ConfigurationManager.AppSettings["shelfInventoryFile"] ) ) {
-				//				products = JsonConvert.DeserializeObject<List<Product>>( File.ReadAllText( ConfigurationManager.AppSettings["shelfInventoryFile"] ) );
-			}
+			Deserialize();
 
 			//			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickup;
 			//			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 		}
 
 		public void UpdateSlot( int slotNumber, Product newProduct ) {
-			// Update the list
-			products.Capacity = slotNumber >= products.Count ? slotNumber + 1 : products.Count;
-			products[slotNumber] = newProduct;
+			// Update the list in memory
+			shelfSlots.Add( slotNumber, newProduct );
 
-			// Serialize the current list to disk
-			File.WriteAllText( ConfigurationManager.AppSettings["shelfInventoryFile"], JsonConvert.SerializeObject( products ) );
+			Serialize();
 
 			// sync with cloud db
 			//			DB.Instance.addShelf( products ); // TODO
+		}
+
+		public List<Product> ProductList() {
+			return new List<Product>( shelfSlots.Values );
+		}
+
+		private void Serialize() {
+			if ( !File.Exists( shelfInventoryFile ) ) {
+				string directory = Path.GetDirectoryName( shelfInventoryFile );
+				Directory.CreateDirectory( directory );
+				File.Create( shelfInventoryFile );
+			}
+
+			File.WriteAllText( shelfInventoryFile, JsonConvert.SerializeObject( shelfSlots ) );
+		}
+
+		private void Deserialize() {
+			if ( File.Exists( shelfInventoryFile ) ) {
+				//				shelfSlots = JsonConvert.DeserializeObject<Dictionary<int, Product>>( File.ReadAllText( shelfInventoryFile ) );
+				// TODO care, this is making the dictionary null some reason, may need some kind of try/catch
+			}
 		}
 
 		private void OnProductPickup( int slotID ) {
