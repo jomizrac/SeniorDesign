@@ -47,7 +47,7 @@ namespace SimpleSerial {
 			string[] filePaths = Directory.GetFiles( videoDirectory );
 			foreach ( string filePath in filePaths ) {
 				string fileName = Path.GetFileNameWithoutExtension( filePath );
-				bool productPresent = ShelfInventory.Instance.products.Exists( p => p.productID.ToString() == fileName );
+				bool productPresent = ShelfInventory.Instance.ProductList().Exists( p => p.productID.ToString() == fileName );
 				if ( !productPresent ) {
 					File.Delete( filePath );
 					Console.WriteLine( "Deleted unused " + filePath );
@@ -56,7 +56,7 @@ namespace SimpleSerial {
 
 			// Download any missing videos for the current product lineup
 			//			foreach ( var product in ShelfInventory.Instance.products ) {
-			foreach ( var product in ShelfInventory.Instance.products ) {
+			foreach ( var product in ShelfInventory.Instance.ProductList() ) {
 				string filePath = GetFilePathForProduct( product );
 				if ( !File.Exists( filePath ) ) {
 					string key = product.productID + videoFileExtension;
