@@ -22,7 +22,6 @@ namespace SimpleSerial {
 
 		public static string shelfInventoryFile = ConfigurationManager.AppSettings["shelfInventoryFile"];
 
-		public List<Product> playables = new List<Product>();
 		private Dictionary<int, Product> shelfSlots = new Dictionary<int, Product>();
 
 		//private Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
@@ -65,20 +64,5 @@ namespace SimpleSerial {
 			}
 		}
 
-		private void OnProductPickup( int slotID ) {
-			//			Product current = new Product();
-			//			current = products[slotID];
-
-			//			current.state = true;
-			//			playables.Add( current );
-		}
-
-		private void OnProductPutDown( int slotID ) {
-			//			Product current = new Product();
-			//			current = products[slotID];
-
-			//			current.state = true;
-			//			playables.Remove( current );
-		}
 	}
 }
