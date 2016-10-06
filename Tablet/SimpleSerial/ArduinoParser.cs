@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
@@ -37,23 +38,23 @@ namespace SimpleSerial {
 
 		#endregion Events
 
-		private const string PickUp = "u";
-		private const string PutDown = "d";
+		private const string PickUp = "U";
+		private const string PutDown = "D";
 		private SerialPort serialPort = new SerialPort();
 		private StringBuilder buffer = new StringBuilder();
 
 		// Communication protocol
-		private Regex regex = new Regex( @"^\d+^[a-zA-Z]+" ); // 1+ digits followed by 1+ alpha letters
+		private Regex telegramDelimMatcher = new Regex( @"^.*(\n|\r|\r\n)" ); // Match any chars followed by a newline
 
 		/// <summary>
 		/// Default constructor.  This will be called immediately upon program startup from MainLoop.cs.
 		/// </summary>
 		public ArduinoParser() {
-			//			serialPort.PortName = AutodetectArduinoPort() ?? "COM4";
-			//			serialPort.BaudRate = 9600;
-			//			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
-			//			serialPort.Open();
-			//			Console.WriteLine( "Successfully opened port: " + serialPort.PortName );
+			serialPort.PortName = AutodetectArduinoPort() ?? ConfigurationManager.AppSettings["defaultPort"];
+			serialPort.BaudRate = int.Parse( ConfigurationManager.AppSettings["baudRate"] );
+			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
+			serialPort.Open();
+			Console.WriteLine( "Successfully opened port: " + serialPort.PortName );
 		}
 
 		private string AutodetectArduinoPort() {
@@ -67,6 +68,7 @@ namespace SimpleSerial {
 					var deviceId = item["DeviceID"].ToString();
 
 					if ( desc.Contains( "Arduino" ) ) {
+						Console.WriteLine( "Autodetected Arduino on port: " + deviceId );
 						return deviceId;
 					}
 				}
@@ -75,6 +77,7 @@ namespace SimpleSerial {
 				// NOOP
 			}
 
+			Console.WriteLine( "Unable to autodetect Arduino port" );
 			return null;
 		}
 
@@ -82,26 +85,16 @@ namespace SimpleSerial {
 			// Append the new data to the buffer
 			buffer.Append( serialPort.ReadExisting() );
 
-			Console.WriteLine( buffer.ToString() );
-
 			// See if we have sufficient data in the buffer to parse a complete telegram
 			Match match;
 			do {
-				match = regex.Match( buffer.ToString() );
+				match = telegramDelimMatcher.Match( buffer.ToString() );
 				if ( match.Success ) {
 					ParseTelegram( match.Captures[0].Value );
 					buffer.Remove( match.Captures[0].Index, match.Captures[0].Length );
 				}
 			} while ( match.Success );
-
-			// TODO Temp:
-			//			buffer.Clear();
 		}
-
-		// TODO list:
-		// figure out how to handle losing random bytes from arduino
-		// move consts into app config file
-		// Consider some kind of delim to separate telegrams, maybe ; and ,
 
 		private void ParseTelegram( string telegram ) {
 			var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)" );
