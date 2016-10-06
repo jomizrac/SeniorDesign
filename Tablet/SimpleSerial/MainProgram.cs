@@ -41,6 +41,8 @@ namespace SimpleSerial {
 			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickUp;
 			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 
+			var tmp = new VideoManager();
+
 			//            VideoConfigs temp = new VideoConfigs();
 			//            File.WriteAllText( jsonFile, JsonConvert.SerializeObject( temp ) );
 

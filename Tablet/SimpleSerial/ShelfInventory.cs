@@ -29,8 +29,7 @@ namespace SimpleSerial {
 		public ShelfInventory() {
 			Deserialize();
 
-			//			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickup;
-			//			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+			//			new Thread( () => Initialize() ).Start();
 		}
 
 		public void UpdateSlot( int slotNumber, Product newProduct ) {
@@ -45,6 +44,11 @@ namespace SimpleSerial {
 
 		public List<Product> ProductList() {
 			return new List<Product>( shelfSlots.Values );
+		}
+
+		private void Initialize() {
+			//			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickup;
+			//			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 		}
 
 		private void Serialize() {
@@ -63,6 +67,5 @@ namespace SimpleSerial {
 				// TODO care, this is making the dictionary null some reason, may need some kind of try/catch
 			}
 		}
-
 	}
 }

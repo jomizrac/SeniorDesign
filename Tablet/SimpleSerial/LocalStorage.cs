@@ -75,7 +75,11 @@ namespace SimpleSerial {
 		}
 
 		public string GetFilePathForProduct( Product product ) {
-			return videoDirectory + product.productID + videoFileExtension;
+			return GetFilePathForProduct( product.productID );
+		}
+
+		public string GetFilePathForProduct( int productID ) {
+			return videoDirectory + productID + videoFileExtension;
 		}
 	}
 }
