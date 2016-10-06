@@ -41,8 +41,9 @@ namespace SimpleSerial
 
         private void PlayVideos()
         {
+            int config = 1;
             string directory = LocalStorage.videoDirectory;
-
+           
             while (playables[0] != null)
             {
                 string prodID = playables[0].productID.ToString();
@@ -52,12 +53,25 @@ namespace SimpleSerial
                 while (playing)
                 {
                     current++;
-                    if (playables[current].status == Product.Status.PickedUp)
+                    if (config == 1)
+                    {
+                        if (playables[current] != null )
+                        {
+                            prodID = playables[current].productID.ToString();
+                            PlayFile(directory + prodID + LocalStorage.videoFileExtension);
+                            playing = true;
+                        }
+                    }
+                } 
+                if (config == 2)
+                    {
+                    if (playables[current] != null)
                     {
                         prodID = playables[current].productID.ToString();
                         PlayFile(directory + prodID + LocalStorage.videoFileExtension);
                     }
                 }
+
             }
         }
 
