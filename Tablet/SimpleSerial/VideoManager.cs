@@ -13,12 +13,17 @@ namespace SimpleSerial {
 
 	internal class VideoManager {
 
-		#region Singleton
+		//public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
+		public static string behavior = ConfigurationManager.AppSettings["videoConfig"];
 
-		private static VideoManager m_instance;
+		public List<Product> playables = new List<Product>();
 		private WMPLib.WindowsMediaPlayer Player;
 
 		private bool playing = false;
+
+		#region Singleton
+
+		private static VideoManager m_instance;
 
 		public static VideoManager Instance {
 			get { return m_instance ?? ( m_instance = new VideoManager() ); }
@@ -26,10 +31,6 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
-		//public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
-		public static string behavior = ConfigurationManager.AppSettings["videoConfig"];
-
-		public List<Product> playables = new List<Product>();
 		private string Directory = LocalStorage.videoDirectory;
 
 		public VideoManager() {
