@@ -50,7 +50,7 @@ namespace SimpleSerial {
 				Thread.Sleep( 1 ); // TODO not needed with windows form app
 			}
 		}
-
+        //Makes sure the credentials for AWS are present in the correct file
 		private static void CheckAWSCredentialsPresent() {
 			string credentials = ConfigurationManager.AppSettings["AWSProfilesLocation"];
 			if ( !File.Exists( credentials ) ) {
@@ -68,11 +68,11 @@ namespace SimpleSerial {
 				return;
 			}
 		}
-
+        //debugging
 		private void OnProductPickUp( int slotID ) {
 			Console.WriteLine( "Picked up " + slotID );
 		}
-
+        //debugging
 		private void OnProductPutDown( int slotID ) {
 			Console.WriteLine( "Put down " + slotID );
 		}

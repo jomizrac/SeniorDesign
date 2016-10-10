@@ -46,10 +46,15 @@ namespace SimpleSerial {
 		// Communication protocol
 		private Regex telegramDelimMatcher = new Regex( @"^.*(\n|\r|\r\n)" ); // Match any chars followed by a newline
 
-		/// <summary>
-		/// Default constructor.  This will be called immediately upon program startup from MainLoop.cs.
-		/// </summary>
-		public ArduinoParser() {
+        public ArduinoParser()
+        {
+            new Thread(() => Initialize()).Start();
+        }
+
+        /// <summary>
+        /// Default constructor.  This will be called immediately upon program startup from MainLoop.cs.
+        /// </summary>
+        public void Initialize() {
 			serialPort.PortName = AutodetectArduinoPort() ?? ConfigurationManager.AppSettings["defaultPort"];
 			serialPort.BaudRate = int.Parse( ConfigurationManager.AppSettings["baudRate"] );
 			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
@@ -57,6 +62,7 @@ namespace SimpleSerial {
 			Console.WriteLine( "Successfully opened port: " + serialPort.PortName );
 		}
 
+        //Checks which port the Arduino is connected to
 		private string AutodetectArduinoPort() {
 			var connectionScope = new ManagementScope();
 			var serialQuery = new SelectQuery( "SELECT * FROM Win32_SerialPort" );
@@ -95,7 +101,7 @@ namespace SimpleSerial {
 				}
 			} while ( match.Success );
 		}
-
+        //Parses the message received to check which type of event it is
 		private void ParseTelegram( string telegram ) {
 			var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)" );
 			var match = numAlpha.Match( telegram );
