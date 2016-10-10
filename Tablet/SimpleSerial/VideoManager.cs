@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace SimpleSerial {
 
@@ -35,6 +36,11 @@ namespace SimpleSerial {
 
 		public VideoManager() {
 			new Thread( () => Initialize() ).Start();
+
+			//			var delay = Task.Run( async () => {
+			//				await Task.Delay( 2500 );
+			//				MainProgram.form.PlayTest( LocalStorage.Instance.GetFilePathForProduct( 1 ) );
+			//			} );
 		}
 
 		private void Initialize() {
@@ -82,17 +88,13 @@ namespace SimpleSerial {
 		}
 
 		private void OnProductPickup( int slotID ) {
-			// Temp debugging
-			Console.WriteLine( "trying to play video " + slotID );
-			//Process.Start( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
 			int config = 1;
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PickedUp;
 			playables.Add( current );
 			if ( config == 1 ) {
 				//Play current video immediately
-				string prodID = current.productID.ToString();
-				PlayFile( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
+				MainProgram.form.PlayVideo( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
 			}
 			if ( config == 2 ) {
 				//Play queue of videos

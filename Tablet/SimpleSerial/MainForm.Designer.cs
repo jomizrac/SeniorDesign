@@ -54,5 +54,11 @@
 		#endregion
 
 		private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1;
+
+		public void PlayVideo(string filePath)
+		{
+			axWindowsMediaPlayer1.URL = filePath;
+			axWindowsMediaPlayer1.Ctlcontrols.play();
+		}
 	}
 }

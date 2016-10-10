@@ -14,6 +14,7 @@ namespace SimpleSerial {
 	/// This class serves as the main point of logic for the ShelfRokr.
 	/// </summary>
 	internal class MainProgram {
+		public static MainForm form;
 
 		#region Singleton
 
@@ -49,7 +50,13 @@ namespace SimpleSerial {
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false );
-			Application.Run( new MainForm() );
+			form = new MainForm();
+
+			//			form.PlayTest( LocalStorage.Instance.GetFilePathForProduct( 1 ) );
+
+			Application.Run( form );
+
+			//			form.PlayTest( LocalStorage.Instance.GetFilePathForProduct( 1 ) );
 
 			//			while ( true ) {
 			//				Thread.Sleep( 1 ); // TODO not needed with windows form app
