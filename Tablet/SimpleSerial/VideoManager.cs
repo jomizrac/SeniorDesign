@@ -103,7 +103,7 @@ namespace SimpleSerial {
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PickedUp;
 			playables.Add( current );
-            PlayVideos();
+            //PlayVideos();
 		}
 
 		private void OnProductPutDown( int slotID ) {
