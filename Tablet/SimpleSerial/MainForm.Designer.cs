@@ -31,10 +31,10 @@
 			// axWindowsMediaPlayer1
 			// 
 			this.axWindowsMediaPlayer1.Enabled = true;
-			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(26, 25);
+			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(12, 12);
 			this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
 			this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
-			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(226, 208);
+			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(596, 296);
 			this.axWindowsMediaPlayer1.TabIndex = 0;
 			this.axWindowsMediaPlayer1.Enter += new System.EventHandler(this.axWindowsMediaPlayer1_Enter);
 			// 
@@ -42,7 +42,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(284, 261);
+			this.ClientSize = new System.Drawing.Size(620, 320);
 			this.Controls.Add(this.axWindowsMediaPlayer1);
 			this.Name = "MainForm";
 			this.Text = "MainForm";
