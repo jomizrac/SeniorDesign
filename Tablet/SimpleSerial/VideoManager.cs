@@ -41,15 +41,11 @@ namespace SimpleSerial {
 		}
 
 		private void PlayVideos() {
-		    string prodID = playables[0].productID.ToString();
-		    PlayFile( Directory + prodID + LocalStorage.videoFileExtension );
-		    playing = true;
 			int current = 0;
 			while ( playables[current] != null ) {
-				current++;
-		    	prodID = playables[current].productID.ToString();
-    			PlayFile( Directory + prodID + LocalStorage.videoFileExtension );
-			}
+    			PlayFile( LocalStorage.Instance.GetFilePathForProduct(playables[current]) );
+                current++;
+            }
 		}
 
 		private void PlayFile( String url ) {
@@ -82,19 +78,20 @@ namespace SimpleSerial {
 		private void OnProductPickup( int slotID ) {
 			// Temp debugging
 			Console.WriteLine( "trying to play video " + slotID );
-			Process.Start( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
+			//Process.Start( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
             int config = 1;
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PickedUp;
 			playables.Add( current );
             if (config == 1)
             {
-                //PlayCurrentVid
+                //Play current video immediately
                 string prodID = current.productID.ToString();
-                PlayFile(Directory + prodID + LocalStorage.videoFileExtension);
+                PlayFile(LocalStorage.Instance.GetFilePathForProduct(slotID));
             }
             if (config == 2)
             {
+                //Play queue of videos
                 PlayVideos();
             }
 
