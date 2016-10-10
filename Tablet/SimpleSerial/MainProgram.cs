@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace SimpleSerial {
 
@@ -27,7 +28,7 @@ namespace SimpleSerial {
 		[STAThread]
 		private static void Main() {
 			CheckAWSCredentialsPresent();
-            //needs to be able to update any slot
+			//needs to be able to update any slot
 			ShelfInventory.Instance.UpdateSlot( 0, new Product( "product 0", 0 ) );
 			ShelfInventory.Instance.UpdateSlot( 1, new Product( "product 1", 1 ) );
 			ShelfInventory.Instance.UpdateSlot( 2, new Product( "product 2", 2 ) );
@@ -46,11 +47,16 @@ namespace SimpleSerial {
 			//            VideoConfigs temp = new VideoConfigs();
 			//            File.WriteAllText( jsonFile, JsonConvert.SerializeObject( temp ) );
 
-			while ( true ) {
-				Thread.Sleep( 1 ); // TODO not needed with windows form app
-			}
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault( false );
+			Application.Run( new MainForm() );
+
+			//			while ( true ) {
+			//				Thread.Sleep( 1 ); // TODO not needed with windows form app
+			//			}
 		}
-        //Makes sure the credentials for AWS are present in the correct file
+
+		//Makes sure the credentials for AWS are present in the correct file
 		private static void CheckAWSCredentialsPresent() {
 			string credentials = ConfigurationManager.AppSettings["AWSProfilesLocation"];
 			if ( !File.Exists( credentials ) ) {
@@ -68,11 +74,13 @@ namespace SimpleSerial {
 				return;
 			}
 		}
-        //debugging
+
+		//debugging
 		private void OnProductPickUp( int slotID ) {
 			Console.WriteLine( "Picked up " + slotID );
 		}
-        //debugging
+
+		//debugging
 		private void OnProductPutDown( int slotID ) {
 			Console.WriteLine( "Put down " + slotID );
 		}

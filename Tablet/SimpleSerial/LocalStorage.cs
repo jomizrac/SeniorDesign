@@ -55,7 +55,6 @@ namespace SimpleSerial {
 			}
 
 			// Download any missing videos for the current product lineup
-			//			foreach ( var product in ShelfInventory.Instance.products ) {
 			foreach ( var product in ShelfInventory.Instance.ProductList() ) {
 				string filePath = GetFilePathForProduct( product );
 				if ( !File.Exists( filePath ) ) {

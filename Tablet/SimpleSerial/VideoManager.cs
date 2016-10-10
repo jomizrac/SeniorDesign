@@ -28,32 +28,37 @@ namespace SimpleSerial {
 
 		//public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
 		public static string behavior = ConfigurationManager.AppSettings["videoConfig"];
-        private string Directory = LocalStorage.videoDirectory;
-        public List<Product> playables = new List<Product>();
+
+		public List<Product> playables = new List<Product>();
+		private string Directory = LocalStorage.videoDirectory;
 
 		public VideoManager() {
 			new Thread( () => Initialize() ).Start();
 		}
 
 		private void Initialize() {
+			// TODO temp unregistering from events to prevent duplicate registration
+			ArduinoParser.Instance.ProductPickUpEvent -= Instance.OnProductPickup;
+			ArduinoParser.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
 			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickup;
 			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+
+			Player = new WMPLib.WindowsMediaPlayer();
+			Player.PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler( Player_PlayStateChange );
+			Player.MediaError -= new WMPLib._WMPOCXEvents_MediaErrorEventHandler( Player_MediaError );
+			Player.PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler( Player_PlayStateChange );
+			Player.MediaError += new WMPLib._WMPOCXEvents_MediaErrorEventHandler( Player_MediaError );
 		}
 
 		private void PlayVideos() {
 			int current = 0;
 			while ( playables[current] != null ) {
-    			PlayFile( LocalStorage.Instance.GetFilePathForProduct(playables[current]) );
-                current++;
-            }
+				PlayFile( LocalStorage.Instance.GetFilePathForProduct( playables[current] ) );
+				current++;
+			}
 		}
 
-		private void PlayFile( String url ) {
-			Player = new WMPLib.WindowsMediaPlayer();
-			Player.PlayStateChange +=
-				new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler( Player_PlayStateChange );
-			Player.MediaError +=
-				new WMPLib._WMPOCXEvents_MediaErrorEventHandler( Player_MediaError );
+		private void PlayFile( string url ) {
 			Player.URL = url;
 			Player.controls.play();
 		}
@@ -79,23 +84,20 @@ namespace SimpleSerial {
 			// Temp debugging
 			Console.WriteLine( "trying to play video " + slotID );
 			//Process.Start( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
-            int config = 1;
+			int config = 1;
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PickedUp;
 			playables.Add( current );
-            if (config == 1)
-            {
-                //Play current video immediately
-                string prodID = current.productID.ToString();
-                PlayFile(LocalStorage.Instance.GetFilePathForProduct(slotID));
-            }
-            if (config == 2)
-            {
-                //Play queue of videos
-                PlayVideos();
-            }
-
-        }
+			if ( config == 1 ) {
+				//Play current video immediately
+				string prodID = current.productID.ToString();
+				PlayFile( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
+			}
+			if ( config == 2 ) {
+				//Play queue of videos
+				PlayVideos();
+			}
+		}
 
 		private void OnProductPutDown( int slotID ) {
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
