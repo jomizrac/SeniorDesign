@@ -88,8 +88,10 @@ namespace SimpleSerial {
 		}
 
 		private void OnDataReceived( object sender, SerialDataReceivedEventArgs e ) {
-			// Append the new data to the buffer
-			buffer.Append( serialPort.ReadExisting() );
+            // Append the new data to the buffer
+            currentMessage = serialPort.ReadExisting();
+            Console.WriteLine(currentMessage);
+			buffer.Append( currentMessage );
 
 			// See if we have sufficient data in the buffer to parse a complete telegram
 			Match match;
