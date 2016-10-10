@@ -28,8 +28,8 @@ namespace SimpleSerial {
 
 		//public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
 		public static string behavior = ConfigurationManager.AppSettings["videoConfig"];
-
-		public List<Product> playables = new List<Product>();
+        private string Directory = LocalStorage.videoDirectory;
+        public List<Product> playables = new List<Product>();
 
 		public VideoManager() {
 			new Thread( () => Initialize() ).Start();
@@ -41,30 +41,14 @@ namespace SimpleSerial {
 		}
 
 		private void PlayVideos() {
-			int config = 1;
-			string directory = LocalStorage.videoDirectory;
-
-			while ( playables[0] != null ) {
-				string prodID = playables[0].productID.ToString();
-				PlayFile( directory + prodID + LocalStorage.videoFileExtension );
-				playing = true;
-				int current = 0;
-				while ( playing ) {
-					current++;
-					if ( config == 1 ) {
-						if ( playables[current] != null ) {
-							prodID = playables[current].productID.ToString();
-							PlayFile( directory + prodID + LocalStorage.videoFileExtension );
-							playing = true;
-						}
-					}
-				}
-				if ( config == 2 ) {
-					if ( playables[current] != null ) {
-						prodID = playables[current].productID.ToString();
-						PlayFile( directory + prodID + LocalStorage.videoFileExtension );
-					}
-				}
+		    string prodID = playables[0].productID.ToString();
+		    PlayFile( Directory + prodID + LocalStorage.videoFileExtension );
+		    playing = true;
+			int current = 0;
+			while ( playables[current] != null ) {
+				current++;
+		    	prodID = playables[current].productID.ToString();
+    			PlayFile( Directory + prodID + LocalStorage.videoFileExtension );
 			}
 		}
 
@@ -99,12 +83,22 @@ namespace SimpleSerial {
 			// Temp debugging
 			Console.WriteLine( "trying to play video " + slotID );
 			Process.Start( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
-
+            int config = 1;
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PickedUp;
 			playables.Add( current );
-            //PlayVideos();
-		}
+            if (config == 1)
+            {
+                //PlayCurrentVid
+                string prodID = current.productID.ToString();
+                PlayFile(Directory + prodID + LocalStorage.videoFileExtension);
+            }
+            if (config == 2)
+            {
+                PlayVideos();
+            }
+
+        }
 
 		private void OnProductPutDown( int slotID ) {
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];

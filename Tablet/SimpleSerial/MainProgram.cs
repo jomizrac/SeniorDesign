@@ -27,7 +27,7 @@ namespace SimpleSerial {
 		[STAThread]
 		private static void Main() {
 			CheckAWSCredentialsPresent();
-
+            //needs to be able to update any slot
 			ShelfInventory.Instance.UpdateSlot( 0, new Product( "product 0", 0 ) );
 			ShelfInventory.Instance.UpdateSlot( 1, new Product( "product 1", 1 ) );
 			ShelfInventory.Instance.UpdateSlot( 2, new Product( "product 2", 2 ) );
