@@ -60,7 +60,7 @@ namespace SimpleSerial {
 		private void PlayVideos() {
 			int current = 0;
 			while ( playables[current] != null ) {
-				PlayFile( LocalStorage.Instance.GetFilePathForProduct( playables[current] ) );
+                MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct( playables[current] ));
 				current++;
 			}
 		}
