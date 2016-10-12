@@ -36,9 +36,9 @@ int thresholds[NUM_SLOTS];
 //reference to the LED array for FASTLed
 CRGB leds[NUM_LEDS];
 //start led index for its corresponding product slot
-const int LEDStart[] = {0, 3, 6, 9, 13, 16, 21};
+const int LEDStart[] = {0, 3, 6, 9, 12, 16, 21};
 //ending led index for its corresponding product slot
-const int LEDEnd[] = {2, 6, 9, 12, 15, 19, 24};
+const int LEDEnd[] = {2, 5, 8, 12, 15, 19, 24};
 //bool values to keep track of which slots have blinking LEDs
 bool slotsBlinking[NUM_SLOTS];
 //keeps track of the brightness value for updateLighting()
@@ -47,6 +47,12 @@ int brightness = 0;
 int brightnessIncrement = 15;
 //global that keeps track if a chasing effect is playing
 bool chasingEffect = false;
+//the lead LED in the chase effect must be between 0 and NUM_LEDS
+//should always start at 0
+int chaseLeader = 0;
+//the direction the chase is traveling. should always start as true
+//or will interfere with chaseEffect logic
+bool chaseRight = true;
 
 
 // defines for setting and clearing register bits
@@ -60,10 +66,23 @@ bool chasingEffect = false;
 void setup() {
   //initialize boolean values to to start as false because all
   //slots should have something in it
-  Serial.print("initializing thresholds");
+  //Serial.print("initializing thresholds");
   initializeThresholds();
   initializeSlots();
   LEDSetup();
+
+/////////////TESTING LIGHTING///////////////////
+
+//  activateSlot(0);
+//  activateSlot(1);
+//  activateSlot(2);
+//  activateSlot(3);
+//  activateSlot(4);
+//  activateSlot(5);
+//  activateSlot(6);
+    chasingEffect = true;
+
+////////////////////////////////////////////////
   
   //informs FastLED library the reference for the LED array and how many there are
   /*FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);*/
@@ -111,15 +130,10 @@ void pollProductSensors(){
       digitalWrite(CLOCK, LOW);
       //switch off current sensor so the previous sensor is the only one active
       digitalWrite(SENSORS, LOW);
-
-//      if(j == 0){
-//      Serial.print("for loop: ");
-//      Serial.print(j);
-//      }
+      
       //actually check to see if the status of each slot has changed
       sensorWork(j);
       
-    
     }
 
     //delay to allow time between polling all of the sensors. accounts for slower pickups
@@ -149,6 +163,7 @@ boolean sensorWork(int slot){
     sendPutDown(slot);
   }
 
+////////////////////TESTING//////////////////////
 //  if(slot == 0){
 //  Serial.print("SLOT: ");
 //  Serial.print(slot);
@@ -159,6 +174,7 @@ boolean sensorWork(int slot){
 //  //Serial.print(" Difference: ");\
 //  //Serial.print(difference);
 //  }
+////////////////////////////////////////////////
 
   //only want to update the threshold if the product has been sitting in place
   if(pickedUp[slot] == false && slot == 0){
@@ -215,7 +231,8 @@ void readInput(){
       activateSlot(slot);
       
     }else if(effect == 'C'){
-      chasingEffect = true;
+      slot = (Serial.read() - '0');
+      beginChaseEffect(slot);
     }
     
   }
@@ -224,14 +241,37 @@ void readInput(){
 
 void updateLighting(){
   if(chasingEffect){    //code for simulating the chase effect
-    
+    if(chaseRight){
+      leds[chaseLeader - 2] = CRGB::Black;
+      if(chaseLeader == NUM_LEDS){
+        chaseRight == false;
+      }else{
+        chaseLeader++;
+      }
+    }else if(!chaseRight){
+      leds[chaseLeader + 2] = CRGB::Black;
+      if(chaseLeader == 0){
+        chaseRight = true;
+      }else{
+        chaseLeader--;
+      }
+    }else{
+      //should not get here. it should be either one of the above
+    }
+
+    leds[chaseLeader - 1] = CRGB::White;
+    leds[chaseLeader] = CRGB::White;
+    leds[chaseLeader + 1] = CRGB::White;
+
+    FastLED.show();
+  
   }else{    //iterate through all the slots and do light effect for items that are picked up
     brightness += brightnessIncrement;
     FastLED.setBrightness(brightness);
     FastLED.show();
     
     if((brightness >= 255 && brightnessIncrement > 0) || (brightness <= 0 && brightnessIncrement < 0)){
-      brightnessIncrement = brightnessIncrement * -1;
+      brightnessIncrement *= -1;
     }
   }
 }
@@ -248,9 +288,27 @@ void deactivateSlot(int slot){
   }
 }
 
+//starts the chasing effect at the designated slot
+void beginChaseEffect(int slot){
+  chaseLeader = LEDStart[slot];
+  leds[chaseLeader] = CRGB::White;
+  FastLED.setBrightness(255);
+  chasingEffect = true;
+}
+
+//cancels the chasing effect
 void stopChasingEffect(){
   chasingEffect = false;
+  //reset the chase
+  FastLED.setBrightness(0);
+  chaseLeader = 0;
+  
   //code to reset the LEDs back to black
+  for(int i = LEDStart[chaseLeader - 1]; i <= LEDEnd[chaseLeader + 1]; i++){
+    leds[i] = CRGB::Black;
+  }
+  FastLED.show();
+  
 }
 
 //called in the beginning of the program. iterates over the pickedUp array
