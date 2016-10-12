@@ -18,7 +18,7 @@ namespace SimpleSerial {
 
 		private enum PlaybackMethod { Immediate, Queued };
 
-		private PlaybackMethod playbackMethod = PlaybackMethod.Immediate;
+		private PlaybackMethod playbackMethod = PlaybackMethod.Queued;
 		private List<Product> queue = new List<Product>();
 
 		/// <summary> Just for syntax convenience. </summary>
@@ -55,7 +55,7 @@ namespace SimpleSerial {
 		private void OnPlayStateChange( object sender, _WMPOCXEvents_PlayStateChangeEvent e ) {
 			Console.WriteLine( "PlayStateChange [" + e.newState + "] at " + DateTime.Now.ToShortTimeString() );
 
-			if ( playbackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Any() ) {
+			if ( playbackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Count > 0 ) {
 				// Remove the just-played video
 				queue.RemoveAt( 0 );
 
