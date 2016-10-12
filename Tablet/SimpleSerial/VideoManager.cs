@@ -17,7 +17,7 @@ namespace SimpleSerial {
 		//public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
 		public static string behavior = ConfigurationManager.AppSettings["videoConfig"];
 
-		public List<Product> playables = new List<Product>();
+		public List<Product> queue = new List<Product>();
 		private WMPLib.WindowsMediaPlayer Player;
 
 		private bool playing = false;
@@ -69,8 +69,8 @@ namespace SimpleSerial {
 
 		private void Player_PlayStateChange( int NewState ) {
 			if ( (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded && ( config == 2 )) {
-                MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(playables[current]));
-                playables.Remove( playables[0]) ;
+                MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(queue[current]));
+                queue.Remove( queue[0]) ;
 				//				this.Close();
 			}
 		}
@@ -89,13 +89,13 @@ namespace SimpleSerial {
 				MainProgram.form.PlayVideo( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
 			}
 			if ( config == 2 ) {
-                if ( !playables.Any() )
+                if ( !queue.Any() )
                 {
                     MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(slotID));
 
                 } else
                 {
-                    playables.Add(current);
+                    queue.Add(current);
                 }
 			}
 		}
@@ -103,7 +103,7 @@ namespace SimpleSerial {
 		private void OnProductPutDown( int slotID ) {
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PutDown;
-			playables.Remove( current );
+			queue.Remove( current );
 		}
 	}
 }
