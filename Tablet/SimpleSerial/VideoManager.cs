@@ -30,9 +30,10 @@ namespace SimpleSerial {
 			get { return m_instance ?? ( m_instance = new VideoManager() ); }
 		}
 
-		#endregion Singleton
+        #endregion Singleton
+        int config = 2;
 
-		private string Directory = LocalStorage.videoDirectory;
+        private string Directory = LocalStorage.videoDirectory;
 
 		public VideoManager() {
 			new Thread( () => Initialize() ).Start();
@@ -69,7 +70,7 @@ namespace SimpleSerial {
 
 		private void Player_PlayStateChange( int NewState ) {
 			if ( (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded && ( config == 2 )) {
-                MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(queue[current]));
+                MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(queue[0]));
                 queue.Remove( queue[0]) ;
 				//				this.Close();
 			}
@@ -81,7 +82,6 @@ namespace SimpleSerial {
 		}
 
 		private void OnProductPickup( int slotID ) {
-			int config = 2;
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PickedUp;
 			if ( config == 1 ) {
