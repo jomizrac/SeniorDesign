@@ -81,7 +81,7 @@ namespace SimpleSerial {
 		}
 
 		private void OnProductPickup( int slotID ) {
-			int config = 1;
+			int config = 2;
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PickedUp;
 			if ( config == 1 ) {
