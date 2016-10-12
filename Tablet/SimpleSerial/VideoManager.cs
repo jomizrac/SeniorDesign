@@ -1,5 +1,6 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Transfer;
+using AxWMPLib;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -9,18 +10,24 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SimpleSerial {
 
 	internal class VideoManager {
 
+		private enum PlaybackMethod { Immediate, Queued };
+
+		private PlaybackMethod playbackMethod = PlaybackMethod.Immediate;
+		private List<Product> queue = new List<Product>();
+
+		// Convenience properties
+		//		public MainForm Form { get { return MainProgram.Instance.Form; } }
+
+		//		public AxWindowsMediaPlayer Player { get { return Form.Player; } }
+
 		//public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
-		public static string behavior = ConfigurationManager.AppSettings["videoConfig"];
-
-		public List<Product> queue = new List<Product>();
-		private WMPLib.WindowsMediaPlayer Player;
-
-		private bool playing = false;
+		//		private static string behavior = ConfigurationManager.AppSettings["videoConfig"];
 
 		#region Singleton
 
@@ -30,80 +37,48 @@ namespace SimpleSerial {
 			get { return m_instance ?? ( m_instance = new VideoManager() ); }
 		}
 
-        #endregion Singleton
-        int config = 2;
-
-        private string Directory = LocalStorage.videoDirectory;
+		#endregion Singleton
 
 		public VideoManager() {
 			new Thread( () => Initialize() ).Start();
-
-			//			var delay = Task.Run( async () => {
-			//				await Task.Delay( 2500 );
-			//				MainProgram.form.PlayTest( LocalStorage.Instance.GetFilePathForProduct( 1 ) );
-			//			} );
 		}
 
 		private void Initialize() {
-			// TODO temp unregistering from events to prevent duplicate registration
-			ArduinoParser.Instance.ProductPickUpEvent -= Instance.OnProductPickup;
-			ArduinoParser.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
-			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickup;
-			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+			ShelfInventory.Instance.ProductPickUpEvent -= Instance.OnProductPickup;
+			ShelfInventory.Instance.ProductPickUpEvent += Instance.OnProductPickup;
 
-			Player = new WMPLib.WindowsMediaPlayer();
-			Player.PlayStateChange -= new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler( Player_PlayStateChange );
-			Player.MediaError -= new WMPLib._WMPOCXEvents_MediaErrorEventHandler( Player_MediaError );
-			Player.PlayStateChange += new WMPLib._WMPOCXEvents_PlayStateChangeEventHandler( Player_PlayStateChange );
-			Player.MediaError += new WMPLib._WMPOCXEvents_MediaErrorEventHandler( Player_MediaError );
+			ShelfInventory.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
+			ShelfInventory.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+
+			MainProgram.Form.Player.PlayStateChange -= new _WMPOCXEvents_PlayStateChangeEventHandler( OnPlayStateChange );
+			MainProgram.Form.Player.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler( OnPlayStateChange );
 		}
 
-		private void PlayFile( string url ) {
-			Player.URL = url;
-			Player.controls.play();
-		}
-
-		private void Form1_Load( object sender, System.EventArgs e ) {
-			// TODO  Insert a valid path in the line below.
-			//			PlayFile( LocalStorage.Instance.videoDirectory + playables[0].productID() + LocalStorage.Instance.fileExtension ));
-		}
-
-		private void Player_PlayStateChange( int NewState ) {
-			if ( (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded && ( config == 2 )) {
-                MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(queue[0]));
-                queue.Remove( queue[0]) ;
-				//				this.Close();
+		private void OnPlayStateChange( object sender, _WMPOCXEvents_PlayStateChangeEvent e ) {
+			if ( playbackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Any() ) {
+				MainProgram.Form.Player.Play( queue[0] );
+				queue.RemoveAt( 0 );
 			}
 		}
 
-		private void Player_MediaError( object pMediaObject ) {
-			//			MessageBox.Show( "Cannot play media file." );
-			//			this.Close();
-		}
+		private void OnProductPickup( Product product ) {
+			Console.WriteLine( "trying to play " + product );
 
-		private void OnProductPickup( int slotID ) {
-			Product current = ShelfInventory.Instance.shelfSlots[slotID];
-			current.status = Product.Status.PickedUp;
-			if ( config == 1 ) {
-				//Play current video immediately
-				MainProgram.form.PlayVideo( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
+			if ( playbackMethod == PlaybackMethod.Immediate ) {
+				MainProgram.Form.Player.Play( product );
 			}
-			if ( config == 2 ) {
-                if ( !queue.Any() )
-                {
-                    MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(slotID));
-
-                } else
-                {
-                    queue.Add(current);
-                }
+			else if ( playbackMethod == PlaybackMethod.Queued ) {
+				if ( !queue.Any() ) { // TODO replace this with 'if video currently playing' -- or -- add the currently playing video to the queue
+					MainProgram.Form.Player.Play( product );
+				}
+				else {
+					queue.Add( product );
+				}
 			}
 		}
 
-		private void OnProductPutDown( int slotID ) {
-			Product current = ShelfInventory.Instance.shelfSlots[slotID];
-			current.status = Product.Status.PutDown;
-			queue.Remove( current );
+		private void OnProductPutDown( Product product ) {
+			queue.Remove( product );
 		}
 	}
 }

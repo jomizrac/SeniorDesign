@@ -1,4 +1,7 @@
-﻿namespace SimpleSerial {
+﻿using System.Windows.Forms;
+using AxWMPLib;
+
+namespace SimpleSerial {
 	partial class MainForm {
 		/// <summary>
 		/// Required designer variable.
@@ -31,10 +34,10 @@
 			// axWindowsMediaPlayer1
 			// 
 			this.axWindowsMediaPlayer1.Enabled = true;
-			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(12, 12);
+			this.axWindowsMediaPlayer1.Location = new System.Drawing.Point(0, 0);
 			this.axWindowsMediaPlayer1.Name = "axWindowsMediaPlayer1";
 			this.axWindowsMediaPlayer1.OcxState = ((System.Windows.Forms.AxHost.State)(resources.GetObject("axWindowsMediaPlayer1.OcxState")));
-			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(596, 296);
+			this.axWindowsMediaPlayer1.Size = new System.Drawing.Size(274, 149);
 			this.axWindowsMediaPlayer1.TabIndex = 0;
 			this.axWindowsMediaPlayer1.Enter += new System.EventHandler(this.axWindowsMediaPlayer1_Enter);
 			// 
@@ -42,7 +45,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(620, 320);
+			this.ClientSize = new System.Drawing.Size(481, 313);
 			this.Controls.Add(this.axWindowsMediaPlayer1);
 			this.Name = "MainForm";
 			this.Text = "MainForm";
@@ -53,12 +56,8 @@
 
 		#endregion
 
-		private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1;
+		private AxWindowsMediaPlayer axWindowsMediaPlayer1;
 
-		public void PlayVideo(string filePath)
-		{
-			axWindowsMediaPlayer1.URL = filePath;
-			axWindowsMediaPlayer1.Ctlcontrols.play();
-		}
+		public  AxWindowsMediaPlayer Player { get { return axWindowsMediaPlayer1; } }
 	}
 }

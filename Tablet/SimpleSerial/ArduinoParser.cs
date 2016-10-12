@@ -28,13 +28,13 @@ namespace SimpleSerial {
 
 		#region Events
 
-		public delegate void ProductPickUp( int slotID );
+		public delegate void SlotPickUp( int slotIdx );
 
-		public delegate void ProductPutDown( int slotID );
+		public delegate void SlotPutDown( int slotIdx );
 
-		public event ProductPickUp ProductPickUpEvent;
+		public event SlotPickUp SlotPickUpEvent;
 
-		public event ProductPutDown ProductPutDownEvent;
+		public event SlotPutDown SlotPutDownEvent;
 
 		#endregion Events
 
@@ -101,13 +101,15 @@ namespace SimpleSerial {
 			var match = numAlpha.Match( telegram );
 			var alpha = match.Groups["Alpha"].Value;
 			var num = match.Groups["Numeric"].Value;
-			var slotID = int.Parse( num );
+			var slotIdx = int.Parse( num );
 
 			if ( alpha == PickUp ) {
-				ProductPickUpEvent( slotID );
+				Console.WriteLine( "Picked up slot " + slotIdx );
+				SlotPickUpEvent?.Invoke( slotIdx );
 			}
 			else if ( alpha == PutDown ) {
-				ProductPutDownEvent( slotID );
+				Console.WriteLine( "Put down slot " + slotIdx );
+				SlotPutDownEvent?.Invoke( slotIdx );
 			}
 			else {
 				Console.WriteLine( "Unrecognized alpha string: " + alpha );

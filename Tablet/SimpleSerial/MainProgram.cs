@@ -14,7 +14,7 @@ namespace SimpleSerial {
 	/// This class serves as the main point of logic for the ShelfRokr.
 	/// </summary>
 	internal class MainProgram {
-		public static MainForm form;
+		static public MainForm Form;
 
 		#region Singleton
 
@@ -28,8 +28,8 @@ namespace SimpleSerial {
 
 		[STAThread]
 		private static void Main() {
-			CheckAWSCredentialsPresent();
-			//needs to be able to update any slot
+			if ( !AWSCredentialsPresent() ) Application.Exit();
+
 			ShelfInventory.Instance.UpdateSlot( 0, new Product( "product 0", 0 ) );
 			ShelfInventory.Instance.UpdateSlot( 1, new Product( "product 1", 1 ) );
 			ShelfInventory.Instance.UpdateSlot( 2, new Product( "product 2", 2 ) );
@@ -40,31 +40,27 @@ namespace SimpleSerial {
 
 			LocalStorage.Instance.SyncVideos();
 
-			ArduinoParser.Instance.ProductPickUpEvent += Instance.OnProductPickUp;
-			ArduinoParser.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+			var ard = ArduinoParser.Instance;
 
-			var tmp = new VideoManager();
+			// Load the form with the integrated Windows Media
+			//			Instance.Form = new MainForm();
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault( false );
+			Form = new MainForm();
+			Application.Run( Form );
+
+			var vm = VideoManager.Instance;
 
 			//            VideoConfigs temp = new VideoConfigs();
 			//            File.WriteAllText( jsonFile, JsonConvert.SerializeObject( temp ) );
 
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault( false );
-			form = new MainForm();
-
-			//			form.PlayTest( LocalStorage.Instance.GetFilePathForProduct( 1 ) );
-
-			Application.Run( form );
-
-			//			form.PlayTest( LocalStorage.Instance.GetFilePathForProduct( 1 ) );
-
-			//			while ( true ) {
-			//				Thread.Sleep( 1 ); // TODO not needed with windows form app
-			//			}
+			while ( true ) {
+				Thread.Sleep( 1 ); // not needed with windows form app
+			}
 		}
 
 		//Makes sure the credentials for AWS are present in the correct file
-		private static void CheckAWSCredentialsPresent() {
+		private static bool AWSCredentialsPresent() {
 			string credentials = ConfigurationManager.AppSettings["AWSProfilesLocation"];
 			if ( !File.Exists( credentials ) ) {
 				string directory = Path.GetDirectoryName( credentials );
@@ -78,18 +74,9 @@ namespace SimpleSerial {
 
 				Console.WriteLine( "AWS credentials file has not been setup. Please configure the following file: " + credentials );
 				Console.ReadKey(); // Wait for user input
-				return;
+				return false;
 			}
-		}
-
-		//debugging
-		private void OnProductPickUp( int slotID ) {
-			Console.WriteLine( "Picked up " + slotID );
-		}
-
-		//debugging
-		private void OnProductPutDown( int slotID ) {
-			Console.WriteLine( "Put down " + slotID );
+			return true;
 		}
 	}
 }

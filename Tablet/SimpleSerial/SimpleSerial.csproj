@@ -6,7 +6,7 @@
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{AFA9EE80-6907-40E1-9601-A68E8E745515}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SimpleSerial</RootNamespace>
     <AssemblyName>SimpleSerial</AssemblyName>
@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="ArduinoParser.cs" />
     <Compile Include="DB.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="LEDManager.cs" />
     <Compile Include="LocalStorage.cs" />
     <Compile Include="MainForm.cs">
