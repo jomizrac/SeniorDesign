@@ -14,7 +14,7 @@ namespace SimpleSerial {
 	/// This class serves as the main point of logic for the ShelfRokr.
 	/// </summary>
 	internal class MainProgram {
-		static public MainForm Form;
+		public MainForm Form;
 
 		#region Singleton
 
@@ -30,6 +30,10 @@ namespace SimpleSerial {
 		private static void Main() {
 			if ( !AWSCredentialsPresent() ) Application.Exit();
 
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault( false ); // This must be called before MainForm is instantiated
+			Instance.Form = new MainForm();
+
 			ShelfInventory.Instance.UpdateSlot( 0, new Product( "product 0", 0 ) );
 			ShelfInventory.Instance.UpdateSlot( 1, new Product( "product 1", 1 ) );
 			ShelfInventory.Instance.UpdateSlot( 2, new Product( "product 2", 2 ) );
@@ -40,26 +44,15 @@ namespace SimpleSerial {
 
 			LocalStorage.Instance.SyncVideos();
 
+			// Just to initialize our singletons
 			var ard = ArduinoParser.Instance;
-
-			// Load the form with the integrated Windows Media
-			//			Instance.Form = new MainForm();
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault( false );
-			Form = new MainForm();
-			Application.Run( Form );
-
 			var vm = VideoManager.Instance;
 
-			//            VideoConfigs temp = new VideoConfigs();
-			//            File.WriteAllText( jsonFile, JsonConvert.SerializeObject( temp ) );
-
-			while ( true ) {
-				Thread.Sleep( 1 ); // not needed with windows form app
-			}
+			Application.Run( Instance.Form );
+			// Warning: no code after Application.Run()'s while-loop will be reached!
 		}
 
-		//Makes sure the credentials for AWS are present in the correct file
+		/// <summary> Makes sure the credentials for AWS are present in the correct file </summary>
 		private static bool AWSCredentialsPresent() {
 			string credentials = ConfigurationManager.AppSettings["AWSProfilesLocation"];
 			if ( !File.Exists( credentials ) ) {

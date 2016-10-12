@@ -25,14 +25,14 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
-		public static string productVideoBucket = ConfigurationManager.AppSettings["productVideoBucket"];
-		public static string videoDirectory = ConfigurationManager.AppSettings["videoDirectory"];
-		public static string videoFileExtension = ConfigurationManager.AppSettings["videoFileExtension"];
+		private string productVideoBucket = ConfigurationManager.AppSettings["productVideoBucket"];
+		private string videoDirectory = ConfigurationManager.AppSettings["videoDirectory"];
+		private string videoFileExtension = ConfigurationManager.AppSettings["videoFileExtension"];
 
-		private static AmazonS3Client client;
-		private static TransferUtility fileTransferUtility;
+		private AmazonS3Client client;
+		private TransferUtility fileTransferUtility;
 
-		public LocalStorage() {
+		private LocalStorage() {
 			client = new AmazonS3Client( Amazon.RegionEndpoint.USEast1 );
 			fileTransferUtility = new TransferUtility( client );
 		}

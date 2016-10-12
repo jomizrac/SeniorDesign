@@ -21,10 +21,8 @@ namespace SimpleSerial {
 		private PlaybackMethod playbackMethod = PlaybackMethod.Immediate;
 		private List<Product> queue = new List<Product>();
 
-		// Convenience properties
-		//		public MainForm Form { get { return MainProgram.Instance.Form; } }
-
-		//		public AxWindowsMediaPlayer Player { get { return Form.Player; } }
+		/// <summary> Just for syntax convenience. </summary>
+		public AxWindowsMediaPlayer Player { get { return MainProgram.Instance.Form.Player; } }
 
 		//public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
 		//		private static string behavior = ConfigurationManager.AppSettings["videoConfig"];
@@ -39,7 +37,7 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
-		public VideoManager() {
+		private VideoManager() {
 			new Thread( () => Initialize() ).Start();
 		}
 
@@ -50,26 +48,24 @@ namespace SimpleSerial {
 			ShelfInventory.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
 			ShelfInventory.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 
-			MainProgram.Form.Player.PlayStateChange -= new _WMPOCXEvents_PlayStateChangeEventHandler( OnPlayStateChange );
-			MainProgram.Form.Player.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler( OnPlayStateChange );
+			Player.PlayStateChange -= new _WMPOCXEvents_PlayStateChangeEventHandler( OnPlayStateChange );
+			Player.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler( OnPlayStateChange );
 		}
 
 		private void OnPlayStateChange( object sender, _WMPOCXEvents_PlayStateChangeEvent e ) {
 			if ( playbackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Any() ) {
-				MainProgram.Form.Player.Play( queue[0] );
+				Player.Play( queue[0] );
 				queue.RemoveAt( 0 );
 			}
 		}
 
 		private void OnProductPickup( Product product ) {
-			Console.WriteLine( "trying to play " + product );
-
 			if ( playbackMethod == PlaybackMethod.Immediate ) {
-				MainProgram.Form.Player.Play( product );
+				Player.Play( product );
 			}
 			else if ( playbackMethod == PlaybackMethod.Queued ) {
 				if ( !queue.Any() ) { // TODO replace this with 'if video currently playing' -- or -- add the currently playing video to the queue
-					MainProgram.Form.Player.Play( product );
+					Player.Play( product );
 				}
 				else {
 					queue.Add( product );

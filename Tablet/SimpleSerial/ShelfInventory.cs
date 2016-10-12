@@ -45,7 +45,8 @@ namespace SimpleSerial {
 
 		//private Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
 		//		public List<Product> products = new List<Product>();
-		public ShelfInventory() {
+
+		private ShelfInventory() {
 			Deserialize();
 
 			new Thread( () => Initialize() ).Start();
