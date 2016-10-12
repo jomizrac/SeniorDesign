@@ -54,13 +54,18 @@ namespace SimpleSerial {
 
 		private void OnPlayStateChange( object sender, _WMPOCXEvents_PlayStateChangeEvent e ) {
 			Console.WriteLine( "PlayStateChange [" + e.newState + "] at " + DateTime.Now.ToShortTimeString() );
+			//			Console.WriteLine( (int)WMPLib.WMPPlayState.wmppsMediaEnded ); // 8
+
+			Console.WriteLine( "queue size = " + queue.Count );
 
 			if ( playbackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Count > 0 ) {
+				Console.WriteLine( "reached 1" );
 				// Remove the just-played video
 				queue.RemoveAt( 0 );
 
 				// If there's another video in the queue, play it
 				if ( queue.Count > 0 ) {
+					Console.WriteLine( "reached 2" );
 					Player.Play( queue[0] );
 				}
 			}
