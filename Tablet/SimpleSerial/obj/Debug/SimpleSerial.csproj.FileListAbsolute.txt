@@ -80,3 +80,13 @@ C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\Sim
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.Properties.Resources.resources
 C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.GenerateResource.Cache
 C:\Users\BBL\Documents\GitHub\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.MainForm.resources
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\bin\Debug\SimpleSerial.exe.config
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\Interop.WMPLib.dll
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\AxInterop.WMPLib.dll
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.ResolveComReference.cache
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.exe
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.pdb
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csprojResolveAssemblyReference.cache
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.MainForm.resources
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.Properties.Resources.resources
+C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.GenerateResource.Cache

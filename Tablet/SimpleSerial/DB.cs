@@ -29,40 +29,41 @@ namespace SimpleSerial {
 		private static string tableName = "EventCatalog";
 
 		//Creates a new item in the database.
-		public static void CreateProductItem( int currentProdLocation, int currentTime, string eventType ) {
-			//			Console.WriteLine( "\n*** Executing CreateProductItem() ***" );
-			//			Table productCatalog = new Table( client, tableName );
-			//			var product = new Document();
-			//			var currentShelfMAC =
-			//			(
-			//				from nic in NetworkInterface.GetAllNetworkInterfaces()
-			//				where nic.OperationalStatus == OperationalStatus.Up
-			//				select nic.GetPhysicalAddress().ToString()
-			//			).FirstOrDefault();
-			//			var deviceName = Environment.MachineName;
-            //          product["ProductID"] = currentProductID;
-			//			product["ProductName"] = currentProductName;
-			//			product["ProductLocation"] = currentProdLocation;
-			//			product["ShelfMAC"] = currentShelfMAC;
-			//			product["DeviceName"] = deviceName;
-			//			product["Timestamp"] = currentTime;
-			//			product["EventType"] = eventType;
-			//
-			//			productCatalog.PutItem( product );
-		}
+		public static void CreateProductItem( string currentProductID, string currentProductName, int currentProdLocation, int currentTime, string eventType ) {
+            Console.WriteLine("\n*** Executing CreateProductItem() ***");
+            Table productCatalog = Table.LoadTable(client, tableName);
+            var product = new Document();
+            var currentShelfMAC =
+            (
+                from nic in NetworkInterface.GetAllNetworkInterfaces()
+                where nic.OperationalStatus == OperationalStatus.Up
+                select nic.GetPhysicalAddress().ToString()
+            ).FirstOrDefault();
+            var deviceName = Environment.MachineName;
+            product["ProductID"] = currentProductID;
+            product["ProductName"] = currentProductName;
+            product["ProductLocation"] = currentProdLocation;
+            product["ShelfMAC"] = currentShelfMAC;
+            product["DeviceName"] = deviceName;
+            product["Timestamp"] = currentTime;
+            product["EventType"] = eventType;
+
+            productCatalog.PutItem(product);
+        }
 
 		private static void RetrieveProduct( int currentProductID ) {
-			//			Console.WriteLine( "\n*** Executing RetrieveProduct() ***" );
-			//			Table productCatalog = new Table();
-			//			// Optional configuration.
-			//			GetItemOperationConfig config = new GetItemOperationConfig {
-			//				AttributesToGet = new List<string> { "ProductID", "ProductName", "ProductLocation", "ShelfMAC", "DeviceName", "Timestamp", "EventType" },
-			//				ConsistentRead = true
-			//			};
-			//			Document document = productCatalog.GetItem( currentProductID, config );
-			//			Console.WriteLine( "Retrieveproduct: Printing product retrieved..." );
-			//			PrintDocument( document );
-		}
+            //Console.WriteLine("\n*** Executing RetrieveProduct() ***");
+            //Table productCatalog = new Table();
+            // Optional configuration.
+            //GetItemOperationConfig config = new GetItemOperationConfig
+            //{
+            //    AttributesToGet = new List<string> { "ProductID", "ProductName", "ProductLocation", "ShelfMAC", "DeviceName", "Timestamp", "EventType" },
+            //    ConsistentRead = true
+            //};
+            //Document document = productCatalog.GetItem(currentProductID, config);
+            //Console.WriteLine("Retrieveproduct: Printing product retrieved...");
+            //PrintDocument(document);
+        }
 
 		private static void AddShelf( List<Product> productList ) {
 			//			Table shelfList = new Table();
