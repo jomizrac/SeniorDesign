@@ -60,7 +60,11 @@ namespace SimpleSerial {
 		private void PlayVideos() {
 			int current = 0;
 			while ( playables[current] != null ) {
-                MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct( playables[current] ));
+                if (playing == false)
+                {
+                    MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(playables[current]));
+                    playing = true;
+                }
 				current++;
 			}
 		}
@@ -76,7 +80,7 @@ namespace SimpleSerial {
 		}
 
 		private void Player_PlayStateChange( int NewState ) {
-			if ( (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsStopped ) {
+			if ( (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded ) {
 				playing = false;
 				//				this.Close();
 			}
