@@ -1,5 +1,3 @@
-*.wmv
-
 # User-specific files
 *.suo
 *.user
@@ -13,5 +11,16 @@ build/
 [Bb]in/
 [Oo]bj/
 
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
 # Others
 *.Cache
+*.wmv
