@@ -26,7 +26,7 @@ namespace SimpleSerial {
 
 		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
-		private static string tableName = "ProductCatalog";
+		private static string tableName = "EventCatalog";
 
 		//Creates a new item in the database.
 		public static void CreateProductItem( int currentProdLocation, int currentTime, string eventType ) {
@@ -40,6 +40,7 @@ namespace SimpleSerial {
 			//				select nic.GetPhysicalAddress().ToString()
 			//			).FirstOrDefault();
 			//			var deviceName = Environment.MachineName;
+            //          product["ProductID"] = currentProductID;
 			//			product["ProductName"] = currentProductName;
 			//			product["ProductLocation"] = currentProdLocation;
 			//			product["ShelfMAC"] = currentShelfMAC;
@@ -55,7 +56,7 @@ namespace SimpleSerial {
 			//			Table productCatalog = new Table();
 			//			// Optional configuration.
 			//			GetItemOperationConfig config = new GetItemOperationConfig {
-			//				AttributesToGet = new List<string> { "ProductId", "ProductLocation", "ShelfMAC", "DeviceName", "Timestamp", "EventType" },
+			//				AttributesToGet = new List<string> { "ProductID", "ProductName", "ProductLocation", "ShelfMAC", "DeviceName", "Timestamp", "EventType" },
 			//				ConsistentRead = true
 			//			};
 			//			Document document = productCatalog.GetItem( currentProductID, config );
