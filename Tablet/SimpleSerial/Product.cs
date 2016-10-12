@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SimpleSerial {
 
-	public class Product {
+	public class Product : IEquatable<Product> {
 
 		public enum Status { PutDown, PickedUp }
 
@@ -19,6 +19,11 @@ namespace SimpleSerial {
 			this.name = name;
 			this.productID = productID;
 			this.status = status;
+		}
+
+		public bool Equals( Product other ) {
+			if ( other == null ) return false;
+			return ( productID.Equals( other.productID ) );
 		}
 	}
 }
