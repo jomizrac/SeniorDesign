@@ -44,7 +44,7 @@ namespace SimpleSerial {
 
 			LocalStorage.Instance.SyncVideos();
 
-			// Just to initialize our singletons
+			// Initialize our singletons
 			var ard = ArduinoParser.Instance;
 			var vm = VideoManager.Instance;
 

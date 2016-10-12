@@ -44,7 +44,7 @@ namespace SimpleSerial {
 		private StringBuilder buffer = new StringBuilder();
 
 		// Communication protocol
-		private Regex telegramDelimMatcher = new Regex( @"^.*(\n|\r|\r\n)" ); // Match any chars followed by a newline
+		private Regex telegramDelimMatcher = new Regex( @"^.*(\r\n|\n|\r)" ); // Match any chars followed by a newline
 
 		private ArduinoParser() {
 			serialPort.PortName = AutodetectArduinoPort() ?? ConfigurationManager.AppSettings["defaultPort"];

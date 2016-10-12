@@ -14,9 +14,9 @@ namespace SimpleSerial {
 		public MainForm() {
 			InitializeComponent();
 
-			//			TopMost = true;
-			//			FormBorderStyle = FormBorderStyle.None;
-			//			WindowState = FormWindowState.Maximized;
+			// TopMost = true;
+			FormBorderStyle = FormBorderStyle.None;
+			WindowState = FormWindowState.Maximized;
 		}
 
 		private void axWindowsMediaPlayer1_Enter( object sender, EventArgs e ) {
