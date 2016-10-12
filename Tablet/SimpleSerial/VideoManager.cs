@@ -57,18 +57,6 @@ namespace SimpleSerial {
 			Player.MediaError += new WMPLib._WMPOCXEvents_MediaErrorEventHandler( Player_MediaError );
 		}
 
-		private void PlayVideos() {
-			int current = 0;
-			while ( playables[current] != null ) {
-                if (playing == false)
-                {
-                    MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(playables[current]));
-                    playing = true;
-                }
-				current++;
-			}
-		}
-
 		private void PlayFile( string url ) {
 			Player.URL = url;
 			Player.controls.play();
@@ -80,8 +68,9 @@ namespace SimpleSerial {
 		}
 
 		private void Player_PlayStateChange( int NewState ) {
-			if ( (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded ) {
-				playing = false;
+			if ( (WMPLib.WMPPlayState)NewState == WMPLib.WMPPlayState.wmppsMediaEnded && ( config == 2 )) {
+                MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(playables[current]));
+                playables.Remove( playables[0]) ;
 				//				this.Close();
 			}
 		}
@@ -95,14 +84,19 @@ namespace SimpleSerial {
 			int config = 1;
 			Product current = ShelfInventory.Instance.shelfSlots[slotID];
 			current.status = Product.Status.PickedUp;
-			playables.Add( current );
 			if ( config == 1 ) {
 				//Play current video immediately
 				MainProgram.form.PlayVideo( LocalStorage.Instance.GetFilePathForProduct( slotID ) );
 			}
 			if ( config == 2 ) {
-				//Play queue of videos
-				PlayVideos();
+                if ( !playables.Any() )
+                {
+                    MainProgram.form.PlayVideo(LocalStorage.Instance.GetFilePathForProduct(slotID));
+
+                } else
+                {
+                    playables.Add(current);
+                }
 			}
 		}
 
