@@ -21,6 +21,8 @@ namespace SimpleSerial {
 		private PlaybackMethod playbackMethod = PlaybackMethod.Queued;
 		private List<Product> queue = new List<Product>();
 
+		private int flag;
+
 		/// <summary> Just for syntax convenience. </summary>
 		public AxWindowsMediaPlayer Player { get { return MainProgram.Instance.Form.Player; } }
 
@@ -39,6 +41,7 @@ namespace SimpleSerial {
 
 		private VideoManager() {
 			new Thread( () => Initialize() ).Start();
+			new Thread( () => Loop() ).Start();
 		}
 
 		private void Initialize() {
@@ -54,20 +57,34 @@ namespace SimpleSerial {
 
 		private void OnPlayStateChange( object sender, _WMPOCXEvents_PlayStateChangeEvent e ) {
 			Console.WriteLine( "PlayStateChange [" + e.newState + "] at " + DateTime.Now.ToShortTimeString() );
-			//			Console.WriteLine( (int)WMPLib.WMPPlayState.wmppsMediaEnded ); // 8
-
-			Console.WriteLine( "queue size = " + queue.Count );
 
 			if ( playbackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Count > 0 ) {
-				Console.WriteLine( "reached 1" );
 				// Remove the just-played video
 				queue.RemoveAt( 0 );
 
+				// We cannot call Play() in here, see:
+				// http://stackoverflow.com/questions/9618153/playing-two-video-with-axwindowsmediaplayer
+				// http://www.dreamincode.net/forums/topic/202062-c%23-media-player-automatically-play-next-mp3/page__view__findpost__p__1322620?s=7e94316f9e27364c8007914acc29b547
+
 				// If there's another video in the queue, play it
-				if ( queue.Count > 0 ) {
-					Console.WriteLine( "reached 2" );
-					Player.Play( queue[0] );
+				Interlocked.Increment( ref flag );
+				//				if ( queue.Count > 0 ) {
+				//					Player.Play( queue[0] );
+				//				}
+
+				// http://stackoverflow.com/a/154803
+			}
+		}
+
+		private void Loop() {
+			while ( true ) {
+				if ( flag > 0 ) {
+					flag = 0; // No need for Interlocked due to the only other place it being modified being locked
+					if ( queue.Count > 0 ) {
+						Player.Play( queue[0] );
+					}
 				}
+				Thread.Sleep( 100 );
 			}
 		}
 
@@ -90,8 +107,6 @@ namespace SimpleSerial {
 			if ( playbackMethod == PlaybackMethod.Queued ) {
 				// If we put down the video that's currently playing, and there's another waiting in the queue...
 				if ( queue.Count > 1 && queue[0] == product ) {
-					// Player.Ctlcontrols.stop();
-					// TODO, warning, this may trigger the media ended event, so maybe just stopping is sufficient
 					Player.Play( queue[1] );
 				}
 
