@@ -23,7 +23,7 @@ namespace SimpleSerial {
 
 		public bool Equals( Product other ) {
 			if ( other == null ) return false;
-			return ( productID.Equals( other.productID ) );
+			return productID.Equals( other.productID );
 		}
 	}
 }

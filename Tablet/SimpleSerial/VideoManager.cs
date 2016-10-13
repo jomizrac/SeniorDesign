@@ -79,7 +79,7 @@ namespace SimpleSerial {
 		private void Loop() {
 			while ( true ) {
 				if ( flag > 0 ) {
-					flag = 0; // No need for Interlocked due to the only other place it being modified being locked
+					flag = 0; // No need for Interlocked here due to the only other place it being modified being locked
 					if ( queue.Count > 0 ) {
 						Player.Play( queue[0] );
 					}
