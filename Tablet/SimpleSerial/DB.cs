@@ -34,6 +34,7 @@ namespace SimpleSerial
 
         public DB()
         {
+            LogEvent(ShelfInventory.Instance.ProductList()[0], "Pick Up");
         }
 
         //Creates a new item in the database.
