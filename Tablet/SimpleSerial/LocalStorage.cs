@@ -47,7 +47,7 @@ namespace SimpleSerial {
 			string[] filePaths = Directory.GetFiles( videoDirectory );
 			foreach ( string filePath in filePaths ) {
 				string fileName = Path.GetFileNameWithoutExtension( filePath );
-				bool productPresent = ShelfInventory.Instance.ProductList().Exists( p => p.productID.ToString() == fileName );
+				bool productPresent = ShelfInventory.Instance.ProductList().Exists( p => p.productID == fileName );
 				if ( !productPresent ) {
 					File.Delete( filePath );
 					Console.WriteLine( "Deleted unused " + filePath );

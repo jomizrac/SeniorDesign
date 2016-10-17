@@ -1,43 +1,38 @@
 ﻿using System;
 using System.Threading;
 
-namespace SimpleSerial
-{
-    public class Logger
-    {
+namespace SimpleSerial {
 
-        #region Singleton
+	public class Logger {
 
-        private static Logger m_instance;
+		#region Singleton
 
-        public static Logger Instance
-        {
-            get { return m_instance ?? (m_instance = new Logger()); }
-        }
+		private static Logger m_instance;
 
-        #endregion Singleton
+		public static Logger Instance {
+			get { return m_instance ?? ( m_instance = new Logger() ); }
+		}
 
+		#endregion Singleton
 
-        public Logger()
-        {
-            new Thread(() => Initialize()).Start();
-        }
-        private void Initialize()
-        {
-            ShelfInventory.Instance.ProductPickUpEvent -= Instance.OnProductPickup;
-            ShelfInventory.Instance.ProductPickUpEvent += Instance.OnProductPickup;
+		public Logger() {
+			new Thread( () => Initialize() ).Start();
+		}
 
-            ShelfInventory.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
-            ShelfInventory.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+		private void Initialize() {
+			ShelfInventory.Instance.ProductPickUpEvent -= Instance.OnProductPickup;
+			ShelfInventory.Instance.ProductPickUpEvent += Instance.OnProductPickup;
 
-        }
-        private void OnProductPickup(Product product)
-        {
-            DB.Instance.LogEvent(product, "Pick Up");
-        }
-        private void OnProductPutDown(Product product)
-        {
-            DB.Instance.LogEvent(product, "Put Down");
-        }
-    }
+			ShelfInventory.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
+			ShelfInventory.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+		}
+
+		private void OnProductPickup( Product product ) {
+			DB.Instance.LogEvent( product, "Pick Up" );
+		}
+
+		private void OnProductPutDown( Product product ) {
+			DB.Instance.LogEvent( product, "Put Down" );
+		}
+	}
 }
