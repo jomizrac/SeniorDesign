@@ -55,7 +55,7 @@ namespace SimpleSerial {
 
         private void CheckTime()
         {
-            while ()
+            while (true)
             {
 
             }
