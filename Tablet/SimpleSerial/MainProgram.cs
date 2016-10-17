@@ -30,10 +30,12 @@ namespace SimpleSerial {
 		private static void Main() {
 			if ( !AWSCredentialsPresent() ) Application.Exit();
 
+			// Setup the form for playing videos
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false ); // This must be called before MainForm is instantiated
 			Instance.Form = new MainForm();
 
+			// Establish a dummy shelf inventory
 			ShelfInventory.Instance.UpdateSlot( 0, new Product( "product 0", 0 ) );
 			ShelfInventory.Instance.UpdateSlot( 1, new Product( "product 1", 1 ) );
 			ShelfInventory.Instance.UpdateSlot( 2, new Product( "product 2", 2 ) );
@@ -42,11 +44,13 @@ namespace SimpleSerial {
 			ShelfInventory.Instance.UpdateSlot( 5, new Product( "product 5", 5 ) );
 			ShelfInventory.Instance.UpdateSlot( 6, new Product( "product 6", 6 ) );
 
+			// Pull any missing videos
 			LocalStorage.Instance.SyncVideos();
 
 			// Initialize any singletons that have not been called yet
 			var ard = ArduinoParser.Instance;
 			var vm = VideoManager.Instance;
+			var db = DB.Instance;
 
 			Application.Run( Instance.Form );
 			// Warning: no code after Application.Run()'s while-loop will be reached!
