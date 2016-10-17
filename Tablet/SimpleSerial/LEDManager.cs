@@ -16,8 +16,35 @@ namespace SimpleSerial {
 		}
 
 		#endregion Singleton
-        //if product picked up, light until put back 
-        //if vid playing, flash maybe?
-        //how do we communicate to the arduino to turn on the light?
-	}
+
+
+        private LEDManager()
+        {
+            Initializer();
+        }
+
+        private void Initialize()
+        {
+            ArduinoParser.Instance.SlotPickUpEvent += Instance.OnSlotPickup;
+            ArduinoParser.Instance.SlotPutDownEvent += Instance.OnSlotPutDown;
+        }
+        
+
+        //register for events coming from arduino parser
+
+        //activate light at a slot
+        private void OnSlotPickup(int slot)
+        {
+            String command = "";    //build the command
+            ArduinoParser.Instance.SendCommand(command);
+        }
+        
+        //deactivate light at a slot
+        private void OnSlotPickup(int slot)
+        {
+            String command = "";    //build the command
+            AdruinoParser.Instance.SendCommand(command);
+        }
+        //activate the chase effect
+    }
 }
