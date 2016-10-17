@@ -51,6 +51,7 @@ namespace SimpleSerial {
 			var ard = ArduinoParser.Instance;
 			var vm = VideoManager.Instance;
 			var db = DB.Instance;
+			var l = Logger.Instance;
 
 			Application.Run( Instance.Form );
 			// Warning: no code after Application.Run()'s while-loop will be reached!
