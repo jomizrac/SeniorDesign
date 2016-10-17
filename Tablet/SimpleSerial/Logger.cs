@@ -1,39 +1,43 @@
 ﻿using System;
+using System.Threading;
 
-public class Logger
+namespace SimpleSerial
 {
-
-    #region Singleton
-
-    private static Logger m_instance;
-
-    public static Logger Instance
+    public class Logger
     {
-        get { return m_instance ?? (m_instance = new Logger()); }
-    }
 
-    #endregion Singleton
+        #region Singleton
+
+        private static Logger m_instance;
+
+        public static Logger Instance
+        {
+            get { return m_instance ?? (m_instance = new Logger()); }
+        }
+
+        #endregion Singleton
 
 
-    public Logger()
-	{
-        new Thread(() => Initialize()).Start();
-    }
-    private void Initialize()
-    {
-        ShelfInventory.Instance.ProductPickUpEvent -= Instance.OnProductPickup;
-        ShelfInventory.Instance.ProductPickUpEvent += Instance.OnProductPickup;
+        public Logger()
+        {
+            new Thread(() => Initialize()).Start();
+        }
+        private void Initialize()
+        {
+            ShelfInventory.Instance.ProductPickUpEvent -= Instance.OnProductPickup;
+            ShelfInventory.Instance.ProductPickUpEvent += Instance.OnProductPickup;
 
-        ShelfInventory.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
-        ShelfInventory.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
+            ShelfInventory.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
+            ShelfInventory.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 
-    }
-    private void OnProductPickup(Product product)
-    {
-        DB.Instance.LogEvent(product, "Pick Up");
-    }
-    private void OnProductPutDown(Product product)
-    {
-        DB.Instance.LogEvent(product, "Put Down");
+        }
+        private void OnProductPickup(Product product)
+        {
+            DB.Instance.LogEvent(product, "Pick Up");
+        }
+        private void OnProductPutDown(Product product)
+        {
+            DB.Instance.LogEvent(product, "Put Down");
+        }
     }
 }
