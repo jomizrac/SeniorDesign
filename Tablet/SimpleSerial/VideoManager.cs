@@ -14,17 +14,18 @@ using System.Windows.Forms;
 
 namespace SimpleSerial {
 
+	/// <summary>
+	/// This class is responsible listening to product pickup/putdown events and playing (or enqueueing) their corresponding videos.
+	/// In the case of queued behavior, the currently playing video is considered part of the queue (queue[0]).
+	/// </summary>
 	internal class VideoManager {
 
 		private enum PlaybackMethod { Immediate, Queued };
 
 		private PlaybackMethod playbackMethod = PlaybackMethod.Queued;
 		private List<Product> queue = new List<Product>();
+		private int isPending;
 
-		private int flag;
-        private int queueTime;
-
-		/// <summary> Just for syntax convenience. </summary>
 		public AxWindowsMediaPlayer Player { get { return MainProgram.Instance.Form.Player; } }
 
 		// public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
@@ -56,31 +57,28 @@ namespace SimpleSerial {
 			Player.PlayStateChange += new _WMPOCXEvents_PlayStateChangeEventHandler( OnPlayStateChange );
 		}
 
+		/// <summary>
+		/// We cannot play a new video directly in the event handler due to restrictions imposed by the API.
+		/// To deal with this, we instead set a global isPending and allow another method to detect changes in that isPending to play a video.
+		/// For more information, see:
+		/// http://stackoverflow.com/questions/9618153/playing-two-video-with-axwindowsmediaplayer
+		/// http://www.dreamincode.net/forums/topic/202062-c%23-media-player-automatically-play-next-mp3/page__view__findpost__p__1322620?s=7e94316f9e27364c8007914acc29b547
+		/// http://stackoverflow.com/a/154803
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void OnPlayStateChange( object sender, _WMPOCXEvents_PlayStateChangeEvent e ) {
-			Console.WriteLine( "PlayStateChange [" + e.newState + "] at " + DateTime.Now.ToShortTimeString() );
-
 			if ( playbackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Count > 0 ) {
-				// Remove the just-played video
+				// Remove the just-played video from the front of the queue
 				queue.RemoveAt( 0 );
-
-				// We cannot call Play() in here, see:
-				// http://stackoverflow.com/questions/9618153/playing-two-video-with-axwindowsmediaplayer
-				// http://www.dreamincode.net/forums/topic/202062-c%23-media-player-automatically-play-next-mp3/page__view__findpost__p__1322620?s=7e94316f9e27364c8007914acc29b547
-
-				// If there's another video in the queue, play it
-				Interlocked.Increment( ref flag );
-				//				if ( queue.Count > 0 ) {
-				//					Player.Play( queue[0] );
-				//				}
-
-				// http://stackoverflow.com/a/154803
+				Interlocked.Increment( ref isPending );
 			}
 		}
 
 		private void Loop() {
 			while ( true ) {
-				if ( flag > 0 ) {
-					flag = 0; // No need for Interlocked here due to the only other place it being modified being locked
+				if ( isPending > 0 ) {
+					isPending = 0; // No need for Interlocked here due to the only other place it being modified being locked
 					if ( queue.Count > 0 ) {
 						Player.Play( queue[0] );
 					}
@@ -99,7 +97,7 @@ namespace SimpleSerial {
 					Player.Play( product );
 				}
 
-				// Add it to the queue, even if it's being played right away
+				// Add it to the queue, regardless of whether the queue is empty or not
 				queue.Add( product );
 			}
 		}
