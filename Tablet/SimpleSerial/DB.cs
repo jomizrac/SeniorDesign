@@ -40,7 +40,7 @@ namespace SimpleSerial
         //Creates a new item in the database.
         public void LogEvent(Product currentProduct, string eventType)
         {
-            Console.WriteLine("\n*** Executing LogEvent() ***");
+            //Console.WriteLine("\n*** Executing LogEvent() ***");
             Table productCatalog = Table.LoadTable(client, tableName);
             var product = new Document();
             var currentShelfMAC =
