@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
+using System.Threading;
 
 namespace SimpleSerial {
 
@@ -21,12 +23,12 @@ namespace SimpleSerial {
         private long IDLE_TIMER = 300000;
 
         //stop watch that is referenced against the IDLE_TIMER
-        private StopWatch stopwatch;
+        private Stopwatch stopwatch;
 
         private LEDManager()
         {
             Initialize();
-            stopwatch = new StopWatch();
+            stopwatch = new Stopwatch();
             stopwatch.Start();
 
             new Thread(() => CheckTime()).Start();
@@ -52,7 +54,7 @@ namespace SimpleSerial {
         private void OnSlotPutDown(int slotIdx)
         {
             String command = "LED D " + slotIdx;    //build the command
-            AdruinoParser.Instance.SendCommand(command);
+            ArduinoParser.Instance.SendCommand(command);
 
             stopwatch.Restart();
         }
@@ -62,7 +64,7 @@ namespace SimpleSerial {
         {
             while (true)
             {
-                if(stopwatch.EllapsedMilliseconds >= IDLE_TIMER)
+                if(stopwatch.ElapsedMilliseconds >= IDLE_TIMER)
                 {
                     SendChaseEvent();
                     stopwatch.Restart();

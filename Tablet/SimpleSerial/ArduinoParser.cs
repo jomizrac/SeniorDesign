@@ -118,7 +118,7 @@ namespace SimpleSerial {
 
         //sending commands to the Arduino for it to exexute on the hardware
         //only sends commands for LEDs from LEDManager right now
-        public void sendCommandToArduino(String command)
+        public void SendCommand(String command)
         {
             serialPort.WriteLine(command);
         }
