@@ -50,7 +50,7 @@ namespace SimpleSerial
                 select nic.GetPhysicalAddress().ToString()
             ).FirstOrDefault();
             var deviceName = Environment.MachineName;
-            product["ProductID"] = currentProduct.productID;
+            product["ProductID"] = currentProduct.productID + DateTime.Now.ToString();
             product["ProductName"] = currentProduct.name;
             product["ProductLocation"] = currentProduct.slotID;
             product["ShelfMAC"] = currentShelfMAC;
