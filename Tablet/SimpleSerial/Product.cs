@@ -11,13 +11,13 @@ namespace SimpleSerial {
 
 		public string name { get; private set; }
 
-		public int productID { get; private set; }
+		public string productID { get; private set; }
 
         public int slotID { get; set; }
 
         public Status status { get; set; }
 
-		public Product( string name, int productID, int slotID, Status status = Status.PutDown ) {
+		public Product( string name, string productID, int slotID, Status status = Status.PutDown ) {
 			this.name = name;
 			this.productID = productID;
             this.slotID = slotID;
