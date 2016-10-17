@@ -55,7 +55,7 @@ namespace SimpleSerial {
 		public void UpdateSlot( int slotIdx, Product newProduct ) {
 			// Update the list in memory
 			slots.Add( slotIdx, newProduct );
-            newProduct.setSlot(slotIdx);
+            newProduct.slotID = slotIdx;
 			// Save the list to disk
 			Serialize();
 

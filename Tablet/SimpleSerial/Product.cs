@@ -28,14 +28,5 @@ namespace SimpleSerial {
 			return productID.Equals( other.productID );
 		}
 
-        public void setSlot( int slotIdx )
-        {
-            this.slotID = slotIdx;
-        }
-
-        public int getSlotID()
-        {
-            return slotID;
-        }
 	}
 }
