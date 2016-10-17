@@ -2,6 +2,7 @@
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.Runtime;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -30,12 +31,12 @@ namespace SimpleSerial {
 
         public DB()
         {
-            CreateProductItem("ExampleID", "ExampleName", 1, 999, "pick up");
+            LogEvent("ExampleID", "ExampleName", 1, 999, "pick up");
         }
 
 		//Creates a new item in the database.
-		public static void CreateProductItem( string currentProductID, string currentProductName, int currentProdLocation, int currentTime, string eventType ) {
-            Console.WriteLine("\n*** Executing CreateProductItem() ***");
+		public static void LogEvent( string currentProductID, string currentProductName, int currentProdLocation, string eventType ) {
+            Console.WriteLine("\n*** Executing LogEvent() ***");
             Table productCatalog = Table.LoadTable(client, tableName);
             var product = new Document();
             var currentShelfMAC =
@@ -50,7 +51,7 @@ namespace SimpleSerial {
             product["ProductLocation"] = currentProdLocation;
             product["ShelfMAC"] = currentShelfMAC;
             product["DeviceName"] = deviceName;
-            product["Timestamp"] = currentTime;
+            product["Timestamp"] = LocalDate.ToString(new CultureInfo("en-US"));
             product["EventType"] = eventType;
 
             productCatalog.PutItem(product);

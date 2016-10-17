@@ -13,7 +13,9 @@ namespace SimpleSerial {
 
 		public int productID { get; private set; }
 
-		public Status status { get; set; }
+        public int slotID { get; set; }
+
+        public Status status { get; set; }
 
 		public Product( string name, int productID, Status status = Status.PutDown ) {
 			this.name = name;
@@ -25,5 +27,15 @@ namespace SimpleSerial {
 			if ( other == null ) return false;
 			return productID.Equals( other.productID );
 		}
+
+        public void setSlot( int slotIdx )
+        {
+            this.slotID = slotIdx;
+        }
+
+        public int getSlotID()
+        {
+            return slotID;
+        }
 	}
 }

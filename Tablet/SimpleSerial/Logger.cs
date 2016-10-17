@@ -30,10 +30,10 @@ public class Logger
     }
     private void OnProductPickup(Product product)
     {
-        DB.Instance.CreateProductItem(product, "Pick Up");
+        DB.Instance.LogEvent(product, "Pick Up");
     }
-    private void OnProductPutDown()
+    private void OnProductPutDown(Product product)
     {
-        DB.Instance.CreateProductItem(product, "Put Down");
+        DB.Instance.LogEvent(product, "Put Down");
     }
 }
