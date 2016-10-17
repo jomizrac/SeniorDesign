@@ -13,6 +13,7 @@ namespace SimpleSerial {
 	internal static class ExtensionMethods {
 
 		public static void Play( this AxWindowsMediaPlayer player, string filePath ) {
+			Console.WriteLine( "Playing video: " + filePath );
 			player.URL = filePath;
 			player.Ctlcontrols.play();
 		}
