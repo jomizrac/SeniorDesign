@@ -28,6 +28,11 @@ namespace SimpleSerial {
 
 		private static string tableName = "EventCatalog";
 
+        public DB()
+        {
+            CreateProductItem("ExampleID", "ExampleName", 1, 999, "pick up");
+        }
+
 		//Creates a new item in the database.
 		public static void CreateProductItem( string currentProductID, string currentProductName, int currentProdLocation, int currentTime, string eventType ) {
             Console.WriteLine("\n*** Executing CreateProductItem() ***");
