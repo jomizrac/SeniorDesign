@@ -17,34 +17,55 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
+        private StopWatch stopwatch;
 
         private LEDManager()
         {
-            Initializer();
+            Initialize();
+            stopwatch = new StopWatch();
+            stopwatch.Start();
+
+            new Thread(() => CheckTime()).Start();
         }
 
+        //register for events coming from arduino parser
         private void Initialize()
         {
             ArduinoParser.Instance.SlotPickUpEvent += Instance.OnSlotPickup;
             ArduinoParser.Instance.SlotPutDownEvent += Instance.OnSlotPutDown;
         }
-        
-
-        //register for events coming from arduino parser
 
         //activate light at a slot
-        private void OnSlotPickup(int slot)
+        private void OnSlotPickup(int slotIdx)
         {
-            String command = "";    //build the command
+            String command = slotIdx + " U" ;    //build the command
             ArduinoParser.Instance.SendCommand(command);
+
+            stopwatch.Restart();
         }
         
         //deactivate light at a slot
-        private void OnSlotPickup(int slot)
+        private void OnSlotPutDown(int slotIdx)
         {
-            String command = "";    //build the command
+            String command = slotIdx + " D";    //build the command
             AdruinoParser.Instance.SendCommand(command);
+
+            stopwatch.Restart();
         }
-        //activate the chase effect
+
+        private void CheckTime()
+        {
+            while ()
+            {
+
+            }
+        }
+
+        //timer for the chase event and send command
+        private void SendChaseEvent()
+        {
+            String command = "CS";
+            ArduinoParser.Instance.SendCommand(command);
+        }
     }
 }
