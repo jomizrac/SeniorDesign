@@ -90,3 +90,4 @@ C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj
 C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.MainForm.resources
 C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.Properties.Resources.resources
 C:\Users\Jonathan!\Desktop\Classes\Senior\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.csproj.GenerateResource.Cache
+C:\Users\Erin Snider\ShelfRockr\2016FallTeam07\Tablet\SimpleSerial\obj\Debug\SimpleSerial.MainForm.resources

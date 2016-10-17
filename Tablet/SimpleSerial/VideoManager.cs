@@ -22,6 +22,7 @@ namespace SimpleSerial {
 		private List<Product> queue = new List<Product>();
 
 		private int flag;
+        private int queueTime;
 
 		/// <summary> Just for syntax convenience. </summary>
 		public AxWindowsMediaPlayer Player { get { return MainProgram.Instance.Form.Player; } }
