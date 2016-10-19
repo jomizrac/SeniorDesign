@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SimpleSerial {
 
@@ -13,14 +10,14 @@ namespace SimpleSerial {
 
 		public string productID { get; private set; }
 
-        public int slotID { get; set; }
+		public int slotID { get; set; }
 
-        public Status status { get; set; }
+		public Status status { get; set; }
 
 		public Product( string name, string productID, int slotID, Status status = Status.PutDown ) {
 			this.name = name;
 			this.productID = productID;
-            this.slotID = slotID;
+			this.slotID = slotID;
 			this.status = status;
 		}
 
@@ -28,6 +25,5 @@ namespace SimpleSerial {
 			if ( other == null ) return false;
 			return productID.Equals( other.productID );
 		}
-
 	}
 }

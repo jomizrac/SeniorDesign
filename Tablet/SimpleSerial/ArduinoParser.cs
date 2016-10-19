@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
 using System.IO.Ports;
-using System.Linq;
 using System.Management;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace SimpleSerial {
 
@@ -52,6 +48,12 @@ namespace SimpleSerial {
 			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
 			serialPort.Open();
 			Console.WriteLine( "Successfully opened port: " + serialPort.PortName );
+		}
+
+		//sending commands to the Arduino for it to exexute on the hardware
+		//only sends commands for LEDs from LEDManager right now
+		public void SendCommand( String command ) {
+			serialPort.WriteLine( command );
 		}
 
 		//Checks which port the Arduino is connected to
@@ -115,13 +117,5 @@ namespace SimpleSerial {
 				Console.WriteLine( "Unrecognized alpha string: " + alpha );
 			}
 		}
-
-        //sending commands to the Arduino for it to exexute on the hardware
-        //only sends commands for LEDs from LEDManager right now
-        public void SendCommand(String command)
-        {
-            serialPort.WriteLine(command);
-        }
-
-    }
+	}
 }

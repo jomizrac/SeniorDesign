@@ -1,17 +1,10 @@
-﻿using Amazon.S3;
-using Amazon.S3.Transfer;
-using AxWMPLib;
+﻿using AxWMPLib;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace SimpleSerial {
 
