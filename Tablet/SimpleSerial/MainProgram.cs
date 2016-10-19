@@ -10,10 +10,10 @@ using System.Windows.Forms;
 
 namespace SimpleSerial {
 
-    /// <summary>
-    /// This class serves as the main point of logic for the ShelfRokr.
-    /// </summary>
-    internal class MainProgram {
+	/// <summary>
+	/// This class serves as the main point of logic for the ShelfRokr.
+	/// </summary>
+	internal class MainProgram {
 		public MainForm Form;
 
 		#region Singleton
@@ -43,18 +43,19 @@ namespace SimpleSerial {
 			ShelfInventory.Instance.UpdateSlot( 4, new Product( "product 4", "4", 4 ) );
 			ShelfInventory.Instance.UpdateSlot( 5, new Product( "product 5", "5", 5 ) );
 			ShelfInventory.Instance.UpdateSlot( 6, new Product( "product 6", "6", 6 ) );
-            //write new config file
-            VideoConfigs config = new VideoConfigs();
-            config.behavior = VideoConfigs.Behavior.Queued;
-            Instance.Serialize(config);
-            //serialize to json
+
+			//write new config file
+			VideoConfigs config = new VideoConfigs();
+			config.behavior = VideoConfigs.Behavior.Queued;
+			Instance.Serialize( config );
+			//serialize to json
 
 			// Pull any missing videos
 			LocalStorage.Instance.SyncVideos();
 
 			// Initialize any singletons that have not been called yet
 			var ard = ArduinoParser.Instance;
-            var led = LEDManager.Instance;
+			var led = LEDManager.Instance;
 			var vm = VideoManager.Instance;
 			var db = DB.Instance;
 			var log = Logger.Instance;
@@ -63,22 +64,8 @@ namespace SimpleSerial {
 			// Warning: no code after Application.Run()'s while-loop will be reached!
 		}
 
-        private void Serialize(VideoConfigs config)
-        {
-            string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
-
-            if (!File.Exists(videoConfigFile))
-            {
-                string directory = Path.GetDirectoryName(videoConfigFile);
-                Directory.CreateDirectory(directory);
-                File.WriteAllText(videoConfigFile, JsonConvert.SerializeObject(config));
-
-            }
-
-        }
-
-        /// <summary> Makes sure the credentials for AWS are present in the correct file </summary>
-        private static bool AWSCredentialsPresent() {
+		/// <summary> Makes sure the credentials for AWS are present in the correct file </summary>
+		private static bool AWSCredentialsPresent() {
 			string credentials = ConfigurationManager.AppSettings["AWSProfilesLocation"];
 			if ( !File.Exists( credentials ) ) {
 				string directory = Path.GetDirectoryName( credentials );
@@ -95,6 +82,17 @@ namespace SimpleSerial {
 				return false;
 			}
 			return true;
+		}
+
+		private void Serialize( VideoConfigs config ) {
+			string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
+
+			if ( !File.Exists( videoConfigFile ) ) {
+				string directory = Path.GetDirectoryName( videoConfigFile );
+				Directory.CreateDirectory( directory );
+			}
+
+			File.WriteAllText( videoConfigFile, JsonConvert.SerializeObject( config ) );
 		}
 	}
 }
