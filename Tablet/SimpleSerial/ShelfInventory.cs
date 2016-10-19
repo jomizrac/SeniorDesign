@@ -43,19 +43,16 @@ namespace SimpleSerial {
 
 		private Dictionary<int, Product> slots = new Dictionary<int, Product>();
 
-		//private Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
-		//		public List<Product> products = new List<Product>();
-
 		private ShelfInventory() {
 			Deserialize();
-
 			new Thread( () => Initialize() ).Start();
 		}
 
 		public void UpdateSlot( int slotIdx, Product newProduct ) {
 			// Update the list in memory
 			slots.Add( slotIdx, newProduct );
-            newProduct.slotID = slotIdx;
+			newProduct.slotID = slotIdx;
+
 			// Save the list to disk
 			Serialize();
 
@@ -90,12 +87,10 @@ namespace SimpleSerial {
 			if ( !File.Exists( shelfInventoryFile ) ) {
 				string directory = Path.GetDirectoryName( shelfInventoryFile );
 				Directory.CreateDirectory( directory );
-				File.Create( shelfInventoryFile );
 			}
 
 			File.WriteAllText( shelfInventoryFile, JsonConvert.SerializeObject( slots ) );
 		}
-
 
 		private void Deserialize() {
 			if ( File.Exists( shelfInventoryFile ) ) {
