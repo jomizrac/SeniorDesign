@@ -44,14 +44,11 @@ namespace SimpleSerial {
 			ShelfInventory.Instance.UpdateSlot( 5, new Product( "product 5", "5", 5 ) );
 			ShelfInventory.Instance.UpdateSlot( 6, new Product( "product 6", "6", 6 ) );
 
-			//write new config file
-			VideoConfigs config = new VideoConfigs();
-			config.behavior = VideoManager.PlaybackMethod.Queued;
-			Instance.Serialize( config );
-			//serialize to json
-
 			// Pull any missing videos
 			LocalStorage.Instance.SyncVideos();
+
+			// Temp way to set playback method
+			VideoManager.Instance.SetPlaybackMethod( VideoManager.PlaybackMethod.Queued );
 
 			// Initialize any singletons that have not been called yet
 			var ard = ArduinoParser.Instance;
@@ -82,17 +79,6 @@ namespace SimpleSerial {
 				return false;
 			}
 			return true;
-		}
-
-		private void Serialize( VideoConfigs config ) {
-			string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
-
-			if ( !File.Exists( videoConfigFile ) ) {
-				string directory = Path.GetDirectoryName( videoConfigFile );
-				Directory.CreateDirectory( directory );
-			}
-
-			File.WriteAllText( videoConfigFile, JsonConvert.SerializeObject( config ) );
 		}
 	}
 }

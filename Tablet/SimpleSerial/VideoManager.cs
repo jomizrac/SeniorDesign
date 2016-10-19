@@ -21,17 +21,13 @@ namespace SimpleSerial {
 	/// </summary>
 	internal class VideoManager {
 
-        private static string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
-        public enum PlaybackMethod { Immediate, Queued };
+		public enum PlaybackMethod { Immediate, Queued };
 
-        private PlaybackMethod playbackMethod = PlaybackMethod.Queued;
+		private VideoManagerConfig config = new VideoManagerConfig();
 		private List<Product> queue = new List<Product>();
 		private int isPending;
 
 		public AxWindowsMediaPlayer Player { get { return MainProgram.Instance.Form.Player; } }
-
-		// public static string jsonFile = @"C:\ShelfRokr\config\videoConfig.json";
-		// private static string behavior = ConfigurationManager.AppSettings["videoConfig"];
 
 		#region Singleton
 
@@ -44,9 +40,14 @@ namespace SimpleSerial {
 		#endregion Singleton
 
 		private VideoManager() {
-            Deserialize();           
+			Deserialize();
 			new Thread( () => Initialize() ).Start();
 			new Thread( () => Loop() ).Start();
+		}
+
+		public void SetPlaybackMethod( PlaybackMethod playbackMethod ) {
+			config.PlaybackMethod = playbackMethod;
+			Serialize();
 		}
 
 		private void Initialize() {
@@ -71,7 +72,7 @@ namespace SimpleSerial {
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
 		private void OnPlayStateChange( object sender, _WMPOCXEvents_PlayStateChangeEvent e ) {
-			if ( playbackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Count > 0 ) {
+			if ( config.PlaybackMethod == PlaybackMethod.Queued && e.newState == (int)WMPLib.WMPPlayState.wmppsMediaEnded && queue.Count > 0 ) {
 				// Remove the just-played video from the front of the queue
 				queue.RemoveAt( 0 );
 				Interlocked.Increment( ref isPending );
@@ -91,10 +92,10 @@ namespace SimpleSerial {
 		}
 
 		private void OnProductPickup( Product product ) {
-			if ( playbackMethod == PlaybackMethod.Immediate ) {
+			if ( config.PlaybackMethod == PlaybackMethod.Immediate ) {
 				Player.Play( product );
 			}
-			else if ( playbackMethod == PlaybackMethod.Queued ) {
+			else if ( config.PlaybackMethod == PlaybackMethod.Queued ) {
 				// If the queue is empty (no video currently playing), go ahead and start this video
 				if ( queue.Count == 0 ) {
 					Player.Play( product );
@@ -106,7 +107,7 @@ namespace SimpleSerial {
 		}
 
 		private void OnProductPutDown( Product product ) {
-			if ( playbackMethod == PlaybackMethod.Queued ) {
+			if ( config.PlaybackMethod == PlaybackMethod.Queued ) {
 				// If we put down the video that's currently playing, and there's another waiting in the queue...
 				if ( queue.Count > 1 && queue[0] == product ) {
 					Player.Play( queue[1] );
@@ -115,13 +116,29 @@ namespace SimpleSerial {
 				queue.Remove( product );
 			}
 		}
-        private void Deserialize()
-        {
-            if (File.Exists(videoConfigFile))
-            {
-                VideoConfigs config = JsonConvert.DeserializeObject<VideoConfigs>( File.ReadAllText( videoConfigFile ) );
-                playbackMethod = config.behavior;
-            }
-        }
-    }
+
+		private void Serialize() {
+			string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
+
+			if ( !File.Exists( videoConfigFile ) ) {
+				string directory = Path.GetDirectoryName( videoConfigFile );
+				Directory.CreateDirectory( directory );
+			}
+
+			File.WriteAllText( videoConfigFile, JsonConvert.SerializeObject( config ) );
+		}
+
+		private void Deserialize() {
+			string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
+
+			if ( File.Exists( videoConfigFile ) ) {
+				config = JsonConvert.DeserializeObject<VideoManagerConfig>( File.ReadAllText( videoConfigFile ) );
+			}
+		}
+	}
+
+	[Serializable]
+	internal class VideoManagerConfig {
+		public VideoManager.PlaybackMethod PlaybackMethod = VideoManager.PlaybackMethod.Queued;
+	}
 }
