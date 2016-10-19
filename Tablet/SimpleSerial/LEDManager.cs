@@ -19,19 +19,12 @@ namespace SimpleSerial {
 
         #endregion Singleton
 
-        //timer is set up for 5 minutes. time is in millis
-        private long IDLE_TIMER = 300000;
 
-        //stop watch that is referenced against the IDLE_TIMER
-        private Stopwatch stopwatch;
 
         private LEDManager()
         {
             new Thread(() => Initialize()).Start();
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
 
-            new Thread(() => CheckTime()).Start();
         }
 
         //register for events coming from arduino parser
@@ -39,6 +32,7 @@ namespace SimpleSerial {
         {
             ArduinoParser.Instance.SlotPickUpEvent += Instance.OnSlotPickup;
             ArduinoParser.Instance.SlotPutDownEvent += Instance.OnSlotPutDown;
+            IdleDetector.Instance.IdleProcessEvent += Instance.SendChaseCommand;
         }
 
         //activate light at a slot
@@ -46,8 +40,6 @@ namespace SimpleSerial {
         {
             String command = "LED U " + slotIdx;    //build the command
             ArduinoParser.Instance.SendCommand(command);
-
-            stopwatch.Restart();
         }
         
         //deactivate light at a slot
@@ -55,26 +47,10 @@ namespace SimpleSerial {
         {
             String command = "LED D " + slotIdx;    //build the command
             ArduinoParser.Instance.SendCommand(command);
-
-            stopwatch.Restart();
-        }
-
-        //checks the timer to see if a chase effect needs to be send
-        private void CheckTime()
-        {
-            while (true)
-            {
-                if(stopwatch.ElapsedMilliseconds >= IDLE_TIMER)
-                {
-                    SendChaseEvent();
-                    stopwatch.Restart();
-                }
-                Thread.Sleep(5000);
-            }
         }
 
         //timer for the chase event and send command
-        private void SendChaseEvent()
+        private void SendChaseCommand()
         {
             String command = "LED C";
             ArduinoParser.Instance.SendCommand(command);

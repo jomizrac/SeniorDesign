@@ -51,6 +51,7 @@ namespace SimpleSerial {
 			var vm = VideoManager.Instance;
 			var db = DB.Instance;
 			var log = Logger.Instance;
+            var idle = IdleDetector.Instance;
 
 			Application.Run( Instance.Form );
 			// Warning: no code after Application.Run()'s while-loop will be reached!

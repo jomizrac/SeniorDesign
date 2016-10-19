@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace SimpleSerial
 {
@@ -9,25 +11,73 @@ namespace SimpleSerial
     {
         #region Singleton
 
-        private static ArduinoParser m_instance;
+        private static IdleDetector m_instance;
 
-        public static ArduinoParser Instance
+        public static  IdleDetector Instance
         {
-            get { return m_instance ?? (m_instance = new ArduinoParser()); }
+            get { return m_instance ?? (m_instance = new IdleDetector()); }
         }
 
         #endregion Singleton
 
         #region Events
 
-        public delegate void SlotPickUp(int slotIdx);
+        //not sure if i need this. 
+        public delegate void IdleProcess();
 
-        public delegate void SlotPutDown(int slotIdx);
-
-        public event SlotPickUp SlotPickUpEvent;
-
-        public event SlotPutDown SlotPutDownEvent;
+        public event IdleProcess IdleProcessEvent;
 
         #endregion Events
+
+        //timer is set up for 5 minutes. time is in millis
+        private long IDLE_TIMER = 300000;
+
+        //intervals at which the stop watch is checked in millis
+        private int WATCH_DELAY = 5000;
+
+        //stop watch that is referenced against the IDLE_TIMER
+        private Stopwatch stopwatch;
+
+        private IdleDetector()
+        {
+            new Thread( () => Initialize() ).Start();
+
+            stopwatch = new Stopwatch();
+            stopwatch.Start();
+            new Thread( () => CheckTime() ).Start();
+        }
+
+        private void Initialize()
+        {
+            //remove any registered events if happen to be registered before needed
+            ArduinoParser.Instance.SlotPickUpEvent -= Instance.ResetTimer;
+            ArduinoParser.Instance.SlotPutDownEvent -= Instance.ResetTimer;
+
+            //registering to events
+            ArduinoParser.Instance.SlotPickUpEvent += Instance.ResetTimer;
+            ArduinoParser.Instance.SlotPutDownEvent += Instance.ResetTimer;
+        }
+
+        //happens when there is a pickup or putdown event. indicates someone
+        //interacting with the shelf and the idle timer should be reset.
+        //dont care about the slotIdx. it is just extra information
+        private void ResetTimer( int slotIdx)
+        {
+            stopwatch.Restart();
+        }
+
+        //checks the timer to see if a chase idle event needs to be sent
+        private void CheckTime()
+        {
+            while (true)
+            {
+                if (stopwatch.ElapsedMilliseconds >= IDLE_TIMER)
+                {
+                    IdleProcessEvent?.Invoke();
+                    stopwatch.Restart();
+                }
+                Thread.Sleep(WATCH_DELAY);
+            }
+        }
     }
 }
