@@ -99,7 +99,7 @@ void loop() {
   readInput();
 
   //update the lighting effects
-  //updateLighting();
+  updateLighting();
 }
 
 //reads through all of the product sensors to see which have been picked up
