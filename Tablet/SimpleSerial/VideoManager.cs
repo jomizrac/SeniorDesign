@@ -118,21 +118,21 @@ namespace SimpleSerial {
 		}
 
 		private void Serialize() {
-			string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
+			string filePath = ConfigurationManager.AppSettings["videoConfig"];
 
-			if ( !File.Exists( videoConfigFile ) ) {
-				string directory = Path.GetDirectoryName( videoConfigFile );
+			if ( !File.Exists( filePath ) ) {
+				string directory = Path.GetDirectoryName( filePath );
 				Directory.CreateDirectory( directory );
 			}
 
-			File.WriteAllText( videoConfigFile, JsonConvert.SerializeObject( config ) );
+			File.WriteAllText( filePath, JsonConvert.SerializeObject( config ) );
 		}
 
 		private void Deserialize() {
-			string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
+			string filePath = ConfigurationManager.AppSettings["videoConfig"];
 
-			if ( File.Exists( videoConfigFile ) ) {
-				config = JsonConvert.DeserializeObject<VideoManagerConfig>( File.ReadAllText( videoConfigFile ) );
+			if ( File.Exists( filePath ) ) {
+				config = JsonConvert.DeserializeObject<VideoManagerConfig>( File.ReadAllText( filePath ) );
 			}
 		}
 	}
