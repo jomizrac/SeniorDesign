@@ -50,7 +50,7 @@ namespace SimpleSerial
             try
             {
                 TableDescription tabledescription = client.DescribeTable(request).Table;
-            } catch(ResourceNotFoundException e)
+            } catch(ResourceNotFoundException)
             {
                 CreateTable();
             }
