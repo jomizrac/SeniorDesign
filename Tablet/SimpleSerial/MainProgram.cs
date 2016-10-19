@@ -49,6 +49,7 @@ namespace SimpleSerial {
 
 			// Initialize any singletons that have not been called yet
 			var ard = ArduinoParser.Instance;
+            var led = LEDManager.Instance;
 			var vm = VideoManager.Instance;
 			var db = DB.Instance;
 			var log = Logger.Instance;
