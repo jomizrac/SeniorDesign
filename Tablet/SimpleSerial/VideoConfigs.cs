@@ -7,17 +7,14 @@ using System.Text;
 
 namespace SimpleSerial
 {
-    public enum Behavior { Interruptable, Queued};
+
+    [Serializable]
 
     class VideoConfigs
     {
-        Behavior behavior = Behavior.Interruptable;
-
+        public enum Behavior { Interruptable, Queued };
+        public Behavior behavior = Behavior.Interruptable;
 
     }
-    
-    
-
-
 
 }

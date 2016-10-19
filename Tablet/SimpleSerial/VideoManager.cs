@@ -42,6 +42,9 @@ namespace SimpleSerial {
 		#endregion Singleton
 
 		private VideoManager() {
+            //if config file exists
+              //load config file
+           
 			new Thread( () => Initialize() ).Start();
 			new Thread( () => Loop() ).Start();
 		}
