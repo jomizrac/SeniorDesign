@@ -45,6 +45,7 @@ namespace SimpleSerial {
 		private ArduinoParser() {
 			serialPort.PortName = AutodetectArduinoPort() ?? ConfigurationManager.AppSettings["defaultPort"];
 			serialPort.BaudRate = int.Parse( ConfigurationManager.AppSettings["baudRate"] );
+			serialPort.DataReceived -= new SerialDataReceivedEventHandler( OnDataReceived );
 			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
 			serialPort.Open();
 			Console.WriteLine( "Successfully opened port: " + serialPort.PortName );
@@ -52,7 +53,7 @@ namespace SimpleSerial {
 
 		//sending commands to the Arduino for it to exexute on the hardware
 		//only sends commands for LEDs from LEDManager right now
-		public void SendCommand( String command ) {
+		public void SendCommand( string command ) {
 			serialPort.WriteLine( command );
 		}
 
