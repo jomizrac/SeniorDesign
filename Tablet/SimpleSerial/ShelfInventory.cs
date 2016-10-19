@@ -33,9 +33,13 @@ namespace SimpleSerial {
 
 		public delegate void ProductPutDown( Product product );
 
+		public delegate void SlotUpdated( int slotIdx, Product oldProduct, Product newProduct );
+
 		public event ProductPickUp ProductPickUpEvent;
 
 		public event ProductPutDown ProductPutDownEvent;
+
+		public event SlotUpdated SlotUpdatedEvent;
 
 		#endregion Events
 
@@ -49,6 +53,9 @@ namespace SimpleSerial {
 		}
 
 		public void UpdateSlot( int slotIdx, Product newProduct ) {
+			Product oldProduct = slots[slotIdx];
+			if ( oldProduct == newProduct ) return;
+
 			// Update the list in memory
 			slots.Add( slotIdx, newProduct );
 			newProduct.slotID = slotIdx;
@@ -59,8 +66,7 @@ namespace SimpleSerial {
 			// sync with cloud db
 			//			DB.Instance.addShelf( products ); // TODO
 
-			// Download any new videos, if needed (TODO, maybe have a "slot updated" event that will trigger this instead)
-			LocalStorage.Instance.SyncVideos();
+			SlotUpdatedEvent?.Invoke( slotIdx, oldProduct, newProduct );
 		}
 
 		public List<Product> ProductList() {
@@ -68,7 +74,10 @@ namespace SimpleSerial {
 		}
 
 		private void Initialize() {
+			ArduinoParser.Instance.SlotPickUpEvent -= Instance.OnSlotPickup;
 			ArduinoParser.Instance.SlotPickUpEvent += Instance.OnSlotPickup;
+
+			ArduinoParser.Instance.SlotPutDownEvent -= Instance.OnSlotPutDown;
 			ArduinoParser.Instance.SlotPutDownEvent += Instance.OnSlotPutDown;
 		}
 

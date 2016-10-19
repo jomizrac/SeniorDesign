@@ -7,6 +7,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace SimpleSerial {
 
@@ -35,6 +36,8 @@ namespace SimpleSerial {
 		private LocalStorage() {
 			client = new AmazonS3Client( Amazon.RegionEndpoint.USEast1 );
 			fileTransferUtility = new TransferUtility( client );
+
+			new Thread( () => Initialize() ).Start();
 		}
 
 		public void SyncVideos() {
@@ -79,6 +82,15 @@ namespace SimpleSerial {
 
 		public string GetFilePathForProduct( string productID ) {
 			return videoDirectory + productID + videoFileExtension;
+		}
+
+		private void Initialize() {
+			ShelfInventory.Instance.SlotUpdatedEvent -= Instance.OnSlotUpdated;
+			ShelfInventory.Instance.SlotUpdatedEvent += Instance.OnSlotUpdated;
+		}
+
+		private void OnSlotUpdated( int slotIdx, Product oldProduct, Product newProduct ) {
+			Instance.SyncVideos();
 		}
 	}
 }
