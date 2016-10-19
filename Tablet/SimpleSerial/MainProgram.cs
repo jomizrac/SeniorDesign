@@ -46,7 +46,7 @@ namespace SimpleSerial {
 
 			//write new config file
 			VideoConfigs config = new VideoConfigs();
-			config.behavior = VideoConfigs.Behavior.Queued;
+			config.behavior = VideoManager.PlaybackMethod.Queued;
 			Instance.Serialize( config );
 			//serialize to json
 

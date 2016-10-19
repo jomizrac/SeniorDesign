@@ -1,6 +1,7 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Transfer;
 using AxWMPLib;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -20,9 +21,10 @@ namespace SimpleSerial {
 	/// </summary>
 	internal class VideoManager {
 
-		private enum PlaybackMethod { Immediate, Queued };
+        private static string videoConfigFile = ConfigurationManager.AppSettings["videoConfig"];
+        public enum PlaybackMethod { Immediate, Queued };
 
-		private PlaybackMethod playbackMethod = PlaybackMethod.Queued;
+        private PlaybackMethod playbackMethod = PlaybackMethod.Queued;
 		private List<Product> queue = new List<Product>();
 		private int isPending;
 
@@ -42,9 +44,7 @@ namespace SimpleSerial {
 		#endregion Singleton
 
 		private VideoManager() {
-            //if config file exists
-              //load config file
-           
+            Deserialize();           
 			new Thread( () => Initialize() ).Start();
 			new Thread( () => Loop() ).Start();
 		}
@@ -115,5 +115,13 @@ namespace SimpleSerial {
 				queue.Remove( product );
 			}
 		}
-	}
+        private void Deserialize()
+        {
+            if (File.Exists(videoConfigFile))
+            {
+                VideoConfigs config = JsonConvert.DeserializeObject<VideoConfigs>( File.ReadAllText( videoConfigFile ) );
+                playbackMethod = config.behavior;
+            }
+        }
+    }
 }

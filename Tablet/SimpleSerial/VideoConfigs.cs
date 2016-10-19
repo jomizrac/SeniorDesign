@@ -12,8 +12,7 @@ namespace SimpleSerial
 
     class VideoConfigs
     {
-        public enum Behavior { Interruptable, Queued };
-        public Behavior behavior = Behavior.Interruptable;
+        public VideoManager.PlaybackMethod behavior = VideoManager.PlaybackMethod.Immediate;
 
     }
 
