@@ -99,16 +99,7 @@ namespace SimpleSerial
             var response = client.CreateTable(request);
 
             var tableDescription = response.TableDescription;
-            //Console.WriteLine("{1}: {0} \t ReadsPerSec: {2} \t WritesPerSec: {3}",
-            //                tableDescription.TableStatus,
-            //                tableDescription.TableName,
-            //                tableDescription.ProvisionedThroughput.ReadCapacityUnits,
-            //                tableDescription.ProvisionedThroughput.WriteCapacityUnits);
-
-            //string status = tableDescription.TableStatus;
-            //Console.WriteLine(tableName + " - " + status);
-
-            Thread.Sleep(1000);
+            WaitTillTableCreated(client, tableName, response);
 
         }
 
@@ -168,6 +159,34 @@ namespace SimpleSerial
             //			shelf["ShelfMAC"] = currentShelfMAC;
             //			shelf["ProductList"] = nameList;
             //			shelfList.PutItem( shelf );
+        }
+    private static void WaitTillTableCreated(AmazonDynamoDBClient client, string tableName,
+                                                CreateTableResponse response)
+    {
+        var tableDescription = response.TableDescription;
+
+        string status = tableDescription.TableStatus;
+
+        Console.WriteLine(tableName + " - " + status);
+
+            // Let us wait until table is created. Call DescribeTable.
+            while (status != "ACTIVE")
+            {
+                System.Threading.Thread.Sleep(5000); // Wait 5 seconds.
+                try
+                {
+                    var res = client.DescribeTable(new DescribeTableRequest
+                    {
+                        TableName = tableName
+                    });
+                    Console.WriteLine("Table name: {0}, status: {1}", res.Table.TableName,
+                                                                      res.Table.TableStatus);
+                    status = res.Table.TableStatus;
+                }
+                // Try-catch to handle potential eventual-consistency issue.
+                catch (ResourceNotFoundException)
+                { }
+            }
         }
     }
 }
