@@ -58,6 +58,9 @@ namespace SimpleSerial {
 
 			// sync with cloud db
 			//			DB.Instance.addShelf( products ); // TODO
+
+			// Download any new videos, if needed (TODO, maybe have a "slot updated" event that will trigger this instead)
+			LocalStorage.Instance.SyncVideos();
 		}
 
 		public List<Product> ProductList() {
