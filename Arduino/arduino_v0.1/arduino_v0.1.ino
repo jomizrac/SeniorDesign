@@ -1,3 +1,4 @@
+
 #include "FastLED.h"
 
 //pin number of data pin
@@ -70,19 +71,6 @@ void setup() {
   initializeThresholds();
   initializeSlots();
   LEDSetup();
-
-/////////////TESTING LIGHTING///////////////////
-
-//  activateSlot(0);
-//  activateSlot(1);
-//  activateSlot(2);
-//  activateSlot(3);
-//  activateSlot(4);
-//  activateSlot(5);
-//  activateSlot(6);
-    chasingEffect = true;
-
-////////////////////////////////////////////////
   
   //informs FastLED library the reference for the LED array and how many there are
   /*FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);*/
@@ -108,10 +96,10 @@ void loop() {
   pollProductSensors();
   
   //receive any commands from the main program
-  //readInput();
+  readInput();
 
   //update the lighting effects
-  //updateLighting();
+  updateLighting();
 }
 
 //reads through all of the product sensors to see which have been picked up
@@ -163,29 +151,9 @@ boolean sensorWork(int slot){
     sendPutDown(slot);
   }
 
-////////////////////TESTING//////////////////////
-//  if(slot == 0){
-//  Serial.print("SLOT: ");
-//  Serial.print(slot);
-//  Serial.print(" ON value: ");
-//  Serial.print(sensorOn);
-//  //Serial.print(" OFF value: ");
-//  //Serial.print(sensorOff);
-//  //Serial.print(" Difference: ");\
-//  //Serial.print(difference);
-//  }
-////////////////////////////////////////////////
-
   //only want to update the threshold if the product has been sitting in place
   if(pickedUp[slot] == false && slot == 0){
-//    Serial.print(" Threshold before: ");
-//    Serial.print(thresholds[slot]);
     updateThresholds(sensorOn, slot);
-//    Serial.print(" Thresholds after: ");
-//    Serial.print(thresholds[slot]);
-//    Serial.print("\n");
-//  }else{
-//    Serial.print("\n");
   }
 }
 
@@ -214,43 +182,50 @@ void sendPutDown(int slot){
 //triggerLighting function
 void readInput(){
   if(Serial.available() > 0){
-    //parse input with Serial.read()
-    //for now will only read one char. can mod later on to account
-    //for more complex commands
-    char effect = Serial.read();
+    String command = Serial.readStringUntil('\n');
     int slot = -1;
-    
-    if(effect == 'D'){
-      //convert the char for the slot into an int
-      slot = (Serial.read() - '0');
-      deactivateSlot(slot);
-          
-    }else if(effect == 'U'){
-      slot = (Serial.read() - '0');
-      stopChasingEffect();
-      activateSlot(slot);
-      
-    }else if(effect == 'C'){
-      slot = (Serial.read() - '0');
-      beginChaseEffect(slot);
+
+    //using if block with function calls to allow for
+    //extensibility in the future for other commandsS
+    if(command.startsWith("LED")){
+      parseCommandLED(command);
+    }else{
+      //not a valid command. can be altered later for additional commands
     }
-    
   }
+}
+
+void parseCommandLED(String command){
+  //char ledCommand[] = command;
+  //command.toCharArray(ledCommand, command.length());
   
+  char action = command.charAt(4);
+  int slot = (int)(command.charAt(6)) - 48;
+  if(action == 'U'){
+    stopChaseEffect();
+    activateSlot(slot);
+  }else if(action == 'D'){
+    stopChaseEffect();
+    deactivateSlot(slot);
+  }else if(action == 'C'){
+    beginChaseEffect(0);
+  }else{
+    //do nothing. clear buffer. bad command
+  }
 }
 
 void updateLighting(){
   if(chasingEffect){    //code for simulating the chase effect
     if(chaseRight){
       leds[chaseLeader - 2] = CRGB::Black;
-      if(chaseLeader == NUM_LEDS){
+      if(chaseLeader >= NUM_LEDS - 1){
         chaseRight == false;
       }else{
         chaseLeader++;
       }
     }else if(!chaseRight){
       leds[chaseLeader + 2] = CRGB::Black;
-      if(chaseLeader == 0){
+      if(chaseLeader <= 0){
         chaseRight = true;
       }else{
         chaseLeader--;
@@ -297,7 +272,7 @@ void beginChaseEffect(int slot){
 }
 
 //cancels the chasing effect
-void stopChasingEffect(){
+void stopChaseEffect(){
   chasingEffect = false;
   //reset the chase
   FastLED.setBrightness(0);

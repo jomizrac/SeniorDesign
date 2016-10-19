@@ -27,7 +27,7 @@ namespace SimpleSerial {
 
         private LEDManager()
         {
-            Initialize();
+            new Thread(() => Initialize()).Start();
             stopwatch = new Stopwatch();
             stopwatch.Start();
 
