@@ -71,10 +71,10 @@ namespace SimpleSerial {
             {
                 string directory = Path.GetDirectoryName(videoConfigFile);
                 Directory.CreateDirectory(directory);
-                File.Create(videoConfigFile);
+                File.WriteAllText(videoConfigFile, JsonConvert.SerializeObject(config));
+
             }
 
-            File.WriteAllText(videoConfigFile, JsonConvert.SerializeObject(config));
         }
 
         /// <summary> Makes sure the credentials for AWS are present in the correct file </summary>
