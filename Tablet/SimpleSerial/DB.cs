@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using Amazon.DynamoDBv2.Model;
+using System.Threading;
 
 namespace SimpleSerial
 {
@@ -34,7 +36,80 @@ namespace SimpleSerial
 
         public DB()
         {
+            var currentShelfMAC =
+            (
+                from nic in NetworkInterface.GetAllNetworkInterfaces()
+                where nic.OperationalStatus == OperationalStatus.Up
+                select nic.GetPhysicalAddress().ToString()
+            ).FirstOrDefault();
+            tableName = currentShelfMAC;
+            DescribeTableRequest request = new DescribeTableRequest
+            {
+                TableName = tableName
+            };
+            try
+            {
+                TableDescription tabledescription = client.DescribeTable(request).Table;
+            } catch(ResourceNotFoundException e)
+            {
+                CreateTable();
+            }
             LogEvent(ShelfInventory.Instance.ProductList()[0], "Pick Up");
+        }
+
+        private static void CreateTable()
+        {
+            Console.WriteLine("\n*** Creating table ***");
+            var request = new CreateTableRequest
+            {
+                AttributeDefinitions = new List<AttributeDefinition>()
+        {
+          new AttributeDefinition
+          {
+            AttributeName = "ProductID",
+            AttributeType = "N"
+          },
+          new AttributeDefinition
+          {
+            AttributeName = "Timestamp",
+            AttributeType = "N"
+          }
+        },
+                KeySchema = new List<KeySchemaElement>
+        {
+          new KeySchemaElement
+          {
+            AttributeName = "ProductID",
+            KeyType = "HASH"  //Partition key
+          },
+          new KeySchemaElement
+          {
+            AttributeName = "Timestamp",
+            KeyType = "RANGE"  //Sort key
+          }
+        },
+                ProvisionedThroughput = new ProvisionedThroughput
+                {
+                    ReadCapacityUnits = 5,
+                    WriteCapacityUnits = 5
+                },
+                TableName = tableName
+            };
+
+            var response = client.CreateTable(request);
+
+            var tableDescription = response.TableDescription;
+            //Console.WriteLine("{1}: {0} \t ReadsPerSec: {2} \t WritesPerSec: {3}",
+            //                tableDescription.TableStatus,
+            //                tableDescription.TableName,
+            //                tableDescription.ProvisionedThroughput.ReadCapacityUnits,
+            //                tableDescription.ProvisionedThroughput.WriteCapacityUnits);
+
+            //string status = tableDescription.TableStatus;
+            //Console.WriteLine(tableName + " - " + status);
+
+            Thread.Sleep(1000);
+
         }
 
         //Creates a new item in the database.
@@ -43,17 +118,17 @@ namespace SimpleSerial
             //Console.WriteLine("\n*** Executing LogEvent() ***");
             Table productCatalog = Table.LoadTable(client, tableName);
             var product = new Document();
-            var currentShelfMAC =
-            (
-                from nic in NetworkInterface.GetAllNetworkInterfaces()
-                where nic.OperationalStatus == OperationalStatus.Up
-                select nic.GetPhysicalAddress().ToString()
-            ).FirstOrDefault();
+            //var currentShelfMAC =
+            //(
+            //    from nic in NetworkInterface.GetAllNetworkInterfaces()
+            //    where nic.OperationalStatus == OperationalStatus.Up
+            //    select nic.GetPhysicalAddress().ToString()
+            //).FirstOrDefault();
             var deviceName = Environment.MachineName;
             product["ProductID"] = currentProduct.productID + DateTime.Now.ToString();
             product["ProductName"] = currentProduct.name;
             product["ProductLocation"] = currentProduct.slotID;
-            product["ShelfMAC"] = currentShelfMAC;
+            //product["ShelfMAC"] = currentShelfMAC;
             product["DeviceName"] = deviceName;
             product["Timestamp"] = DateTime.Now.ToString(new CultureInfo("en-US"));
             product["EventType"] = eventType;
