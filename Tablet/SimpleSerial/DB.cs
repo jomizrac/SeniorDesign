@@ -32,7 +32,7 @@ namespace SimpleSerial
 
         private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
-        private string tableName;
+        private static string tableName;
 
         public DB()
         {
