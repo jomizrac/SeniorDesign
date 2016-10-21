@@ -1,4 +1,5 @@
 ﻿using Amazon.S3;
+using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using System;
 using System.Configuration;
@@ -58,6 +59,11 @@ namespace SimpleSerial {
 				string filePath = GetFilePathForProduct( product );
 				if ( !File.Exists( filePath ) ) {
 					string key = product.productID + videoFileExtension;
+
+					// TODO temp, WIP
+					GetObjectMetadataResponse metadata = client.GetObjectMetadata( productVideoBucket, key );
+					Console.WriteLine( metadata.LastModified );
+
 					try {
 						Console.Write( "Downloading " + key + "... " );
 						fileTransferUtility.Download( filePath, productVideoBucket, key );
