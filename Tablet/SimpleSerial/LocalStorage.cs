@@ -43,37 +43,8 @@ namespace SimpleSerial {
 				Console.WriteLine( "Created new video directory: " + videoDirectory );
 			}
 
-			// Delete any videos for products that are no longer present
-			string[] filePaths = Directory.GetFiles( videoDirectory );
-			foreach ( string filePath in filePaths ) {
-				string fileName = Path.GetFileNameWithoutExtension( filePath );
-				bool productPresent = ShelfInventory.Instance.ProductList().Exists( p => p.productID == fileName );
-				if ( !productPresent ) {
-					File.Delete( filePath );
-					Console.WriteLine( "Deleted unused " + filePath );
-				}
-			}
-
-			// Download any missing videos for the current product lineup
-			foreach ( Product product in ShelfInventory.Instance.ProductList() ) {
-				string filePath = GetFilePathForProduct( product );
-				if ( !File.Exists( filePath ) ) {
-					string key = product.productID + videoFileExtension;
-
-					// TODO temp, WIP
-					GetObjectMetadataResponse metadata = client.GetObjectMetadata( productVideoBucket, key );
-					Console.WriteLine( metadata.LastModified );
-
-					try {
-						Console.Write( "Downloading " + key + "... " );
-						fileTransferUtility.Download( filePath, productVideoBucket, key );
-						Console.WriteLine( "Download complete" );
-					}
-					catch ( Exception ) {
-						Console.WriteLine( "Error retrieving object with key: " + key );
-					}
-				}
-			}
+			DeleteUnneededVideos();
+			DownloadMissingOrOutdatedVideos();
 
 			Console.WriteLine( "Video cloud sync complete" );
 		}
@@ -84,6 +55,47 @@ namespace SimpleSerial {
 
 		public string GetFilePathForProduct( string productID ) {
 			return videoDirectory + productID + videoFileExtension;
+		}
+
+		private void DeleteUnneededVideos() {
+			string[] filePaths = Directory.GetFiles( videoDirectory );
+			foreach ( string filePath in filePaths ) {
+				string fileName = Path.GetFileNameWithoutExtension( filePath );
+				bool productPresent = ShelfInventory.Instance.ProductList().Exists( p => p.productID == fileName );
+				if ( !productPresent ) {
+					File.Delete( filePath );
+					Console.WriteLine( "Deleted unused " + filePath );
+				}
+			}
+		}
+
+		private void DownloadMissingOrOutdatedVideos() {
+			foreach ( Product product in ShelfInventory.Instance.ProductList() ) {
+				string filePath = GetFilePathForProduct( product );
+				string key = product.productID + videoFileExtension;
+				if ( !File.Exists( filePath ) || IsOutdated( filePath, key ) ) {
+					try {
+						Console.Write( "Downloading " + key + "... " );
+						fileTransferUtility.Download( filePath, productVideoBucket, key );
+						Console.WriteLine( "Download complete" );
+					}
+					catch ( Exception ) {
+						Console.WriteLine( "Error retrieving object with key: " + key );
+					}
+				}
+			}
+		}
+
+		private bool IsOutdated( string filePath, string key ) {
+			DateTime local = File.GetLastWriteTime( filePath );
+			GetObjectMetadataResponse metadata = client.GetObjectMetadata( productVideoBucket, key );
+			DateTime remote = metadata.LastModified;
+
+			// TODO Temp for debugging
+			Console.WriteLine( "remote DateTime for " + filePath + " = " + remote );
+			Console.WriteLine( "local DateTime for " + filePath + " = " + local );
+
+			return local < remote;
 		}
 
 		private void Initialize() {
