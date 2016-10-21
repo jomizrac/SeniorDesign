@@ -50,7 +50,9 @@ namespace SimpleSerial {
 		}
 
 		public void UpdateSlot( int slotIdx, Product newProduct ) {
-			Product oldProduct = slots[slotIdx];
+			Product oldProduct = null;
+			slots.TryGetValue( slotIdx, out oldProduct );
+
 			if ( oldProduct == newProduct ) return;
 
 			// Update the list in memory
