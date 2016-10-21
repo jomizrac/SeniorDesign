@@ -32,28 +32,28 @@ namespace SimpleSerial
 
         private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
-        private static string tableName;
+        private static string tableName = "Events";
 
         public DB()
         {
-            var currentShelfMAC =
-            (
-                from nic in NetworkInterface.GetAllNetworkInterfaces()
-                where nic.OperationalStatus == OperationalStatus.Up
-                select nic.GetPhysicalAddress().ToString()
-            ).FirstOrDefault();
-            tableName = currentShelfMAC;
-            DescribeTableRequest request = new DescribeTableRequest
-            {
-                TableName = tableName
-            };
-            try
-            {
-                TableDescription tabledescription = client.DescribeTable(request).Table;
-            } catch(ResourceNotFoundException)
-            {
-                CreateTable();
-            }
+            //var currentShelfMAC =
+            //(
+            //    from nic in NetworkInterface.GetAllNetworkInterfaces()
+            //    where nic.OperationalStatus == OperationalStatus.Up
+            //    select nic.GetPhysicalAddress().ToString()
+            //).FirstOrDefault();
+            //tableName = currentShelfMAC;
+            //DescribeTableRequest request = new DescribeTableRequest
+            //{
+            //    TableName = tableName
+            //};
+            //try
+            //{
+            //    TableDescription tabledescription = client.DescribeTable(request).Table;
+            //} catch(ResourceNotFoundException)
+            //{
+            //    CreateTable();
+            //}
             LogEvent(ShelfInventory.Instance.ProductList()[0], "Pick Up");
         }
 
@@ -109,17 +109,17 @@ namespace SimpleSerial
             //Console.WriteLine("\n*** Executing LogEvent() ***");
             Table productCatalog = Table.LoadTable(client, tableName);
             var product = new Document();
-            //var currentShelfMAC =
-            //(
-            //    from nic in NetworkInterface.GetAllNetworkInterfaces()
-            //    where nic.OperationalStatus == OperationalStatus.Up
-            //    select nic.GetPhysicalAddress().ToString()
-            //).FirstOrDefault();
+            var currentShelfMAC =
+            (
+                from nic in NetworkInterface.GetAllNetworkInterfaces()
+                where nic.OperationalStatus == OperationalStatus.Up
+                select nic.GetPhysicalAddress().ToString()
+            ).FirstOrDefault();
             var deviceName = Environment.MachineName;
             product["ProductID"] = currentProduct.productID + DateTime.Now.ToString();
             product["ProductName"] = currentProduct.name;
             product["ProductLocation"] = currentProduct.slotID;
-            //product["ShelfMAC"] = currentShelfMAC;
+            product["ShelfMAC"] = currentShelfMAC;
             product["DeviceName"] = deviceName;
             product["Timestamp"] = DateTime.Now.ToString(new CultureInfo("en-US"));
             product["EventType"] = eventType;
