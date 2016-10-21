@@ -21,6 +21,8 @@ namespace SimpleSerial {
 			this.status = status;
 		}
 
+		#region Equality Comparison Overrides
+
 		public static bool operator ==( Product a, Product b ) {
 			// If both are null, or both are same instance, return true.
 			if ( ReferenceEquals( a, b ) ) {
@@ -44,5 +46,18 @@ namespace SimpleSerial {
 			if ( other == null ) return false;
 			return productID.Equals( other.productID );
 		}
+
+		public override bool Equals( Object obj ) {
+			//Check for null and compare run-time types.
+			if ( obj == null || this.GetType() != obj.GetType() ) return false;
+
+			return this.Equals( (Product)obj );
+		}
+
+		public override int GetHashCode() {
+			return productID.GetHashCode();
+		}
+
+		#endregion Equality Comparison Overrides
 	}
 }
