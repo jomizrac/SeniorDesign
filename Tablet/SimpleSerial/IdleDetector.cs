@@ -5,79 +5,69 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
-namespace SimpleSerial
-{
-   internal class IdleDetector
-    {
-        #region Singleton
+namespace SimpleSerial {
 
-        private static IdleDetector m_instance;
+	internal class IdleDetector {
 
-        public static  IdleDetector Instance
-        {
-            get { return m_instance ?? (m_instance = new IdleDetector()); }
-        }
+		#region Singleton
 
-        #endregion Singleton
+		private static IdleDetector m_instance;
 
-        #region Events
+		public static IdleDetector Instance {
+			get { return m_instance ?? ( m_instance = new IdleDetector() ); }
+		}
 
-        //not sure if i need this. 
-        public delegate void IdleProcess();
+		#endregion Singleton
 
-        public event IdleProcess IdleProcessEvent;
+		#region Events
 
-        #endregion Events
+		//not sure if i need this.
+		public delegate void IdleProcess();
 
-        //timer is set up for 5 minutes. time is in millis
-        private long IDLE_TIMER = 300000;
+		public event IdleProcess IdleProcessEvent;
 
-        //intervals at which the stop watch is checked in millis
-        private int WATCH_DELAY = 5000;
+		#endregion Events
 
-        //stop watch that is referenced against the IDLE_TIMER
-        private Stopwatch stopwatch;
+		//timer is set up for 5 minutes. time is in millis
+		private long IDLE_TIMER = 300000;
 
-        private IdleDetector()
-        {
-            new Thread( () => Initialize() ).Start();
+		//intervals at which the stop watch is checked in millis
+		private int WATCH_DELAY = 5000;
 
-            stopwatch = new Stopwatch();
-            stopwatch.Start();
-            new Thread( () => CheckTime() ).Start();
-        }
+		//stop watch that is referenced against the IDLE_TIMER
+		private Stopwatch stopwatch = new Stopwatch();
 
-        private void Initialize()
-        {
-            //remove any registered events if happen to be registered before needed
-            ArduinoParser.Instance.SlotPickUpEvent -= Instance.ResetTimer;
-            ArduinoParser.Instance.SlotPutDownEvent -= Instance.ResetTimer;
+		private IdleDetector() {
+			stopwatch.Start();
 
-            //registering to events
-            ArduinoParser.Instance.SlotPickUpEvent += Instance.ResetTimer;
-            ArduinoParser.Instance.SlotPutDownEvent += Instance.ResetTimer;
-        }
+			new Thread( () => Initialize() ).Start();
+			new Thread( () => CheckTime() ).Start();
+		}
 
-        //happens when there is a pickup or putdown event. indicates someone
-        //interacting with the shelf and the idle timer should be reset.
-        //dont care about the slotIdx. it is just extra information
-        private void ResetTimer( int slotIdx)
-        {
-            stopwatch.Restart();
-        }
+		private void Initialize() {
+			ArduinoParser.Instance.SlotPickUpEvent -= Instance.ResetTimer;
+			ArduinoParser.Instance.SlotPickUpEvent += Instance.ResetTimer;
 
-        //checks the timer to see if a chase idle event needs to be sent
-        private void CheckTime()
-        {
-            while (true)
-            {
-                if (stopwatch.ElapsedMilliseconds >= IDLE_TIMER)
-                {
-                    IdleProcessEvent?.Invoke();
-                    stopwatch.Restart();
-                }
-                Thread.Sleep(WATCH_DELAY);
-            }
-        }
-    }
+			ArduinoParser.Instance.SlotPutDownEvent -= Instance.ResetTimer;
+			ArduinoParser.Instance.SlotPutDownEvent += Instance.ResetTimer;
+		}
+
+		//happens when there is a pickup or putdown event. indicates someone
+		//interacting with the shelf and the idle timer should be reset.
+		//dont care about the slotIdx. it is just extra information
+		private void ResetTimer( int slotIdx ) {
+			stopwatch.Restart();
+		}
+
+		//checks the timer to see if a chase idle event needs to be sent
+		private void CheckTime() {
+			while ( true ) {
+				if ( stopwatch.ElapsedMilliseconds >= IDLE_TIMER ) {
+					IdleProcessEvent?.Invoke();
+					stopwatch.Restart();
+				}
+				Thread.Sleep( WATCH_DELAY );
+			}
+		}
+	}
 }

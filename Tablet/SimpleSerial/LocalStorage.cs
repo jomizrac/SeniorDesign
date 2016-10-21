@@ -90,11 +90,6 @@ namespace SimpleSerial {
 			DateTime local = File.GetLastWriteTime( filePath );
 			GetObjectMetadataResponse metadata = client.GetObjectMetadata( productVideoBucket, key );
 			DateTime remote = metadata.LastModified;
-
-			// TODO Temp for debugging
-			Console.WriteLine( "remote DateTime for " + filePath + " = " + remote );
-			Console.WriteLine( "local DateTime for " + filePath + " = " + local );
-
 			return local < remote;
 		}
 
