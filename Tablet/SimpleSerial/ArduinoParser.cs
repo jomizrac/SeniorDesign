@@ -107,11 +107,11 @@ namespace SimpleSerial {
 			var slotIdx = int.Parse( num );
 
 			if ( alpha == PickUp ) {
-				Console.WriteLine( "Picked up slot " + slotIdx );
+				Console.WriteLine( "DEBUG: Picked up slot " + slotIdx );
 				SlotPickUpEvent?.Invoke( slotIdx );
 			}
 			else if ( alpha == PutDown ) {
-				Console.WriteLine( "Put down slot " + slotIdx );
+				Console.WriteLine( "DEBUG: Put down slot " + slotIdx );
 				SlotPutDownEvent?.Invoke( slotIdx );
 			}
 			else {

@@ -47,11 +47,11 @@ namespace SimpleSerial {
 
 			// Initialize any singletons that have not been called yet
 			var ard = ArduinoParser.Instance;
-			var idle = IdleDetector.Instance;
+			//			var idle = IdleDetector.Instance;
 			var vm = VideoManager.Instance;
-			var led = LEDManager.Instance;
-			var db = DB.Instance;
-			var log = Logger.Instance;
+			//			var led = LEDManager.Instance;
+			//			var db = DB.Instance;
+			//			var log = Logger.Instance;
 
 			Application.Run( Instance.Form );
 			// Warning: no code after Application.Run()'s while-loop will be reached!
