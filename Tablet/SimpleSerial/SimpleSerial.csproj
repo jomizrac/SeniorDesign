@@ -74,7 +74,6 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="LEDManager.cs" />
     <Compile Include="LocalStorage.cs" />
-    <Compile Include="DatabaseLogger.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

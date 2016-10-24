@@ -1,8 +1,9 @@
-﻿using System.IO;
-using System.Threading;
+﻿using System.Threading;
 
 namespace SimpleSerial {
+
 	public class Logger {
+
 		#region Singleton
 
 		private static Logger m_instance;
@@ -13,19 +14,24 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
-		private TextWriter log;
-
 		private Logger() {
 			new Thread( () => Initialize() ).Start();
 		}
 
 		private void Initialize() {
+			ShelfInventory.Instance.ProductPickUpEvent -= Instance.OnProductPickup;
+			ShelfInventory.Instance.ProductPickUpEvent += Instance.OnProductPickup;
+
+			ShelfInventory.Instance.ProductPutDownEvent -= Instance.OnProductPutDown;
+			ShelfInventory.Instance.ProductPutDownEvent += Instance.OnProductPutDown;
 		}
 
-		public void Log( string message ) {
+		private void OnProductPickup( Product product ) {
+			Database.Instance.LogEvent( product, "Pick Up" );
 		}
 
-		private void DeleteOldLogs() {
+		private void OnProductPutDown( Product product ) {
+			Database.Instance.LogEvent( product, "Put Down" );
 		}
 	}
 }

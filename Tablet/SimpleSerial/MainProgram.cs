@@ -51,7 +51,7 @@ namespace SimpleSerial {
 			var vm = VideoManager.Instance;
 			var led = LEDManager.Instance;
 			var db = Database.Instance;
-			var log = DatabaseLogger.Instance;
+			var log = Logger.Instance;
 
 			Application.Run( Instance.Form );
 			// Warning: no code after Application.Run()'s while-loop will be reached!
