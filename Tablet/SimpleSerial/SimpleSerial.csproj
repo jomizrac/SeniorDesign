@@ -85,6 +85,7 @@
     <Compile Include="Product.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShelfInventory.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="Video.cs" />
     <Compile Include="VideoManager.cs" />
     <EmbeddedResource Include="MainForm.resx">

@@ -40,13 +40,13 @@ namespace SimpleSerial {
 		public void SyncVideos() {
 			if ( !Directory.Exists( videoDirectory ) ) {
 				Directory.CreateDirectory( videoDirectory );
-				Console.WriteLine( "Created new video directory: " + videoDirectory );
+				Util.Log( "Created new video directory: " + videoDirectory );
 			}
 
 			DeleteUnneededVideos();
 			DownloadMissingOrOutdatedVideos();
 
-			Console.WriteLine( "Video cloud sync complete" );
+			Util.Log( "Video cloud sync complete" );
 		}
 
 		public string GetFilePathForProduct( Product product ) {
@@ -64,7 +64,7 @@ namespace SimpleSerial {
 				bool productPresent = ShelfInventory.Instance.ProductList().Exists( p => p.productID == fileName );
 				if ( !productPresent ) {
 					File.Delete( filePath );
-					Console.WriteLine( "Deleted unused " + filePath );
+					Util.Log( "Deleted unused " + filePath );
 				}
 			}
 		}
@@ -75,12 +75,12 @@ namespace SimpleSerial {
 				string key = product.productID + videoFileExtension;
 				if ( !File.Exists( filePath ) || IsOutdated( filePath, key ) ) {
 					try {
-						Console.Write( "Downloading " + key + "... " );
+						Util.Log( "Downloading " + key + "... ", false );
 						fileTransferUtility.Download( filePath, productVideoBucket, key );
-						Console.WriteLine( "Download complete" );
+						Util.Log( "Download complete" );
 					}
 					catch ( Exception ) {
-						Console.WriteLine( "Error retrieving object with key: " + key );
+						Util.Log( "Error retrieving object with key: " + key );
 					}
 				}
 			}

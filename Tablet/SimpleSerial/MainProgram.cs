@@ -70,7 +70,7 @@ namespace SimpleSerial {
 					sw.WriteLine( "aws_secret_access_key=" );
 				}
 
-				Console.WriteLine( "AWS credentials file has not been setup. Please configure the following file: " + credentials );
+				Util.Log( "AWS credentials file has not been setup. Please configure the following file: " + credentials );
 				Console.ReadKey(); // Wait for user input
 				return false;
 			}

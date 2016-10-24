@@ -48,7 +48,7 @@ namespace SimpleSerial {
 			serialPort.DataReceived -= new SerialDataReceivedEventHandler( OnDataReceived );
 			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
 			serialPort.Open();
-			Console.WriteLine( "Successfully opened port: " + serialPort.PortName );
+			Util.Log( "Successfully opened port: " + serialPort.PortName );
 		}
 
 		//sending commands to the Arduino for it to exexute on the hardware
@@ -69,7 +69,7 @@ namespace SimpleSerial {
 					var deviceId = item["DeviceID"].ToString();
 
 					if ( desc.Contains( "Arduino" ) ) {
-						Console.WriteLine( "Autodetected Arduino on port: " + deviceId );
+						Util.Log( "Autodetected Arduino on port: " + deviceId );
 						return deviceId;
 					}
 				}
@@ -78,7 +78,7 @@ namespace SimpleSerial {
 				// NOOP
 			}
 
-			Console.WriteLine( "Unable to autodetect Arduino port" );
+			Util.Log( "Unable to autodetect Arduino port" );
 			return null;
 		}
 
@@ -113,7 +113,7 @@ namespace SimpleSerial {
 				SlotPutDownEvent?.Invoke( slotIdx );
 			}
 			else {
-				Console.WriteLine( "Unrecognized alpha string: " + alpha );
+				Util.Log( "Unrecognized alpha string: " + alpha );
 			}
 		}
 	}
