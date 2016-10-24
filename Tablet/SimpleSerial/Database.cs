@@ -25,45 +25,24 @@ namespace SimpleSerial {
 
 		#endregion Singleton
 
-		private const string EventsTable = "Events";
+		private const string EventsTableName = "Events";
 		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-
-		public Database() {
-			//var currentShelfMAC =
-			//(
-			//    from nic in NetworkInterface.GetAllNetworkInterfaces()
-			//    where nic.OperationalStatus == OperationalStatus.Up
-			//    select nic.GetPhysicalAddress().ToString()
-			//).FirstOrDefault();
-			//EventsTable = currentShelfMAC;
-			//DescribeTableRequest request = new DescribeTableRequest
-			//{
-			//    TableName = EventsTable
-			//};
-			//try
-			//{
-			//    TableDescription tabledescription = client.DescribeTable(request).Table;
-			//} catch(ResourceNotFoundException)
-			//{
-			//    CreateTable();
-			//}
-
-			//			LogEvent( ShelfInventory.Instance.ProductList()[0], "Pick Up" );
-		}
 
 		//Creates a new item in the database.
 		public void LogEvent( Product currentProduct, string eventType ) {
 			//Util.Log("\n*** Executing LogEvent() ***");
-			Table eventTable = Table.LoadTable( client, EventsTable );
-			var eventDoc = new Document();
+			Table eventsTable = Table.LoadTable( client, EventsTableName );
+
 			var currentShelfMAC =
 			(
 				from nic in NetworkInterface.GetAllNetworkInterfaces()
 				where nic.OperationalStatus == OperationalStatus.Up
 				select nic.GetPhysicalAddress().ToString()
 			).FirstOrDefault();
+
 			var deviceName = Environment.MachineName;
 
+			var eventDoc = new Document();
 			eventDoc["ProductID"] = currentProduct.productID;
 			eventDoc["ProductName"] = currentProduct.name;
 			eventDoc["ProductLocation"] = currentProduct.slotID;
@@ -71,8 +50,7 @@ namespace SimpleSerial {
 			eventDoc["DeviceName"] = deviceName;
 			eventDoc["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
 			eventDoc["EventType"] = eventType;
-
-			eventTable.PutItem( eventDoc );
+			eventsTable.PutItem( eventDoc );
 		}
 
 		private static void CreateTable() {
@@ -108,13 +86,13 @@ namespace SimpleSerial {
 					ReadCapacityUnits = 5,
 					WriteCapacityUnits = 5
 				},
-				TableName = EventsTable
+				TableName = EventsTableName
 			};
 
 			var response = client.CreateTable( request );
 
 			var tableDescription = response.TableDescription;
-			WaitTilTableCreated( client, EventsTable, response );
+			WaitTilTableCreated( EventsTableName, response );
 		}
 
 		private static void RetrieveProduct( int currentProductID ) {
@@ -149,7 +127,7 @@ namespace SimpleSerial {
 			//			shelfList.PutItem( shelf );
 		}
 
-		private static void WaitTilTableCreated( AmazonDynamoDBClient client, string tableName, CreateTableResponse response ) {
+		private static void WaitTilTableCreated( string tableName, CreateTableResponse response ) {
 			var tableDescription = response.TableDescription;
 
 			string status = tableDescription.TableStatus;
