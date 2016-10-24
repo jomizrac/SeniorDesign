@@ -10,7 +10,7 @@ namespace SimpleSerial {
 	/// <summary>
 	/// Class responsibilities:
 	/// Matches a slot index to a product
-	///		Stores locally on disk and in cloud DB
+	///		Stores locally on disk and in cloud Database
 	/// Translates slot index pickup/putdown events into product pickup/putdown events
 	/// </summary>
 	internal class ShelfInventory {
@@ -64,7 +64,7 @@ namespace SimpleSerial {
 			Serialize();
 
 			// sync with cloud db
-			//			DB.Instance.addShelf( products ); // TODO
+			//			Database.Instance.addShelf( products ); // TODO
 
 			SlotUpdatedEvent?.Invoke( slotIdx, oldProduct, newProduct );
 		}

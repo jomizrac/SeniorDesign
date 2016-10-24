@@ -70,7 +70,7 @@
   <ItemGroup>
     <Compile Include="ArduinoParser.cs" />
     <Compile Include="IdleDetector.cs" />
-    <Compile Include="DB.cs" />
+    <Compile Include="Database.cs" />
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="LEDManager.cs" />
     <Compile Include="LocalStorage.cs" />

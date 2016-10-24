@@ -13,33 +13,32 @@ namespace SimpleSerial {
 	/// <summary>
 	/// This class is responsible for storing the global AmazonDynamoDBClient connection.
 	/// </summary>
-	internal class DB {
+	internal class Database {
 
 		#region Singleton
 
-		private static DB m_instance;
+		private static Database m_instance;
 
-		public static DB Instance {
-			get { return m_instance ?? ( m_instance = new DB() ); }
+		public static Database Instance {
+			get { return m_instance ?? ( m_instance = new Database() ); }
 		}
 
 		#endregion Singleton
 
+		private const string EventsTable = "Events";
 		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
-		private static string tableName = "Events";
-
-		public DB() {
+		public Database() {
 			//var currentShelfMAC =
 			//(
 			//    from nic in NetworkInterface.GetAllNetworkInterfaces()
 			//    where nic.OperationalStatus == OperationalStatus.Up
 			//    select nic.GetPhysicalAddress().ToString()
 			//).FirstOrDefault();
-			//tableName = currentShelfMAC;
+			//EventsTable = currentShelfMAC;
 			//DescribeTableRequest request = new DescribeTableRequest
 			//{
-			//    TableName = tableName
+			//    TableName = EventsTable
 			//};
 			//try
 			//{
@@ -55,8 +54,8 @@ namespace SimpleSerial {
 		//Creates a new item in the database.
 		public void LogEvent( Product currentProduct, string eventType ) {
 			//Util.Log("\n*** Executing LogEvent() ***");
-			Table productCatalog = Table.LoadTable( client, tableName );
-			var doc = new Document();
+			Table eventTable = Table.LoadTable( client, EventsTable );
+			var eventDoc = new Document();
 			var currentShelfMAC =
 			(
 				from nic in NetworkInterface.GetAllNetworkInterfaces()
@@ -64,15 +63,16 @@ namespace SimpleSerial {
 				select nic.GetPhysicalAddress().ToString()
 			).FirstOrDefault();
 			var deviceName = Environment.MachineName;
-			doc["ProductID"] = currentProduct.productID;
-			doc["ProductName"] = currentProduct.name;
-			doc["ProductLocation"] = currentProduct.slotID;
-			doc["ShelfMAC"] = currentShelfMAC;
-			doc["DeviceName"] = deviceName;
-			doc["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
-			doc["EventType"] = eventType;
 
-			productCatalog.PutItem( doc );
+			eventDoc["ProductID"] = currentProduct.productID;
+			eventDoc["ProductName"] = currentProduct.name;
+			eventDoc["ProductLocation"] = currentProduct.slotID;
+			eventDoc["ShelfMAC"] = currentShelfMAC;
+			eventDoc["DeviceName"] = deviceName;
+			eventDoc["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
+			eventDoc["EventType"] = eventType;
+
+			eventTable.PutItem( eventDoc );
 		}
 
 		private static void CreateTable() {
@@ -97,24 +97,24 @@ namespace SimpleSerial {
 		  {
 			AttributeName = "ProductID",
 			KeyType = "HASH"  //Partition key
-          },
+		  },
 		  new KeySchemaElement
 		  {
 			AttributeName = "Timestamp",
 			KeyType = "RANGE"  //Sort key
-          }
+		  }
 		},
 				ProvisionedThroughput = new ProvisionedThroughput {
 					ReadCapacityUnits = 5,
 					WriteCapacityUnits = 5
 				},
-				TableName = tableName
+				TableName = EventsTable
 			};
 
 			var response = client.CreateTable( request );
 
 			var tableDescription = response.TableDescription;
-			WaitTilTableCreated( client, tableName, response );
+			WaitTilTableCreated( client, EventsTable, response );
 		}
 
 		private static void RetrieveProduct( int currentProductID ) {

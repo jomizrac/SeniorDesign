@@ -27,11 +27,11 @@ namespace SimpleSerial {
 		}
 
 		private void OnProductPickup( Product product ) {
-			DB.Instance.LogEvent( product, "Pick Up" );
+			Database.Instance.LogEvent( product, "Pick Up" );
 		}
 
 		private void OnProductPutDown( Product product ) {
-			DB.Instance.LogEvent( product, "Put Down" );
+			Database.Instance.LogEvent( product, "Put Down" );
 		}
 	}
 }

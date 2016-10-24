@@ -50,7 +50,7 @@ namespace SimpleSerial {
 			var idle = IdleDetector.Instance;
 			var vm = VideoManager.Instance;
 			var led = LEDManager.Instance;
-			var db = DB.Instance;
+			var db = Database.Instance;
 			var log = Logger.Instance;
 
 			Application.Run( Instance.Form );
