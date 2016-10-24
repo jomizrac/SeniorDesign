@@ -12,7 +12,7 @@ namespace SimpleSerial {
 		/// </summary>
 		/// <param name="message"></param>
 		public static void Log( string message, bool addNewLine = true ) {
-			string log = DateTime.Now.ToShortTimeString() + ": " + message;
+			string log = DateTime.Now.ToString( "h:mm:ss tt" ) + ": " + message;
 			if ( addNewLine ) {
 				Console.WriteLine( log );
 			}
