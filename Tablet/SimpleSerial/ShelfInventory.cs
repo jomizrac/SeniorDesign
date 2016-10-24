@@ -85,7 +85,6 @@ namespace SimpleSerial {
 		private void OnSlotPickup( int slotIdx ) {
 			Product product = slots[slotIdx];
 			product.status = Product.Status.PickedUp;
-			Console.WriteLine( "ProductPickUpEvent" );
 			ProductPickUpEvent?.Invoke( product );
 		}
 
@@ -93,7 +92,6 @@ namespace SimpleSerial {
 		private void OnSlotPutDown( int slotIdx ) {
 			Product product = slots[slotIdx];
 			product.status = Product.Status.PutDown;
-			Console.WriteLine( "ProductPutDownEvent" );
 			ProductPutDownEvent?.Invoke( product );
 		}
 
