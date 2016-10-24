@@ -165,7 +165,7 @@ namespace SimpleSerial {
 					var res = client.DescribeTable( new DescribeTableRequest {
 						TableName = tableName
 					} );
-					Util.Log( "Table name: {0}, status: {1}", res.Table.TableName,
+					Console.WriteLine( "Table name: {0}, status: {1}", res.Table.TableName,
 																	  res.Table.TableStatus );
 					status = res.Table.TableStatus;
 				}
