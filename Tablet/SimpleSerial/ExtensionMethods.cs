@@ -11,6 +11,7 @@ namespace SimpleSerial {
 		public static void Play( this AxWindowsMediaPlayer player, string filePath ) {
 			Util.Log( "Playing video: " + filePath );
 			player.URL = filePath;
+			player.Ctlcontrols.stop();
 			player.Ctlcontrols.play();
 		}
 

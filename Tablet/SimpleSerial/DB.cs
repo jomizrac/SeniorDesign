@@ -1,13 +1,11 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
-using Amazon.Runtime;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading;
 
 namespace SimpleSerial {
@@ -115,7 +113,7 @@ namespace SimpleSerial {
 			var response = client.CreateTable( request );
 
 			var tableDescription = response.TableDescription;
-			WaitTillTableCreated( client, tableName, response );
+			WaitTilTableCreated( client, tableName, response );
 		}
 
 		private static void RetrieveProduct( int currentProductID ) {
@@ -150,7 +148,7 @@ namespace SimpleSerial {
 			//			shelfList.PutItem( shelf );
 		}
 
-		private static void WaitTillTableCreated( AmazonDynamoDBClient client, string tableName,
+		private static void WaitTilTableCreated( AmazonDynamoDBClient client, string tableName,
 													CreateTableResponse response ) {
 			var tableDescription = response.TableDescription;
 
@@ -160,13 +158,12 @@ namespace SimpleSerial {
 
 			// Let us wait until table is created. Call DescribeTable.
 			while ( status != "ACTIVE" ) {
-				System.Threading.Thread.Sleep( 5000 ); // Wait 5 seconds.
+				Thread.Sleep( 5000 ); // Wait 5 seconds.
 				try {
 					var res = client.DescribeTable( new DescribeTableRequest {
 						TableName = tableName
 					} );
-					Console.WriteLine( "Table name: {0}, status: {1}", res.Table.TableName,
-																	  res.Table.TableStatus );
+					Util.Log( "Table name: " + res.Table.TableName + ", status: " + res.Table.TableStatus );
 					status = res.Table.TableStatus;
 				}
 				// Try-catch to handle potential eventual-consistency issue.

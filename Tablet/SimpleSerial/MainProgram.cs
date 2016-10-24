@@ -43,7 +43,7 @@ namespace SimpleSerial {
 			LocalStorage.Instance.SyncVideos();
 
 			// Temp way to set playback method
-			VideoManager.Instance.SetPlaybackMethod( VideoManager.PlaybackMethod.Queued );
+			//			VideoManager.Instance.SetPlaybackMethod( VideoManager.PlaybackMethod.Queued );
 
 			// Initialize any singletons that have not been called yet
 			var ard = ArduinoParser.Instance;

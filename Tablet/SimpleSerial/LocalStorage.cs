@@ -89,7 +89,7 @@ namespace SimpleSerial {
 		private bool IsOutdated( string filePath, string key ) {
 			DateTime local = File.GetLastWriteTime( filePath );
 			GetObjectMetadataResponse metadata = client.GetObjectMetadata( productVideoBucket, key );
-			DateTime remote = metadata.LastModified;
+			DateTime remote = metadata.LastModified.ToLocalTime();
 			return local < remote;
 		}
 
