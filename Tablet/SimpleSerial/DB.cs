@@ -48,14 +48,15 @@ namespace SimpleSerial {
 			//{
 			//    CreateTable();
 			//}
-			LogEvent( ShelfInventory.Instance.ProductList()[0], "Pick Up" );
+
+			//			LogEvent( ShelfInventory.Instance.ProductList()[0], "Pick Up" );
 		}
 
 		//Creates a new item in the database.
 		public void LogEvent( Product currentProduct, string eventType ) {
 			//Util.Log("\n*** Executing LogEvent() ***");
 			Table productCatalog = Table.LoadTable( client, tableName );
-			var product = new Document();
+			var doc = new Document();
 			var currentShelfMAC =
 			(
 				from nic in NetworkInterface.GetAllNetworkInterfaces()
@@ -63,15 +64,15 @@ namespace SimpleSerial {
 				select nic.GetPhysicalAddress().ToString()
 			).FirstOrDefault();
 			var deviceName = Environment.MachineName;
-			product["ProductID"] = currentProduct.productID;
-			product["ProductName"] = currentProduct.name;
-			product["ProductLocation"] = currentProduct.slotID;
-			product["ShelfMAC"] = currentShelfMAC;
-			product["DeviceName"] = deviceName;
-			product["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
-			product["EventType"] = eventType;
+			doc["ProductID"] = currentProduct.productID;
+			doc["ProductName"] = currentProduct.name;
+			doc["ProductLocation"] = currentProduct.slotID;
+			doc["ShelfMAC"] = currentShelfMAC;
+			doc["DeviceName"] = deviceName;
+			doc["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
+			doc["EventType"] = eventType;
 
-			productCatalog.PutItem( product );
+			productCatalog.PutItem( doc );
 		}
 
 		private static void CreateTable() {
@@ -148,8 +149,7 @@ namespace SimpleSerial {
 			//			shelfList.PutItem( shelf );
 		}
 
-		private static void WaitTilTableCreated( AmazonDynamoDBClient client, string tableName,
-													CreateTableResponse response ) {
+		private static void WaitTilTableCreated( AmazonDynamoDBClient client, string tableName, CreateTableResponse response ) {
 			var tableDescription = response.TableDescription;
 
 			string status = tableDescription.TableStatus;
