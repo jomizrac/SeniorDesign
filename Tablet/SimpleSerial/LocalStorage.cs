@@ -43,7 +43,7 @@ namespace SimpleSerial {
 				Util.Log( "Created new video directory: " + videoDirectory );
 			}
 
-			DeleteUnneededVideos();
+			DeleteUnusedVideos();
 			DownloadMissingOrOutdatedVideos();
 
 			Util.Log( "Video cloud sync complete" );
@@ -57,7 +57,7 @@ namespace SimpleSerial {
 			return videoDirectory + productID + videoFileExtension;
 		}
 
-		private void DeleteUnneededVideos() {
+		private void DeleteUnusedVideos() {
 			string[] filePaths = Directory.GetFiles( videoDirectory );
 			foreach ( string filePath in filePaths ) {
 				string fileName = Path.GetFileNameWithoutExtension( filePath );
@@ -88,9 +88,15 @@ namespace SimpleSerial {
 
 		private bool IsOutdated( string filePath, string key ) {
 			DateTime local = File.GetLastWriteTime( filePath );
-			GetObjectMetadataResponse metadata = client.GetObjectMetadata( productVideoBucket, key );
-			DateTime remote = metadata.LastModified.ToLocalTime();
-			return local < remote;
+			try {
+				GetObjectMetadataResponse metadata = client.GetObjectMetadata( productVideoBucket, key );
+				DateTime remote = metadata.LastModified.ToLocalTime();
+				return local < remote;
+			}
+			catch ( Exception ) {
+				Util.Log( "Error retrieving object with key: " + key );
+				return false;
+			}
 		}
 
 		private void Initialize() {
