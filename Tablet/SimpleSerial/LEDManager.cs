@@ -32,19 +32,19 @@ namespace SimpleSerial {
 
 		//activate light at a slot
 		private void OnSlotPickup( int slotIdx ) {
-			string command = "LED U " + slotIdx;    //build the command
+			string command = "LED U " + slotIdx + "\n";    //build the command
 			ArduinoParser.Instance.SendCommand( command );
 		}
 
 		//deactivate light at a slot
 		private void OnSlotPutDown( int slotIdx ) {
-			string command = "LED D " + slotIdx;    //build the command
+			string command = "LED D " + slotIdx + "\n";    //build the command
 			ArduinoParser.Instance.SendCommand( command );
 		}
 
 		//timer for the chase event and send command
 		private void SendChaseCommand() {
-			string command = "LED C";
+			string command = "LED C\n";
 			ArduinoParser.Instance.SendCommand( command );
 		}
 	}
