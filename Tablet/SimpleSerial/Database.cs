@@ -29,6 +29,7 @@ namespace SimpleSerial {
         private const string ShelfTableName = "Shelves";
 		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
+       
 		//Creates a new item in the database.
 		public void LogEvent( Product currentProduct, string eventType ) {
 			//Util.Log("\n*** Executing LogEvent() ***");
@@ -149,7 +150,7 @@ namespace SimpleSerial {
 				catch ( ResourceNotFoundException ) { }
 			}
 		}
-        private static void createShelfItem(List<Product> productList)
+        public void createShelfItem()
         {
             var currentShelfMAC =
             (
@@ -158,7 +159,7 @@ namespace SimpleSerial {
                 select nic.GetPhysicalAddress().ToString()
             ).FirstOrDefault();
             Table shelfTable = Table.LoadTable(client, ShelfTableName);
-            productList = ShelfInventory.Instance.ProductList();
+            List<Product> productList = ShelfInventory.Instance.ProductList();
             List<string> productStrings = new List<string>();
             for (int i = 0; i < productList.Count(); i++)
             {
