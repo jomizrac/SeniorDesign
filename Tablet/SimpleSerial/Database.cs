@@ -26,33 +26,45 @@ namespace SimpleSerial {
 		#endregion Singleton
 
 		private const string EventsTableName = "Events";
-        private const string ShelfTableName = "Shelves";
+		private const string ShelfTableName = "Shelves";
 		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
 
-       
 		//Creates a new item in the database.
-		public void LogEvent( Product currentProduct, string eventType ) {
-			//Util.Log("\n*** Executing LogEvent() ***");
-			Table eventsTable = Table.LoadTable( client, EventsTableName );
+		public void LogEvent( Product product, string eventType ) {
+			var eventsTable = Table.LoadTable( client, EventsTableName );
+			var eventDoc = new Document();
+			var shelfMAC = (
+				from nic in NetworkInterface.GetAllNetworkInterfaces()
+				where nic.OperationalStatus == OperationalStatus.Up
+				select nic.GetPhysicalAddress().ToString()
+				).FirstOrDefault();
+			eventDoc["ProductID"] = product.productID;
+			eventDoc["ProductName"] = product.name;
+			eventDoc["ProductLocation"] = product.slotID;
+			eventDoc["ShelfMAC"] = shelfMAC;
+			eventDoc["DeviceName"] = Environment.MachineName;
+			eventDoc["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
+			eventDoc["EventType"] = eventType;
+			eventsTable.PutItem( eventDoc );
+		}
 
+		public void createShelfItem() {
 			var currentShelfMAC =
 			(
 				from nic in NetworkInterface.GetAllNetworkInterfaces()
 				where nic.OperationalStatus == OperationalStatus.Up
 				select nic.GetPhysicalAddress().ToString()
 			).FirstOrDefault();
-
-			var deviceName = Environment.MachineName;
-
-			var eventDoc = new Document();
-			eventDoc["ProductID"] = currentProduct.productID;
-			eventDoc["ProductName"] = currentProduct.name;
-			eventDoc["ProductLocation"] = currentProduct.slotID;
-			eventDoc["ShelfMAC"] = currentShelfMAC;
-			eventDoc["DeviceName"] = deviceName;
-			eventDoc["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
-			eventDoc["EventType"] = eventType;
-			eventsTable.PutItem( eventDoc );
+			Table shelfTable = Table.LoadTable( client, ShelfTableName );
+			List<Product> productList = ShelfInventory.Instance.ProductList();
+			List<string> productStrings = new List<string>();
+			for ( int i = 0; i < productList.Count(); i++ ) {
+				productStrings.Add( productList[i].productID );
+			}
+			var shelfDoc = new Document();
+			shelfDoc["ShelfMAC"] = currentShelfMAC;
+			shelfDoc["Products"] = productStrings;
+			shelfTable.PutItem( shelfDoc );
 		}
 
 		private static void CreateTable() {
@@ -150,25 +162,5 @@ namespace SimpleSerial {
 				catch ( ResourceNotFoundException ) { }
 			}
 		}
-        public void createShelfItem()
-        {
-            var currentShelfMAC =
-            (
-                from nic in NetworkInterface.GetAllNetworkInterfaces()
-                where nic.OperationalStatus == OperationalStatus.Up
-                select nic.GetPhysicalAddress().ToString()
-            ).FirstOrDefault();
-            Table shelfTable = Table.LoadTable(client, ShelfTableName);
-            List<Product> productList = ShelfInventory.Instance.ProductList();
-            List<string> productStrings = new List<string>();
-            for (int i = 0; i < productList.Count(); i++)
-            {
-                productStrings.Add(productList[i].productID);
-            }
-            var shelfDoc = new Document();
-            shelfDoc["ShelfMAC"] = currentShelfMAC;
-            shelfDoc["Products"] = productStrings;
-            shelfTable.PutItem(shelfDoc);
-        }
-    }
+	}
 }
