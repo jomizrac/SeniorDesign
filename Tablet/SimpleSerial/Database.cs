@@ -28,7 +28,20 @@ namespace SimpleSerial {
 		private const string EventsTableName = "Events";
 		private const string ShelfTableName = "Shelves";
 		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-
+        public Database()
+        {
+            DescribeTableRequest request = new DescribeTableRequest
+             {
+                TableName = ShelfTableName
+                            };
+                        try
+             {
+                TableDescription tabledescription = client.DescribeTable(request).Table;
+                            } catch (ResourceNotFoundException e)
+             {
+                CreateTable();
+                            }
+            }
 		//Creates a new item in the database.
 		public void LogEvent( Product product, string eventType ) {
 			var eventsTable = Table.LoadTable( client, EventsTableName );
