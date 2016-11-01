@@ -67,13 +67,14 @@ namespace SimpleSerial {
 			eventsTable.PutItem( eventDoc );
 		}
 
-		public void createShelfItem() {
+		public void UpdateShelfInventory( List<Product> products ) {
 			Table shelfTable = Table.LoadTable( client, ShelfTableName );
-			List<Product> productList = ShelfInventory.Instance.ProductList();
+
 			List<string> productStrings = new List<string>();
-			for ( int i = 0; i < productList.Count(); i++ ) {
-				productStrings.Add( productList[i].productID );
+			foreach ( var product in products ) {
+				productStrings.Add( product.productID );
 			}
+
 			var shelfDoc = new Document();
 			shelfDoc["ShelfMAC"] = shelfMAC;
 			shelfDoc["Products"] = productStrings;

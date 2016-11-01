@@ -63,9 +63,10 @@ namespace SimpleSerial {
 			// Save the list to disk
 			Serialize();
 
-			// sync with cloud db
-			//			Database.Instance.addShelf( products ); // TODO
-			Database.Instance.createShelfItem();
+			// Sync with cloud db
+			Database.Instance.UpdateShelfInventory( ProductList() );
+
+			// Fire the event
 			SlotUpdatedEvent?.Invoke( slotIdx, oldProduct, newProduct );
 		}
 

@@ -31,13 +31,13 @@ namespace SimpleSerial {
 			Instance.Form = new MainForm();
 
 			// Establish a dummy shelf inventory
-			ShelfInventory.Instance.UpdateSlot( 0, new Product( "product 0", "0", 0 ) );
-			ShelfInventory.Instance.UpdateSlot( 1, new Product( "product 1", "1", 1 ) );
-			ShelfInventory.Instance.UpdateSlot( 2, new Product( "product 2", "2", 2 ) );
-			ShelfInventory.Instance.UpdateSlot( 3, new Product( "product 3", "3", 3 ) );
-			ShelfInventory.Instance.UpdateSlot( 4, new Product( "product 4", "4", 4 ) );
-			ShelfInventory.Instance.UpdateSlot( 5, new Product( "product 5", "5", 5 ) );
-			ShelfInventory.Instance.UpdateSlot( 6, new Product( "product 6", "6", 6 ) );
+			ShelfInventory.Instance.UpdateSlot( 0, new Product( "857344005037", "CounterIntelligence", 0 ) );
+			ShelfInventory.Instance.UpdateSlot( 1, new Product( "857344005020", "Ha Ha", 1 ) );
+			ShelfInventory.Instance.UpdateSlot( 2, new Product( "857344005013", "ICU", 2 ) );
+			ShelfInventory.Instance.UpdateSlot( 3, new Product( "857344005075", "Remember Me - Clear", 3 ) );
+			ShelfInventory.Instance.UpdateSlot( 4, new Product( "857344005082", "Remember Me - Tinted", 4 ) );
+			ShelfInventory.Instance.UpdateSlot( 5, new Product( "857344005051", "SOS", 5 ) );
+			ShelfInventory.Instance.UpdateSlot( 6, new Product( "857344005068", "Lightening Bugs", 6 ) );
 
 			// Pull any missing videos
 			LocalStorage.Instance.SyncVideos();
