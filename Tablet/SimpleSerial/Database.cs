@@ -26,18 +26,24 @@ namespace SimpleSerial {
 		#endregion Singleton
 
 		private const string EventsTableName = "Events";
+
 		private const string ShelfTableName = "Shelves";
+
 		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
+
+		private static string shelfMAC;
+
+		private Database() {
+			shelfMAC = ( from nic in NetworkInterface.GetAllNetworkInterfaces()
+						 where nic.OperationalStatus == OperationalStatus.Up
+						 select nic.GetPhysicalAddress().ToString()
+						 ).FirstOrDefault();
+		}
 
 		//Creates a new item in the database.
 		public void LogEvent( Product product, string eventType ) {
 			var eventsTable = Table.LoadTable( client, EventsTableName );
 			var eventDoc = new Document();
-			var shelfMAC = (
-				from nic in NetworkInterface.GetAllNetworkInterfaces()
-				where nic.OperationalStatus == OperationalStatus.Up
-				select nic.GetPhysicalAddress().ToString()
-				).FirstOrDefault();
 			eventDoc["ProductID"] = product.productID;
 			eventDoc["ProductName"] = product.name;
 			eventDoc["ProductLocation"] = product.slotID;
