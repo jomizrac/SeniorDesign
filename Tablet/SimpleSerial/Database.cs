@@ -38,6 +38,19 @@ namespace SimpleSerial {
 						 where nic.OperationalStatus == OperationalStatus.Up
 						 select nic.GetPhysicalAddress().ToString()
 						 ).FirstOrDefault();
+
+			//    DescribeTableRequest request = new DescribeTableRequest
+			//     {
+			//        TableName = ShelfTableName
+			//                    };
+			//                try
+			//     {
+			//        TableDescription tabledescription = client.DescribeTable(request).Table;
+			//                    } catch (ResourceNotFoundException e)
+			//     {
+			//        CreateTable();
+			//                    }
+			//    }
 		}
 
 		//Creates a new item in the database.
@@ -55,12 +68,6 @@ namespace SimpleSerial {
 		}
 
 		public void createShelfItem() {
-			var currentShelfMAC =
-			(
-				from nic in NetworkInterface.GetAllNetworkInterfaces()
-				where nic.OperationalStatus == OperationalStatus.Up
-				select nic.GetPhysicalAddress().ToString()
-			).FirstOrDefault();
 			Table shelfTable = Table.LoadTable( client, ShelfTableName );
 			List<Product> productList = ShelfInventory.Instance.ProductList();
 			List<string> productStrings = new List<string>();
@@ -68,7 +75,7 @@ namespace SimpleSerial {
 				productStrings.Add( productList[i].productID );
 			}
 			var shelfDoc = new Document();
-			shelfDoc["ShelfMAC"] = currentShelfMAC;
+			shelfDoc["ShelfMAC"] = shelfMAC;
 			shelfDoc["Products"] = productStrings;
 			shelfTable.PutItem( shelfDoc );
 		}
@@ -136,13 +143,7 @@ namespace SimpleSerial {
 			//				nameList.Add( productList[element].name );
 			//			}
 			//			var shelf = new Document();
-			//			var currentShelfMAC =
-			//			(
-			//				from nic in NetworkInterface.GetAllNetworkInterfaces()
-			//				where nic.OperationalStatus == OperationalStatus.Up
-			//				select nic.GetPhysicalAddress().ToString()
-			//			).FirstOrDefault();
-			//			shelf["ShelfMAC"] = currentShelfMAC;
+			//			shelf["ShelfMAC"] = shelfMAC;
 			//			shelf["ProductList"] = nameList;
 			//			shelfList.PutItem( shelf );
 		}
