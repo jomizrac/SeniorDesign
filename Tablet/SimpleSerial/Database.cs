@@ -123,8 +123,14 @@ namespace SimpleSerial {
 			WaitTilTableCreated( EventsTableName, response );
 		}
 
-
-		private static string getProductName( string currentProductID ) {
+        public List<string> getProductList()
+        {
+            Table shelf = Table.LoadTable(client, ShelfTableName);
+            Document doc = shelf.GetItem(shelfMAC);
+            List<string> products = doc["Products"].AsListOfString();
+            return products;
+        }
+		public string getProductName( string currentProductID ) {
             Table products = Table.LoadTable(client, "ProductCatalog");
             Document doc = products.GetItem(currentProductID);
             return doc["Name"];
