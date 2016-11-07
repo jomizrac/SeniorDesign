@@ -22,9 +22,9 @@
 //of logic and will balance out after the first few iterations
 #define THRESHOLD_DEFAULT 512
 //percent different a sensor value has to be to be considered picked up
-#define PICKUP_RATIO .5
+#define PICKUP_RATIO .50
 //delay time in ms between sensor poll loops
-#define LOOP_DELAY 500
+#define LOOP_DELAY 100
 
 //boolean values to maintain picked up state of slots. false
 //indicates that the product is not picked up
@@ -45,7 +45,7 @@ bool slotsBlinking[NUM_SLOTS];
 //keeps track of the brightness value for updateLighting()
 int brightness = 0;
 //increment value for brightness to fade in and out
-int brightnessIncrement = 15;
+int brightnessIncrement = 5;
 //global that keeps track if a chasing effect is playing
 bool chasingEffect = false;
 //the lead LED in the chase effect must be between 0 and NUM_LEDS
@@ -67,13 +67,9 @@ bool chaseRight = true;
 void setup() {
   //initialize boolean values to to start as false because all
   //slots should have something in it
-  //Serial.print("initializing thresholds");
   initializeThresholds();
   initializeSlots();
   LEDSetup();
-  
-  //informs FastLED library the reference for the LED array and how many there are
-  /*FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);*/
 
   //sets up special function registers for the arduino. not sure of particulars,
   //but this is standard for all arduino programs.
@@ -86,8 +82,12 @@ void setup() {
   pinMode(SENSORS, OUTPUT);
   pinMode(CLOCK, OUTPUT);
   pinMode(SENSOR_EMITTER, OUTPUT);
-  Serial.begin(9600);
-  
+  Serial.begin(57600);
+
+///////////for testing//////////
+  //beginChaseEffect(0);
+  //stopChaseEffect();
+///////////////////////////////
 }
 
 //arduino main loop
@@ -97,9 +97,6 @@ void loop() {
   
   //receive any commands from the main program
   readInput();
-
-  //update the lighting effects
-  updateLighting();
 }
 
 //reads through all of the product sensors to see which have been picked up
@@ -121,7 +118,8 @@ void pollProductSensors(){
       
       //actually check to see if the status of each slot has changed
       sensorWork(j);
-      
+
+      updateLighting();
     }
 
     //delay to allow time between polling all of the sensors. accounts for slower pickups
@@ -152,14 +150,16 @@ boolean sensorWork(int slot){
   }
 
   //only want to update the threshold if the product has been sitting in place
-  if(pickedUp[slot] == false && slot == 0){
+  if(pickedUp[slot] == false){
     updateThresholds(sensorOn, slot);
   }
 }
 
 //updates the threshold value to it reflects a more accurate mid-range value
 void updateThresholds(int sensorOn, int slot){
-  thresholds[slot] = (thresholds[slot] + sensorOn) / 2;
+  //thresholds[slot] = (thresholds[slot] + sensorOn) / 2;
+  thresholds[slot] -= (thresholds[slot] / 20);
+  thresholds[slot] +=  (sensorOn / 20);
 }
 
 //sends message to host machine to indidcate that there was a pickup
@@ -215,16 +215,17 @@ void parseCommandLED(String command){
 }
 
 void updateLighting(){
+  
   if(chasingEffect){    //code for simulating the chase effect
-    if(chaseRight){
-      leds[chaseLeader - 2] = CRGB::Black;
-      if(chaseLeader >= NUM_LEDS - 1){
-        chaseRight == false;
+    if(chaseRight == true){
+      leds[chaseLeader - 1] = CRGB::Black;
+      if(chaseLeader >= NUM_LEDS - 2){
+        chaseRight = false;
       }else{
         chaseLeader++;
       }
-    }else if(!chaseRight){
-      leds[chaseLeader + 2] = CRGB::Black;
+    }else if(chaseRight == false){
+      leds[chaseLeader + 1] = CRGB::Black;
       if(chaseLeader <= 0){
         chaseRight = true;
       }else{
@@ -268,6 +269,7 @@ void beginChaseEffect(int slot){
   chaseLeader = LEDStart[slot];
   leds[chaseLeader] = CRGB::White;
   FastLED.setBrightness(255);
+  chaseRight = true;
   chasingEffect = true;
 }
 
