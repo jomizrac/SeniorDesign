@@ -123,19 +123,18 @@ namespace SimpleSerial {
 			WaitTilTableCreated( EventsTableName, response );
 		}
 
-		private static void RetrieveProduct( int currentProductID ) {
-			//Util.Log("\n*** Executing RetrieveProduct() ***");
-			//Table productCatalog = new Table();
-			// Optional configuration.
-			//GetItemOperationConfig config = new GetItemOperationConfig
-			//{
-			//    AttributesToGet = new List<string> { "ProductID", "ProductName", "ProductLocation", "ShelfMAC", "DeviceName", "Timestamp", "EventType" },
-			//    ConsistentRead = true
-			//};
-			//Document document = productCatalog.GetItem(currentProductID, config);
-			//Util.Log("Retrieveproduct: Printing product retrieved...");
-			//PrintDocument(document);
-		}
+        public List<string> getProductList()
+        {
+            Table shelf = Table.LoadTable(client, ShelfTableName);
+            Document doc = shelf.GetItem(shelfMAC);
+            List<string> products = doc["Products"].AsListOfString();
+            return products;
+        }
+		public string getProductName( string currentProductID ) {
+            Table products = Table.LoadTable(client, "ProductCatalog");
+            Document doc = products.GetItem(currentProductID);
+            return doc["Name"];
+        }
 
 		private static void AddShelf( List<Product> productList ) {
 			//			Table shelfList = new Table();
