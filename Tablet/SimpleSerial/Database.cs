@@ -76,7 +76,7 @@ namespace SimpleSerial {
 			eventDoc["EventType"] = eventType;
 			eventsTable.PutItem( eventDoc );
 
-			Util.LogSuccess( "Logged \"" + eventType + "\" for: " + product );
+			Util.LogSuccess( "Logged \"" + eventType + "\" event for: " + product );
 		}
 
 		public void UpdateShelfInventory( List<Product> products ) {
