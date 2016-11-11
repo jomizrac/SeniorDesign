@@ -72,7 +72,8 @@ namespace SimpleSerial {
 			eventDoc["ProductLocation"] = product.slotID;
 			eventDoc["ShelfMAC"] = shelfMAC;
 			eventDoc["DeviceName"] = Environment.MachineName;
-			eventDoc["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
+            eventDoc["Timestamp"] = DateTime.Now.Ticks;
+            eventDoc["DateTime"] = DateTime.Now.ToString();
 			eventDoc["EventType"] = eventType;
 			eventsTable.PutItem( eventDoc );
 

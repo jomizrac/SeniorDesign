@@ -42,6 +42,7 @@ namespace SimpleSerial {
 			Deserialize();
 			new Thread( () => Initialize() ).Start();
 			new Thread( () => Loop() ).Start();
+            Player.settings.volume = 99;
 		}
 
 		public void SetPlaybackMethod( PlaybackMethod playbackMethod ) {
