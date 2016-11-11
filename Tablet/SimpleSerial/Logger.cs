@@ -6,10 +6,16 @@ namespace SimpleSerial {
 
 		#region Singleton
 
+		private static object LOCK = new object();
+
 		private static Logger m_instance;
 
 		public static Logger Instance {
-			get { return m_instance ?? ( m_instance = new Logger() ); }
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new Logger() );
+				}
+			}
 		}
 
 		#endregion Singleton

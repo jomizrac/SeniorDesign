@@ -14,6 +14,22 @@ namespace SimpleSerial {
 	/// </summary>
 	internal class VideoManager {
 
+		#region Singleton
+
+		private static object LOCK = new object();
+
+		private static VideoManager m_instance;
+
+		public static VideoManager Instance {
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new VideoManager() );
+				}
+			}
+		}
+
+		#endregion Singleton
+
 		public enum PlaybackMethod { Immediate, Queued };
 
 		private VideoManagerConfig config = new VideoManagerConfig();
@@ -21,16 +37,6 @@ namespace SimpleSerial {
 		private int isPending;
 
 		public AxWindowsMediaPlayer Player { get { return MainProgram.Instance.Form.Player; } }
-
-		#region Singleton
-
-		private static VideoManager m_instance;
-
-		public static VideoManager Instance {
-			get { return m_instance ?? ( m_instance = new VideoManager() ); }
-		}
-
-		#endregion Singleton
 
 		private VideoManager() {
 			Deserialize();
@@ -40,6 +46,7 @@ namespace SimpleSerial {
 
 		public void SetPlaybackMethod( PlaybackMethod playbackMethod ) {
 			config.PlaybackMethod = playbackMethod;
+			Util.LogSuccess( "Video playback method set to: " + config.PlaybackMethod );
 			Serialize();
 		}
 
@@ -80,7 +87,7 @@ namespace SimpleSerial {
 						Player.Play( queue[0] );
 					}
 				}
-				Thread.Sleep( 100 );
+				Thread.Sleep( 10 );
 			}
 		}
 
@@ -126,6 +133,7 @@ namespace SimpleSerial {
 
 			if ( File.Exists( filePath ) ) {
 				config = JsonConvert.DeserializeObject<VideoManagerConfig>( File.ReadAllText( filePath ) );
+				Util.LogSuccess( "Video playback method set to: " + config.PlaybackMethod );
 			}
 		}
 	}

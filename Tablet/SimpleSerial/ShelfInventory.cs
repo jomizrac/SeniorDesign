@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Text;
 using System.Threading;
 
 namespace SimpleSerial {
@@ -17,10 +17,16 @@ namespace SimpleSerial {
 
 		#region Singleton
 
+		private static object LOCK = new object();
+
 		private static ShelfInventory m_instance;
 
 		public static ShelfInventory Instance {
-			get { return m_instance ?? ( m_instance = new ShelfInventory() ); }
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new ShelfInventory() );
+				}
+			}
 		}
 
 		#endregion Singleton
@@ -57,7 +63,7 @@ namespace SimpleSerial {
 			if ( oldProduct == newProduct ) return;
 
 			// Update the list in memory
-			slots.Add( slotIdx, newProduct );
+			slots[slotIdx] = newProduct;
 			newProduct.slotID = slotIdx;
 
 			// Save the list to disk
@@ -74,6 +80,17 @@ namespace SimpleSerial {
 			return new List<Product>( slots.Values );
 		}
 
+		public override string ToString() {
+			StringBuilder sb = new StringBuilder();
+			foreach ( var prod in slots.Values ) {
+				if ( sb.Length != 0 ) sb.Append( ";" );
+				sb.Append( prod.productID );
+			}
+			sb.Insert( 0, "{" );
+			sb.Append( "}" );
+			return sb.ToString();
+		}
+
 		private void Initialize() {
 			ArduinoParser.Instance.SlotPickUpEvent -= Instance.OnSlotPickup;
 			ArduinoParser.Instance.SlotPickUpEvent += Instance.OnSlotPickup;
@@ -84,16 +101,26 @@ namespace SimpleSerial {
 
 		/// <summary> Used to translate a slot pickup event into a product pickup event. </summary>
 		private void OnSlotPickup( int slotIdx ) {
-			Product product = slots[slotIdx];
-			product.status = Product.Status.PickedUp;
-			ProductPickUpEvent?.Invoke( product );
+			if ( slots.ContainsKey( slotIdx ) ) {
+				Product product = slots[slotIdx];
+				product.status = Product.Status.PickedUp;
+				ProductPickUpEvent?.Invoke( product );
+			}
+			else {
+				Util.LogError( "Shelf inventory does not have a product assigned to slot: " + slotIdx );
+			}
 		}
 
 		/// <summary> Used to translate a slot putdown event into a product putdown event. </summary>
 		private void OnSlotPutDown( int slotIdx ) {
-			Product product = slots[slotIdx];
-			product.status = Product.Status.PutDown;
-			ProductPutDownEvent?.Invoke( product );
+			if ( slots.ContainsKey( slotIdx ) ) {
+				Product product = slots[slotIdx];
+				product.status = Product.Status.PutDown;
+				ProductPutDownEvent?.Invoke( product );
+			}
+			else {
+				Util.LogError( "Shelf inventory does not have a product assigned to slot: " + slotIdx );
+			}
 		}
 
 		private void Serialize() {
@@ -103,12 +130,17 @@ namespace SimpleSerial {
 			}
 
 			File.WriteAllText( shelfInventoryFile, JsonConvert.SerializeObject( slots ) );
+			Util.LogSuccess( "Saved shelf inventory: " + this );
 		}
 
 		private void Deserialize() {
 			if ( File.Exists( shelfInventoryFile ) ) {
-				//				slots = JsonConvert.DeserializeObject<Dictionary<int, Product>>( File.ReadAllText( shelfInventoryFile ) );
-				// TODO care, this is making the dictionary null some reason, may need some kind of try/catch
+				slots = JsonConvert.DeserializeObject<Dictionary<int, Product>>( File.ReadAllText( shelfInventoryFile ) );
+				Util.LogSuccess( "Loaded shelf inventory: " + this );
+			}
+			else {
+				Util.LogWarning( "No local shelf inventory file found" );
+				slots = new Dictionary<int, Product>();
 			}
 		}
 	}

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Configuration;
 using System.IO.Ports;
 using System.Management;
 using System.Text;
@@ -14,10 +13,16 @@ namespace SimpleSerial {
 
 		#region Singleton
 
+		private static object LOCK = new object();
+
 		private static ArduinoParser m_instance;
 
 		public static ArduinoParser Instance {
-			get { return m_instance ?? ( m_instance = new ArduinoParser() ); }
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new ArduinoParser() );
+				}
+			}
 		}
 
 		#endregion Singleton
@@ -43,12 +48,12 @@ namespace SimpleSerial {
 		private Regex telegramDelimMatcher = new Regex( @"^.*(\r\n|\n|\r)" ); // Match any chars followed by a newline
 
 		private ArduinoParser() {
-			serialPort.PortName = AutodetectArduinoPort() ?? ConfigurationManager.AppSettings["defaultPort"];
+			serialPort.PortName = AutodetectArduinoPort();
 			serialPort.BaudRate = int.Parse( ConfigurationManager.AppSettings["baudRate"] );
 			serialPort.DataReceived -= new SerialDataReceivedEventHandler( OnDataReceived );
 			serialPort.DataReceived += new SerialDataReceivedEventHandler( OnDataReceived );
 			serialPort.Open();
-			Util.Log( "Successfully opened port: " + serialPort.PortName );
+			Util.LogSuccess( "Opened port: " + serialPort.PortName );
 		}
 
 		//sending commands to the Arduino for it to exexute on the hardware
@@ -69,7 +74,7 @@ namespace SimpleSerial {
 					var deviceId = item["DeviceID"].ToString();
 
 					if ( desc.Contains( "Arduino" ) ) {
-						Util.Log( "Autodetected Arduino on port: " + deviceId );
+						Util.LogSuccess( "Autodetected Arduino on port: " + deviceId );
 						return deviceId;
 					}
 				}
@@ -78,8 +83,9 @@ namespace SimpleSerial {
 				// NOOP
 			}
 
-			Util.Log( "Unable to autodetect Arduino port" );
-			return null;
+			string defaultPort = ConfigurationManager.AppSettings["defaultPort"];
+			Util.LogWarning( "Unable to autodetect Arduino port. Reverting to default port: " + defaultPort );
+			return defaultPort;
 		}
 
 		private void OnDataReceived( object sender, SerialDataReceivedEventArgs e ) {
@@ -113,7 +119,7 @@ namespace SimpleSerial {
 				SlotPutDownEvent?.Invoke( slotIdx );
 			}
 			else {
-				Util.Log( "Unrecognized alpha string: " + alpha );
+				Util.LogError( "Unrecognized alpha string: " + alpha );
 			}
 		}
 	}

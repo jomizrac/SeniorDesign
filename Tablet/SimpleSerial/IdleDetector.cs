@@ -7,10 +7,16 @@ namespace SimpleSerial {
 
 		#region Singleton
 
+		private static object LOCK = new object();
+
 		private static IdleDetector m_instance;
 
 		public static IdleDetector Instance {
-			get { return m_instance ?? ( m_instance = new IdleDetector() ); }
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new IdleDetector() );
+				}
+			}
 		}
 
 		#endregion Singleton

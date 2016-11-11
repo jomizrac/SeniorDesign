@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Windows.Forms;
@@ -14,10 +13,16 @@ namespace SimpleSerial {
 
 		#region Singleton
 
+		private static object LOCK = new object();
+
 		private static MainProgram m_instance;
 
 		public static MainProgram Instance {
-			get { return m_instance ?? ( m_instance = new MainProgram() ); }
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new MainProgram() );
+				}
+			}
 		}
 
 		#endregion Singleton
@@ -30,20 +35,16 @@ namespace SimpleSerial {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false ); // This must be called before MainForm is instantiated
 			Instance.Form = new MainForm();
-            var db = Database.Instance; //Set up DB first so we can import the products
-            // Establish a dummy shelf inventory
-            List<string> productList = Database.Instance.getProductList();
-            for (int i = 0; i < productList.Count; i++)
-            {
-                ShelfInventory.Instance.UpdateSlot(0, new Product(productList[i], Database.Instance.getProductName(productList[i]), i));
-            }
-   //         ShelfInventory.Instance.UpdateSlot( 0, new Product( "857344005037", "CounterIntelligence", 0 ) );
-			//ShelfInventory.Instance.UpdateSlot( 1, new Product( "857344005020", "Ha Ha", 1 ) );
-			//ShelfInventory.Instance.UpdateSlot( 2, new Product( "857344005013", "ICU", 2 ) );
-			//ShelfInventory.Instance.UpdateSlot( 3, new Product( "857344005075", "Remember Me - Clear", 3 ) );
-			//ShelfInventory.Instance.UpdateSlot( 4, new Product( "857344005082", "Remember Me - Tinted", 4 ) );
-			//ShelfInventory.Instance.UpdateSlot( 5, new Product( "857344005051", "SOS", 5 ) );
-			//ShelfInventory.Instance.UpdateSlot( 6, new Product( "857344005068", "Lightening Bugs", 6 ) );
+
+			if ( ShelfInventory.Instance.ProductList().Count == 0 ) {
+				ShelfInventory.Instance.UpdateSlot( 0, new Product( "857344005037", "CounterIntelligence", 0 ) );
+				ShelfInventory.Instance.UpdateSlot( 1, new Product( "857344005020", "Ha Ha", 1 ) );
+				ShelfInventory.Instance.UpdateSlot( 2, new Product( "857344005013", "ICU", 2 ) );
+				ShelfInventory.Instance.UpdateSlot( 3, new Product( "857344005075", "Remember Me - Clear", 3 ) );
+				ShelfInventory.Instance.UpdateSlot( 4, new Product( "857344005082", "Remember Me - Tinted", 4 ) );
+				ShelfInventory.Instance.UpdateSlot( 5, new Product( "857344005051", "SOS", 5 ) );
+				ShelfInventory.Instance.UpdateSlot( 6, new Product( "857344005068", "Lightening Bugs", 6 ) );
+			}
 
 			// Pull any missing videos
 			LocalStorage.Instance.SyncVideos();
@@ -52,13 +53,14 @@ namespace SimpleSerial {
 			//			VideoManager.Instance.SetPlaybackMethod( VideoManager.PlaybackMethod.Queued );
 
 			// Initialize any singletons that have not been called yet
+			var db = Database.Instance;
 			var ard = ArduinoParser.Instance;
 			var idle = IdleDetector.Instance;
 			var vm = VideoManager.Instance;
 			var led = LEDManager.Instance;
-			
 			var log = Logger.Instance;
 
+			Util.LogSuccess( "ShelfRokr startup complete!" + Environment.NewLine );
 			Application.Run( Instance.Form );
 			// Warning: no code after Application.Run()'s while-loop will be reached!
 		}
@@ -76,7 +78,7 @@ namespace SimpleSerial {
 					sw.WriteLine( "aws_secret_access_key=" );
 				}
 
-				Util.Log( "AWS credentials file has not been setup. Please configure the following file: " + credentials );
+				Util.LogError( "AWS credentials file has not been setup. Please configure the following file: " + credentials );
 				Console.ReadKey(); // Wait for user input
 				return false;
 			}

@@ -6,10 +6,16 @@ namespace SimpleSerial {
 
 		#region Singleton
 
+		private static object LOCK = new object();
+
 		private static LEDManager m_instance;
 
 		public static LEDManager Instance {
-			get { return m_instance ?? ( m_instance = new LEDManager() ); }
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new LEDManager() );
+				}
+			}
 		}
 
 		#endregion Singleton

@@ -15,10 +15,16 @@ namespace SimpleSerial {
 
 		#region Singleton
 
+		private static object LOCK = new object();
+
 		private static LocalStorage m_instance;
 
 		public static LocalStorage Instance {
-			get { return m_instance ?? ( m_instance = new LocalStorage() ); }
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new LocalStorage() );
+				}
+			}
 		}
 
 		#endregion Singleton
@@ -33,6 +39,7 @@ namespace SimpleSerial {
 		private LocalStorage() {
 			client = new AmazonS3Client( Amazon.RegionEndpoint.USEast1 );
 			fileTransferUtility = new TransferUtility( client );
+			Util.LogSuccess( "Connected to S3" );
 
 			new Thread( () => Initialize() ).Start();
 		}
@@ -40,13 +47,13 @@ namespace SimpleSerial {
 		public void SyncVideos() {
 			if ( !Directory.Exists( videoDirectory ) ) {
 				Directory.CreateDirectory( videoDirectory );
-				Util.Log( "Created new video directory: " + videoDirectory );
+				Util.LogWarning( "Created new video directory: " + videoDirectory );
 			}
 
 			DeleteUnusedVideos();
 			DownloadMissingOrOutdatedVideos();
 
-			Util.Log( "Video cloud sync complete" );
+			Util.LogSuccess( "Video cloud sync complete" );
 		}
 
 		public string GetFilePathForProduct( Product product ) {
@@ -64,7 +71,7 @@ namespace SimpleSerial {
 				bool productPresent = ShelfInventory.Instance.ProductList().Exists( p => p.productID == fileName );
 				if ( !productPresent ) {
 					File.Delete( filePath );
-					Util.Log( "Deleted unused " + filePath );
+					Util.LogWarning( "Deleted unused product video: " + filePath );
 				}
 			}
 		}
@@ -75,12 +82,12 @@ namespace SimpleSerial {
 				string key = product.productID + videoFileExtension;
 				if ( !File.Exists( filePath ) || IsOutdated( filePath, key ) ) {
 					try {
-						Util.Log( "Downloading " + key + "... ", false );
+						Util.LogSuccess( "Downloading " + key + "... ", false );
 						fileTransferUtility.Download( filePath, productVideoBucket, key );
-						Util.Log( "Download complete" );
+						Util.LogSuccess( "Download complete" );
 					}
 					catch ( Exception ) {
-						Util.Log( "Error retrieving object with key: " + key );
+						Util.LogError( "Unable to retrieve object with key: " + key );
 					}
 				}
 			}
@@ -94,7 +101,7 @@ namespace SimpleSerial {
 				return local < remote;
 			}
 			catch ( Exception ) {
-				Util.Log( "Error retrieving object with key: " + key );
+				Util.LogError( "Unable to retrieve object with key: " + key );
 				return false;
 			}
 		}

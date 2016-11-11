@@ -1,5 +1,4 @@
 ﻿using AxWMPLib;
-using System;
 
 namespace SimpleSerial {
 
@@ -9,7 +8,7 @@ namespace SimpleSerial {
 	internal static class ExtensionMethods {
 
 		public static void Play( this AxWindowsMediaPlayer player, string filePath ) {
-			Util.Log( "Playing video: " + filePath );
+			Util.LogSuccess( "Playing video: " + filePath );
 			player.URL = filePath;
 			player.Ctlcontrols.stop();
 			player.Ctlcontrols.play();

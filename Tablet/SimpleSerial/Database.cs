@@ -17,10 +17,16 @@ namespace SimpleSerial {
 
 		#region Singleton
 
+		private static object LOCK = new object();
+
 		private static Database m_instance;
 
 		public static Database Instance {
-			get { return m_instance ?? ( m_instance = new Database() ); }
+			get {
+				lock ( LOCK ) {
+					return m_instance ?? ( m_instance = new Database() );
+				}
+			}
 		}
 
 		#endregion Singleton
@@ -29,7 +35,7 @@ namespace SimpleSerial {
 
 		private const string ShelfTableName = "Shelves";
 
-		private static AmazonDynamoDBClient client = new AmazonDynamoDBClient();
+		private static AmazonDynamoDBClient client;
 
 		private static string shelfMAC;
 
@@ -38,6 +44,10 @@ namespace SimpleSerial {
 						 where nic.OperationalStatus == OperationalStatus.Up
 						 select nic.GetPhysicalAddress().ToString()
 						 ).FirstOrDefault();
+			Util.LogSuccess( "Detected system MAC address: " + shelfMAC );
+
+			client = new AmazonDynamoDBClient();
+			Util.LogSuccess( "Connected to DynamoDB" );
 
 			//    DescribeTableRequest request = new DescribeTableRequest
 			//     {
@@ -65,6 +75,8 @@ namespace SimpleSerial {
 			eventDoc["Timestamp"] = DateTime.Now.ToString( new CultureInfo( "en-US" ) );
 			eventDoc["EventType"] = eventType;
 			eventsTable.PutItem( eventDoc );
+
+			Util.LogSuccess( "Logged \"" + eventType + "\" for: " + product );
 		}
 
 		public void UpdateShelfInventory( List<Product> products ) {
@@ -81,8 +93,21 @@ namespace SimpleSerial {
 			shelfTable.PutItem( shelfDoc );
 		}
 
+		public List<string> getProductList() {
+			Table shelf = Table.LoadTable( client, ShelfTableName );
+			Document doc = shelf.GetItem( shelfMAC );
+			List<string> products = doc["Products"].AsListOfString();
+			return products;
+		}
+
+		public string getProductName( string currentProductID ) {
+			Table products = Table.LoadTable( client, "ProductCatalog" );
+			Document doc = products.GetItem( currentProductID );
+			return doc["Name"];
+		}
+
 		private static void CreateTable() {
-			Util.Log( "\n*** Creating table ***" );
+			Util.LogSuccess( "\n*** Creating table ***" );
 			var request = new CreateTableRequest {
 				AttributeDefinitions = new List<AttributeDefinition>()
 		{
@@ -123,19 +148,6 @@ namespace SimpleSerial {
 			WaitTilTableCreated( EventsTableName, response );
 		}
 
-        public List<string> getProductList()
-        {
-            Table shelf = Table.LoadTable(client, ShelfTableName);
-            Document doc = shelf.GetItem(shelfMAC);
-            List<string> products = doc["Products"].AsListOfString();
-            return products;
-        }
-		public string getProductName( string currentProductID ) {
-            Table products = Table.LoadTable(client, "ProductCatalog");
-            Document doc = products.GetItem(currentProductID);
-            return doc["Name"];
-        }
-
 		private static void AddShelf( List<Product> productList ) {
 			//			Table shelfList = new Table();
 			//			List<string> nameList = new List<Product>();
@@ -153,7 +165,7 @@ namespace SimpleSerial {
 
 			string status = tableDescription.TableStatus;
 
-			Util.Log( tableName + " - " + status );
+			Util.LogSuccess( tableName + " - " + status );
 
 			// Let us wait until table is created. Call DescribeTable.
 			while ( status != "ACTIVE" ) {
@@ -162,7 +174,7 @@ namespace SimpleSerial {
 					var res = client.DescribeTable( new DescribeTableRequest {
 						TableName = tableName
 					} );
-					Util.Log( "Table name: " + res.Table.TableName + ", status: " + res.Table.TableStatus );
+					Util.LogSuccess( "Table name: " + res.Table.TableName + ", status: " + res.Table.TableStatus );
 					status = res.Table.TableStatus;
 				}
 				// Try-catch to handle potential eventual-consistency issue.

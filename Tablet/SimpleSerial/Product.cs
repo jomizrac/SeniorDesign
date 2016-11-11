@@ -21,6 +21,10 @@ namespace SimpleSerial {
 			this.status = status;
 		}
 
+		public override string ToString() {
+			return name + " (ID: " + productID + ") (Slot: " + slotID + ")";
+		}
+
 		#region Equality Comparison Overrides
 
 		//				public static bool operator ==( Product a, Product b ) {
