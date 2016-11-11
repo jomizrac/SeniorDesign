@@ -30,9 +30,9 @@ namespace SimpleSerial {
 		[STAThread]
 		private static void Main() {
 			if ( !AWSCredentialsPresent() ) Application.Exit();
-
-			// Setup the form for playing videos
-			Application.EnableVisualStyles();
+            
+            // Setup the form for playing videos
+            Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false ); // This must be called before MainForm is instantiated
 			Instance.Form = new MainForm();
 
@@ -84,5 +84,6 @@ namespace SimpleSerial {
 			}
 			return true;
 		}
-	}
+
+    }
 }

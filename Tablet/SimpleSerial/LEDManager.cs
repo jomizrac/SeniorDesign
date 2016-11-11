@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System;
 
 namespace SimpleSerial {
 
@@ -26,7 +27,9 @@ namespace SimpleSerial {
 
 		//register for events coming from arduino parser
 		private void Initialize() {
-			ArduinoParser.Instance.SlotPickUpEvent -= Instance.OnSlotPickup;
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+
+            ArduinoParser.Instance.SlotPickUpEvent -= Instance.OnSlotPickup;
 			ArduinoParser.Instance.SlotPickUpEvent += Instance.OnSlotPickup;
 
 			ArduinoParser.Instance.SlotPutDownEvent -= Instance.OnSlotPutDown;
@@ -53,5 +56,10 @@ namespace SimpleSerial {
 			string command = "LED C\n";
 			ArduinoParser.Instance.SendCommand( command );
 		}
-	}
+
+        static void CurrentDomain_ProcessExit(object sender, EventArgs e) {
+            string command = "LED O\n";
+            ArduinoParser.Instance.SendCommand( command );
+        }
+    }
 }
