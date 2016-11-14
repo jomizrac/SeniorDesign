@@ -16,6 +16,10 @@ namespace SimpleSerial {
 			Log( "ERROR", message, addNewLine );
 		}
 
+		public static void LogInfo( string message, bool addNewLine = true ) {
+			Log( "INFO", message, addNewLine );
+		}
+
 		/// <summary>
 		/// Prefixes a string with the current timestamp and prints it with Console.WriteLine.
 		/// </summary>

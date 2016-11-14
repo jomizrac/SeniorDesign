@@ -72,8 +72,8 @@ namespace SimpleSerial {
 			eventDoc["ProductLocation"] = product.slotID;
 			eventDoc["ShelfMAC"] = shelfMAC;
 			eventDoc["DeviceName"] = Environment.MachineName;
-            eventDoc["Timestamp"] = DateTime.Now.Ticks;
-            eventDoc["DateTime"] = DateTime.Now.ToString();
+			eventDoc["Timestamp"] = DateTime.Now.Ticks;
+			eventDoc["DateTime"] = DateTime.Now.ToString();
 			eventDoc["EventType"] = eventType;
 			eventsTable.PutItem( eventDoc );
 
@@ -108,7 +108,7 @@ namespace SimpleSerial {
 		}
 
 		private static void CreateTable() {
-			Util.LogSuccess( "\n*** Creating table ***" );
+			Util.LogInfo( "\n*** Creating table ***" );
 			var request = new CreateTableRequest {
 				AttributeDefinitions = new List<AttributeDefinition>()
 		{
@@ -166,7 +166,7 @@ namespace SimpleSerial {
 
 			string status = tableDescription.TableStatus;
 
-			Util.LogSuccess( tableName + " - " + status );
+			Util.LogInfo( tableName + " - " + status );
 
 			// Let us wait until table is created. Call DescribeTable.
 			while ( status != "ACTIVE" ) {
@@ -175,7 +175,7 @@ namespace SimpleSerial {
 					var res = client.DescribeTable( new DescribeTableRequest {
 						TableName = tableName
 					} );
-					Util.LogSuccess( "Table name: " + res.Table.TableName + ", status: " + res.Table.TableStatus );
+					Util.LogInfo( "Table name: " + res.Table.TableName + ", status: " + res.Table.TableStatus );
 					status = res.Table.TableStatus;
 				}
 				// Try-catch to handle potential eventual-consistency issue.

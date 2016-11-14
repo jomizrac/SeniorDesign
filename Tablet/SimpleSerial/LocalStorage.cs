@@ -94,11 +94,13 @@ namespace SimpleSerial {
 		}
 
 		private bool IsOutdated( string filePath, string key ) {
-			DateTime local = File.GetLastWriteTime( filePath );
+			var localTime = File.GetLastWriteTime( filePath );
+			var localSize = new FileInfo( filePath ).Length;
 			try {
-				GetObjectMetadataResponse metadata = client.GetObjectMetadata( productVideoBucket, key );
-				DateTime remote = metadata.LastModified.ToLocalTime();
-				return local < remote;
+				var metadata = client.GetObjectMetadata( productVideoBucket, key );
+				var remoteTime = metadata.LastModified.ToLocalTime();
+				var remoteSize = metadata.ContentLength;
+				return localTime < remoteTime || localSize != remoteSize;
 			}
 			catch ( Exception ) {
 				Util.LogError( "Unable to retrieve object with key: " + key );
