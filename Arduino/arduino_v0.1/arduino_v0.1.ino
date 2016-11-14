@@ -85,7 +85,7 @@ void setup() {
   Serial.begin(57600);
 
 ///////////for testing//////////
-  //beginChaseEffect(0);
+  beginChaseEffect(0);
   //stopChaseEffect();
 ///////////////////////////////
 }
@@ -97,6 +97,7 @@ void loop() {
   
   //receive any commands from the main program
   readInput();
+
 }
 
 //reads through all of the product sensors to see which have been picked up
@@ -209,6 +210,8 @@ void parseCommandLED(String command){
     deactivateSlot(slot);
   }else if(action == 'C'){
     beginChaseEffect(0);
+  }else if(action == 'O'){
+    stopChaseEffect();
   }else{
     //do nothing. clear buffer. bad command
   }
@@ -276,14 +279,18 @@ void beginChaseEffect(int slot){
 //cancels the chasing effect
 void stopChaseEffect(){
   chasingEffect = false;
-  //reset the chase
   FastLED.setBrightness(0);
-  chaseLeader = 0;
   
-  //code to reset the LEDs back to black
-  for(int i = LEDStart[chaseLeader - 1]; i <= LEDEnd[chaseLeader + 1]; i++){
+//  //code to reset the LEDs back to black
+//  for(int i = LEDStart[chaseLeader - 1]; i <= LEDEnd[chaseLeader + 1]; i++){
+//    leds[i] = CRGB::Black;
+//  }
+
+  for(int i = 0; i < NUM_LEDS; i++){
     leds[i] = CRGB::Black;
   }
+  
+  chaseLeader = 0;
   FastLED.show();
   
 }
