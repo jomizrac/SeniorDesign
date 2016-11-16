@@ -41,16 +41,19 @@
             // button1
             // 
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(25, 315);
+            this.button1.Location = new System.Drawing.Point(33, 388);
+            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(100, 40);
+            this.button1.Size = new System.Drawing.Size(133, 49);
             this.button1.TabIndex = 0;
             this.button1.Text = "Back";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // splitContainer1
             // 
-            this.splitContainer1.Location = new System.Drawing.Point(150, 75);
+            this.splitContainer1.Location = new System.Drawing.Point(200, 92);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -60,16 +63,18 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.button3);
-            this.splitContainer1.Size = new System.Drawing.Size(300, 200);
-            this.splitContainer1.SplitterDistance = 150;
+            this.splitContainer1.Size = new System.Drawing.Size(400, 246);
+            this.splitContainer1.SplitterDistance = 200;
+            this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 1;
             // 
             // button2
             // 
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(20, 80);
+            this.button2.Location = new System.Drawing.Point(27, 98);
+            this.button2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(112, 40);
+            this.button2.Size = new System.Drawing.Size(149, 49);
             this.button2.TabIndex = 0;
             this.button2.Text = "Queued";
             this.button2.UseVisualStyleBackColor = true;
@@ -77,20 +82,22 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button3.Location = new System.Drawing.Point(20, 80);
+            this.button3.Location = new System.Drawing.Point(27, 98);
+            this.button3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(112, 40);
+            this.button3.Size = new System.Drawing.Size(149, 49);
             this.button3.TabIndex = 0;
             this.button3.Text = "Interrupt";
             this.button3.UseVisualStyleBackColor = true;
             // 
             // VideoInstr
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 361);
+            this.ClientSize = new System.Drawing.Size(779, 444);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.button1);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "VideoInstr";
             this.Text = "Video Instructions";
             this.splitContainer1.Panel1.ResumeLayout(false);

@@ -20,5 +20,12 @@ namespace SimpleSerial.GUI
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            NewProdConf confirm = new NewProdConf();
+            confirm.Show();
+            this.Close();
+        }
     }
 }

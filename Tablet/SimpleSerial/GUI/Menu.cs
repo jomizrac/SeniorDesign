@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleSerial.GUI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,7 +19,23 @@ namespace SimpleSerial
 
         private void button2_Click(object sender, EventArgs e)
         {
+            VideoInstr behavior = new VideoInstr();
+            behavior.Show();
+            this.Close();
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SwapInstr swap = new SwapInstr();
+            swap.Show();
+            this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            LogIn login = new LogIn();
+            login.Show();
+            this.Close();
         }
     }
 }
