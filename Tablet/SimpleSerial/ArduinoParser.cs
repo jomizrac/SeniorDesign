@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 using System.IO.Ports;
 using System.Management;
 using System.Text;
@@ -106,20 +107,25 @@ namespace SimpleSerial {
 
 		//Parses the message received to check which type of event it is
 		private void ParseTelegram( string telegram ) {
-			var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)" );
-			var match = numAlpha.Match( telegram );
-			var alpha = match.Groups["Alpha"].Value;
-			var num = match.Groups["Numeric"].Value;
-			var slotIdx = int.Parse( num );
+			try {
+				var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)" );
+				var match = numAlpha.Match( telegram );
+				var alpha = match.Groups["Alpha"].Value;
+				var num = match.Groups["Numeric"].Value;
+				var slotIdx = int.Parse( num );
 
-			if ( alpha == PickUp ) {
-				SlotPickUpEvent?.Invoke( slotIdx );
+				if ( alpha == PickUp ) {
+					SlotPickUpEvent?.Invoke( slotIdx );
+				}
+				else if ( alpha == PutDown ) {
+					SlotPutDownEvent?.Invoke( slotIdx );
+				}
+				else {
+					Util.LogError( "Unrecognized alpha string: " + alpha );
+				}
 			}
-			else if ( alpha == PutDown ) {
-				SlotPutDownEvent?.Invoke( slotIdx );
-			}
-			else {
-				Util.LogError( "Unrecognized alpha string: " + alpha );
+			catch ( Exception ) {
+				Util.LogError( "Error parsing telegram: " + telegram );
 			}
 		}
 	}

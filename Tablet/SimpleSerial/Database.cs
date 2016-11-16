@@ -65,19 +65,23 @@ namespace SimpleSerial {
 
 		//Creates a new item in the database.
 		public void LogEvent( Product product, string eventType ) {
-			var eventsTable = Table.LoadTable( client, EventsTableName );
-			var eventDoc = new Document();
-			eventDoc["ProductID"] = product.productID;
-			eventDoc["ProductName"] = product.name;
-			eventDoc["ProductLocation"] = product.slotID;
-			eventDoc["ShelfMAC"] = shelfMAC;
-			eventDoc["DeviceName"] = Environment.MachineName;
-			eventDoc["Timestamp"] = DateTime.Now.Ticks;
-			eventDoc["DateTime"] = DateTime.Now.ToString();
-			eventDoc["EventType"] = eventType;
-			eventsTable.PutItem( eventDoc );
-
-			Util.LogSuccess( "Logged \"" + eventType + "\" event for: " + product );
+			try {
+				var eventsTable = Table.LoadTable( client, EventsTableName );
+				var eventDoc = new Document();
+				eventDoc["ProductID"] = product.productID;
+				eventDoc["ProductName"] = product.name;
+				eventDoc["ProductLocation"] = product.slotID;
+				eventDoc["ShelfMAC"] = shelfMAC;
+				eventDoc["DeviceName"] = Environment.MachineName;
+				eventDoc["Timestamp"] = DateTime.Now.Ticks;
+				eventDoc["DateTime"] = DateTime.Now.ToString();
+				eventDoc["EventType"] = eventType;
+				eventsTable.PutItem( eventDoc );
+				Util.LogSuccess( "Logged \"" + eventType + "\" event for: " + product );
+			}
+			catch ( Exception ) {
+				Util.LogError( "Failed to log \"" + eventType + "\" event for: " + product );
+			}
 		}
 
 		public void UpdateShelfInventory( List<Product> products ) {
