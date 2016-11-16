@@ -69,6 +69,48 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArduinoParser.cs" />
+    <Compile Include="GUI\LogIn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\LogIn.Designer.cs">
+      <DependentUpon>LogIn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Menu.Designer.cs">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\NewProd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\NewProd.Designer.cs">
+      <DependentUpon>NewProd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\NewProdConf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\NewProdConf.Designer.cs">
+      <DependentUpon>NewProdConf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\SwapInstr.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\SwapInstr.Designer.cs">
+      <DependentUpon>SwapInstr.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\VideoConf.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\VideoConf.Designer.cs">
+      <DependentUpon>VideoConf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GUI\VideoInstr.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\VideoInstr.Designer.cs">
+      <DependentUpon>VideoInstr.cs</DependentUpon>
+    </Compile>
     <Compile Include="IdleDetector.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="ExtensionMethods.cs" />
@@ -93,6 +135,27 @@
     <Compile Include="ShelfInventory.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="VideoManager.cs" />
+    <EmbeddedResource Include="GUI\LogIn.resx">
+      <DependentUpon>LogIn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Menu.resx">
+      <DependentUpon>Menu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\NewProd.resx">
+      <DependentUpon>NewProd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\NewProdConf.resx">
+      <DependentUpon>NewProdConf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\SwapInstr.resx">
+      <DependentUpon>SwapInstr.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\VideoConf.resx">
+      <DependentUpon>VideoConf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\VideoInstr.resx">
+      <DependentUpon>VideoInstr.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

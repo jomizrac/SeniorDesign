@@ -61,6 +61,8 @@ namespace SimpleSerial {
 			var log = Logger.Instance;
 
 			Util.LogSuccess( "ShelfRokr startup complete!" + Environment.NewLine );
+            LogIn login = new LogIn();
+            login.Show();
 			Application.Run( Instance.Form );
 			// Warning: no code after Application.Run()'s while-loop will be reached!
 		}
