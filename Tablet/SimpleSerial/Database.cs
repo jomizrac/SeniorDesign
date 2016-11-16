@@ -76,11 +76,10 @@ namespace SimpleSerial {
 				eventDoc["Timestamp"] = DateTime.Now.Ticks;
 				eventDoc["DateTime"] = DateTime.Now.ToString();
 				eventDoc["EventType"] = eventType;
-				eventsTable.PutItem( eventDoc );
-				Util.LogSuccess( "Logged \"" + eventType + "\" event for: " + product );
+				eventsTable.BeginPutItem( eventDoc, OnFinishPutItem, eventDoc );
 			}
 			catch ( Exception ) {
-				Util.LogError( "Failed to log \"" + eventType + "\" event for: " + product );
+				Util.LogError( "Failed to log \"" + eventType + "\" event for: " + product.name );
 			}
 		}
 
@@ -109,6 +108,17 @@ namespace SimpleSerial {
 			Table products = Table.LoadTable( client, "ProductCatalog" );
 			Document doc = products.GetItem( currentProductID );
 			return doc["Name"];
+		}
+
+		private static void OnFinishPutItem( IAsyncResult asyncResult ) {
+			Document eventDoc = asyncResult.AsyncState as Document;
+			try {
+				client.EndPutItem( asyncResult );
+				Util.LogSuccess( "Logged \"" + eventDoc["EventType"] + "\" event for: " + eventDoc["ProductName"] );
+			}
+			catch ( Exception ) {
+				Util.LogError( "Failed to log \"" + eventDoc["EventType"] + "\" event for: " + eventDoc["ProductName"] );
+			}
 		}
 
 		private static void CreateTable() {
