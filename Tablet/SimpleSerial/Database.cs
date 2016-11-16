@@ -76,7 +76,7 @@ namespace SimpleSerial {
 				eventDoc["Timestamp"] = DateTime.Now.Ticks;
 				eventDoc["DateTime"] = DateTime.Now.ToString();
 				eventDoc["EventType"] = eventType;
-				eventsTable.BeginPutItem( eventDoc, OnFinishPutItem, eventDoc );
+				eventsTable.BeginPutItem( eventDoc, PutItemCallback, eventDoc );
 			}
 			catch ( Exception ) {
 				Util.LogError( "Failed to log \"" + eventType + "\" event for: " + product.name );
@@ -110,7 +110,7 @@ namespace SimpleSerial {
 			return doc["Name"];
 		}
 
-		private static void OnFinishPutItem( IAsyncResult asyncResult ) {
+		private static void PutItemCallback( IAsyncResult asyncResult ) {
 			Document eventDoc = asyncResult.AsyncState as Document;
 			try {
 				client.EndPutItem( asyncResult );
