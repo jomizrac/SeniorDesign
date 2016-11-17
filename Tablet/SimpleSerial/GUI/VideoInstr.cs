@@ -22,5 +22,19 @@ namespace SimpleSerial.GUI
             menu.Show();
             this.Close();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            VideoConf confirm = new GUI.VideoConf("queued");
+            confirm.Show();
+            this.Close();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            VideoConf confirm = new VideoConf("interrupt");
+            confirm.Show();
+            this.Close();
+        }
     }
 }
