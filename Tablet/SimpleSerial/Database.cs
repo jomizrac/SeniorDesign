@@ -32,11 +32,9 @@ namespace SimpleSerial {
 		#endregion Singleton
 
 		private const string EventsTableName = "Events";
-
-		private const string ShelfTableName = "Shelves";
-
+		private const string ShelvesTableName = "Shelves";
+		private const string ProductsTableName = "ProductCatalog";
 		private static AmazonDynamoDBClient client;
-
 		private static string shelfMAC;
 
 		private Database() {
@@ -79,45 +77,45 @@ namespace SimpleSerial {
 				eventsTable.BeginPutItem( eventDoc, PutItemCallback, eventDoc );
 			}
 			catch ( Exception ) {
-				Util.LogError( "Failed to log \"" + eventType + "\" event for: " + product.name );
+				Util.LogError( "Failed to BeginPutItem \"" + eventType + "\" event for: " + product.name );
 			}
 		}
 
 		public void UpdateShelfInventory( List<Product> products ) {
-			Table shelfTable = Table.LoadTable( client, ShelfTableName );
-
 			List<string> productStrings = new List<string>();
 			foreach ( var product in products ) {
 				productStrings.Add( product.productID );
 			}
 
+			var shelvesTable = Table.LoadTable( client, ShelvesTableName );
 			var shelfDoc = new Document();
 			shelfDoc["ShelfMAC"] = shelfMAC;
 			shelfDoc["Products"] = productStrings;
-			shelfTable.PutItem( shelfDoc );
+			shelvesTable.PutItem( shelfDoc );
 		}
 
 		public List<string> getProductList() {
-			Table shelf = Table.LoadTable( client, ShelfTableName );
-			Document doc = shelf.GetItem( shelfMAC );
+			var shelvesTable = Table.LoadTable( client, ShelvesTableName );
+			var doc = shelvesTable.GetItem( shelfMAC );
 			List<string> products = doc["Products"].AsListOfString();
 			return products;
 		}
 
 		public string getProductName( string currentProductID ) {
-			Table products = Table.LoadTable( client, "ProductCatalog" );
-			Document doc = products.GetItem( currentProductID );
+			var productsTable = Table.LoadTable( client, ProductsTableName );
+			var doc = productsTable.GetItem( currentProductID );
 			return doc["Name"];
 		}
 
 		private static void PutItemCallback( IAsyncResult asyncResult ) {
-			Document eventDoc = asyncResult.AsyncState as Document;
+			var eventDoc = asyncResult.AsyncState as Document;
 			try {
-				client.EndPutItem( asyncResult );
+				var eventsTable = Table.LoadTable( client, EventsTableName );
+				eventsTable.EndPutItem( asyncResult );
 				Util.LogSuccess( "Logged \"" + eventDoc["EventType"] + "\" event for: " + eventDoc["ProductName"] );
 			}
 			catch ( Exception ) {
-				Util.LogError( "Failed to log \"" + eventDoc["EventType"] + "\" event for: " + eventDoc["ProductName"] );
+				Util.LogError( "Failed to EndPutItem \"" + eventDoc["EventType"] + "\" event for: " + eventDoc["ProductName"] );
 			}
 		}
 
@@ -158,7 +156,6 @@ namespace SimpleSerial {
 			};
 
 			var response = client.CreateTable( request );
-
 			var tableDescription = response.TableDescription;
 			WaitTilTableCreated( EventsTableName, response );
 		}
