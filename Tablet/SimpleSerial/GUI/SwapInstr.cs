@@ -5,15 +5,19 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SimpleSerial.GUI
 {
     public partial class SwapInstr : Form
     {
+        public int upc;
         public SwapInstr()
         {
             InitializeComponent();
+            ShelfInventory.Instance.ProductPickUpEvent -= this.onProductPickup;
+            ShelfInventory.Instance.ProductPickUpEvent += this.onProductPickup;
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -31,6 +35,13 @@ namespace SimpleSerial.GUI
             Menu menu = new Menu();
             menu.Show();
             this.Close();
+        }
+        private void onProductPickup( Product P )
+        {
+            upc = Convert.ToInt32(P.productID);
+            NewProd newProd = new NewProd();
+            newProd.Show();
+            this.Hide();
         }
     }
 }

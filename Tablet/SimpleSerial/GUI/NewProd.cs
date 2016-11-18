@@ -11,6 +11,7 @@ namespace SimpleSerial.GUI
 {
     public partial class NewProd : Form
     {
+        public int upc;
         public NewProd()
         {
             InitializeComponent();
@@ -23,6 +24,7 @@ namespace SimpleSerial.GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            upc = Convert.ToInt32(textBox1.Text);
             NewProdConf confirm = new NewProdConf();
             confirm.Show();
             this.Close();
