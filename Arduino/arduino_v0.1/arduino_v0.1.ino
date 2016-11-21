@@ -17,12 +17,12 @@
 //number of facings on a single shelfRokr
 #define NUM_SLOTS 7
 //delay time to allow the emitter to warm up to full strength. time is in MS
-#define EMITTER_TIMER 1000
+#define EMITTER_TIMER 10000
 //initial value for thresholds. a low starting value will not effect the flow
 //of logic and will balance out after the first few iterations
 #define THRESHOLD_DEFAULT 512
 //percent different a sensor value has to be to be considered picked up
-#define PICKUP_RATIO .50
+#define PICKUP_RATIO .65
 //delay time in ms between sensor poll loops
 #define LOOP_DELAY 100
 
@@ -85,7 +85,7 @@ void setup() {
   Serial.begin(57600);
 
 ///////////for testing//////////
-  beginChaseEffect(0);
+  //beginChaseEffect(0);
   //stopChaseEffect();
 ///////////////////////////////
 }
@@ -94,73 +94,83 @@ void setup() {
 void loop() {
   //check the sensors to see if anything has been picked up or put down
   pollProductSensors();
-  
+
   //receive any commands from the main program
   readInput();
-
 }
 
 //reads through all of the product sensors to see which have been picked up
 void pollProductSensors(){
-  
+
   //send signal to activate the first sensor
   digitalWrite(SENSORS, HIGH);
 
   //iterate through each shelf and sensor
+  //Serial.print(millis());
+  //Serial.print(",");
   for(int i = 0; i < NUM_SHELVES; i++){
     for(int j = 0; j < NUM_SLOTS; j++){
-      
+
       //advances clock and iterates current sensor to the
       //next sensor in the array
       digitalWrite(CLOCK, HIGH);
       digitalWrite(CLOCK, LOW);
       //switch off current sensor so the previous sensor is the only one active
       digitalWrite(SENSORS, LOW);
-      
+
       //actually check to see if the status of each slot has changed
       sensorWork(j);
 
-      updateLighting();
     }
 
     //delay to allow time between polling all of the sensors. accounts for slower pickups
     delay(LOOP_DELAY);
-    
+    updateLighting();
   }
+  //Serial.println(",x1");
 }
 
 //checks if the product is being picked up
 boolean sensorWork(int slot){
   //values of SENSOR_RECEIVER when emitter is on and off
   int sensorOn = 0;
-  //int sensorOff = 0;
+  int sensorOff = 0;
 
   //activate emitter and take a reading then deactivate it and
   //take another reading
+  //Serial.print(slot);
+  //Serial.print(",");
   digitalWrite(SENSOR_EMITTER, HIGH);
   delayMicroseconds(EMITTER_TIMER);
   sensorOn = analogRead(SENSOR_RECEIVER);
+  //Serial.print(sensorOn);
+  //Serial.print(",");
   digitalWrite(SENSOR_EMITTER, LOW);
   delayMicroseconds(EMITTER_TIMER);
-  //sensorOff = analogRead(SENSOR_RECEIVER);
+  sensorOff = analogRead(SENSOR_RECEIVER);
+  //Serial.print(sensorOff);
+  //Serial.print(",");
+  int diff = sensorOn - sensorOff;
 
-  if(pickedUp[slot] == false && sensorOn < thresholds[slot] * PICKUP_RATIO){
+  if (millis()<1000) thresholds[slot] = diff;
+
+  if(pickedUp[slot] == false && diff < thresholds[slot] * PICKUP_RATIO){
     sendPickUp(slot);
-  }else if(pickedUp[slot] == true && sensorOn > thresholds[slot] * PICKUP_RATIO){
+  }else if(pickedUp[slot] == true && diff > thresholds[slot] * PICKUP_RATIO){
     sendPutDown(slot);
   }
 
   //only want to update the threshold if the product has been sitting in place
   if(pickedUp[slot] == false){
-    updateThresholds(sensorOn, slot);
+    updateThresholds(diff, slot);
   }
 }
 
 //updates the threshold value to it reflects a more accurate mid-range value
-void updateThresholds(int sensorOn, int slot){
-  //thresholds[slot] = (thresholds[slot] + sensorOn) / 2;
+void updateThresholds(int diff, int slot){
   thresholds[slot] -= (thresholds[slot] / 20);
-  thresholds[slot] +=  (sensorOn / 20);
+  thresholds[slot] +=  (diff / 20);
+  //Serial.print('T');
 }
 
 //sends message to host machine to indidcate that there was a pickup
@@ -199,7 +209,7 @@ void readInput(){
 void parseCommandLED(String command){
   //char ledCommand[] = command;
   //command.toCharArray(ledCommand, command.length());
-  
+
   char action = command.charAt(4);
   int slot = (int)(command.charAt(6)) - 48;
   if(action == 'U'){
@@ -209,16 +219,14 @@ void parseCommandLED(String command){
     stopChaseEffect();
     deactivateSlot(slot);
   }else if(action == 'C'){
-    beginChaseEffect(0);
-  }else if(action == 'O'){
-    stopChaseEffect();
+  //  beginChaseEffect(0);
   }else{
     //do nothing. clear buffer. bad command
   }
 }
 
 void updateLighting(){
-  
+
   if(chasingEffect){    //code for simulating the chase effect
     if(chaseRight == true){
       leds[chaseLeader - 1] = CRGB::Black;
@@ -229,7 +237,7 @@ void updateLighting(){
       }
     }else if(chaseRight == false){
       leds[chaseLeader + 1] = CRGB::Black;
-      if(chaseLeader <= 0){
+      if(chaseLeader <= 1){
         chaseRight = true;
       }else{
         chaseLeader--;
@@ -243,12 +251,12 @@ void updateLighting(){
     leds[chaseLeader + 1] = CRGB::White;
 
     FastLED.show();
-  
+
   }else{    //iterate through all the slots and do light effect for items that are picked up
     brightness += brightnessIncrement;
     FastLED.setBrightness(brightness);
     FastLED.show();
-    
+
     if((brightness >= 255 && brightnessIncrement > 0) || (brightness <= 0 && brightnessIncrement < 0)){
       brightnessIncrement *= -1;
     }
@@ -269,7 +277,7 @@ void deactivateSlot(int slot){
 
 //starts the chasing effect at the designated slot
 void beginChaseEffect(int slot){
-  chaseLeader = LEDStart[slot];
+  chaseLeader = LEDStart[slot + 1];
   leds[chaseLeader] = CRGB::White;
   FastLED.setBrightness(255);
   chaseRight = true;
@@ -279,24 +287,20 @@ void beginChaseEffect(int slot){
 //cancels the chasing effect
 void stopChaseEffect(){
   chasingEffect = false;
+  //reset the chase
   FastLED.setBrightness(0);
-  
-//  //code to reset the LEDs back to black
-//  for(int i = LEDStart[chaseLeader - 1]; i <= LEDEnd[chaseLeader + 1]; i++){
-//    leds[i] = CRGB::Black;
-//  }
+  chaseLeader = 0;
 
-  for(int i = 0; i < NUM_LEDS; i++){
+  //code to reset the LEDs back to black
+  for(int i = LEDStart[chaseLeader - 1]; i <= LEDEnd[chaseLeader + 1]; i++){
     leds[i] = CRGB::Black;
   }
-  
-  chaseLeader = 0;
   FastLED.show();
-  
+
 }
 
 //called in the beginning of the program. iterates over the pickedUp array
-//and sets all values to false, which is the default value. a value of 
+//and sets all values to false, which is the default value. a value of
 //false indicates that the product is still sitting in the slot.
 void initializeSlots(){
   for(int i = 0; i < NUM_SLOTS; i++){
