@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
@@ -56,6 +57,12 @@ namespace SimpleSerial {
 			new Thread( () => Initialize() ).Start();
 		}
 
+        public void UpdateSlot( int slotIdx, int UPC)
+        {
+            string name = Database.Instance.getProductName(Convert.ToString(UPC));
+            Product newProduct = new Product(Convert.ToString(UPC), name, slotIdx);
+            UpdateSlot(slotIdx, newProduct);
+        }
 		public void UpdateSlot( int slotIdx, Product newProduct ) {
 			Product oldProduct = null;
 			slots.TryGetValue( slotIdx, out oldProduct );
