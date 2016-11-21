@@ -32,6 +32,11 @@ namespace SimpleSerial.GUI
             } else if (behavior == "interrupt")
             {
                 VideoManager.Instance.SetPlaybackMethod(VideoManager.PlaybackMethod.Immediate);
+            } else
+            {
+                LogIn login = new LogIn();
+                login.Show();
+                this.Close();
             }
             Menu menu = new SimpleSerial.Menu();
             menu.Show();

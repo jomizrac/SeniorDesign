@@ -12,9 +12,13 @@ namespace SimpleSerial.GUI
     public partial class NewProd : Form
     {
         public int upc;
-        public NewProd()
+        public int slot;
+        public NewProd(int upc, int slot)
         {
+            this.upc = upc;
+            this.slot = slot;
             InitializeComponent();
+            label1.Text = "You have selected: " + upc + ", If this is correct, enter the new products UPC code";
         }
 
         private void splitContainer2_Panel1_Paint(object sender, PaintEventArgs e)
@@ -24,8 +28,8 @@ namespace SimpleSerial.GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            upc = Convert.ToInt32(textBox1.Text);
-            NewProdConf confirm = new NewProdConf();
+            int upc2 = Convert.ToInt32(textBox1.Text);
+            NewProdConf confirm = new NewProdConf(upc2, slot);
             confirm.Show();
             this.Close();
         }

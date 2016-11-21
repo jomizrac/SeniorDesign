@@ -59,8 +59,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 17);
             this.label2.TabIndex = 2;
-            this.label2.Text = behavior;
-            // 
+            this.label2.Text = "";
             // VideoConf
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);

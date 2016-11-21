@@ -39,7 +39,7 @@ namespace SimpleSerial.GUI
         private void onProductPickup( Product P )
         {
             upc = Convert.ToInt32(P.productID);
-            NewProd newProd = new NewProd();
+            NewProd newProd = new NewProd(upc, P.slotID);
             newProd.Show();
             this.Hide();
         }
