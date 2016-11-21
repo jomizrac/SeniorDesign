@@ -12,8 +12,8 @@ namespace SimpleSerial.GUI
     public partial class NewProdConf : Form
     {
         private int slot;
-        private int upc;
-        public NewProdConf(int upc, int slot)
+        private string upc;
+        public NewProdConf(string upc, int slot)
         {
             this.slot = slot;
             this.upc = upc;

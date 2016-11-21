@@ -12,7 +12,7 @@ namespace SimpleSerial.GUI
 {
     public partial class SwapInstr : Form
     {
-        public int upc;
+        public string upc;
         public SwapInstr()
         {
             InitializeComponent();
@@ -38,7 +38,7 @@ namespace SimpleSerial.GUI
         }
         private void onProductPickup( Product P )
         {
-            upc = Convert.ToInt32(P.productID);
+            upc = P.productID;
             NewProd newProd = new NewProd(upc, P.slotID);
             newProd.Show();
             this.Hide();

@@ -57,10 +57,10 @@ namespace SimpleSerial {
 			new Thread( () => Initialize() ).Start();
 		}
 
-        public void UpdateSlot( int slotIdx, int UPC)
+        public void UpdateSlot( int slotIdx, string UPC)
         {
             string name = Database.Instance.getProductName(Convert.ToString(UPC));
-            Product newProduct = new Product(Convert.ToString(UPC), name, slotIdx);
+            Product newProduct = new Product(UPC, name, slotIdx);
             UpdateSlot(slotIdx, newProduct);
         }
 		public void UpdateSlot( int slotIdx, Product newProduct ) {

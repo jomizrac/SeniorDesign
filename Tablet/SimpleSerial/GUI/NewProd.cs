@@ -11,9 +11,9 @@ namespace SimpleSerial.GUI
 {
     public partial class NewProd : Form
     {
-        public int upc;
+        public string upc;
         public int slot;
-        public NewProd(int upc, int slot)
+        public NewProd(string upc, int slot)
         {
             this.upc = upc;
             this.slot = slot;
@@ -28,7 +28,7 @@ namespace SimpleSerial.GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int upc2 = Convert.ToInt32(textBox1.Text);
+            string upc2 = textBox1.Text;
             NewProdConf confirm = new NewProdConf(upc2, slot);
             confirm.Show();
             this.Close();
