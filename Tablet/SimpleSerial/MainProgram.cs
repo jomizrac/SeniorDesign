@@ -30,11 +30,13 @@ namespace SimpleSerial {
 		[STAThread]
 		private static void Main() {
 			if ( !AWSCredentialsPresent() ) Application.Exit();
-            
-            // Setup the form for playing videos
-            Application.EnableVisualStyles();
+
+			// Setup the form for playing videos
+			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false ); // This must be called before MainForm is instantiated
 			Instance.Form = new MainForm();
+
+			Database.Instance.GetProductCatalog();
 
 			if ( ShelfInventory.Instance.ProductList().Count == 0 ) {
 				ShelfInventory.Instance.UpdateSlot( 0, new Product( "857344005037", "CounterIntelligence", 0 ) );
@@ -61,8 +63,8 @@ namespace SimpleSerial {
 			var log = Logger.Instance;
 
 			Util.LogSuccess( "ShelfRokr startup complete!" + Environment.NewLine );
-            LogIn login = new LogIn();
-            login.Show();
+			LogIn login = new LogIn();
+			login.Show();
 			Application.Run( Instance.Form );
 			// Warning: no code after Application.Run()'s while-loop will be reached!
 		}
@@ -86,6 +88,5 @@ namespace SimpleSerial {
 			}
 			return true;
 		}
-
-    }
+	}
 }

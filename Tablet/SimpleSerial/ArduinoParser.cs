@@ -73,6 +73,8 @@ namespace SimpleSerial {
 				foreach ( var item in searcher.Get() ) {
 					var desc = item["Description"].ToString();
 					var deviceId = item["DeviceID"].ToString();
+					Util.LogInfo( "desc = " + desc );
+					Util.LogInfo( "deviceId =" + deviceId );
 
 					if ( desc.Contains( "Arduino" ) ) {
 						Util.LogSuccess( "Autodetected Arduino on port: " + deviceId );
@@ -80,8 +82,8 @@ namespace SimpleSerial {
 					}
 				}
 			}
-			catch ( ManagementException ) {
-				// NOOP
+			catch ( ManagementException e ) {
+				Util.LogWarning( e );
 			}
 
 			string defaultPort = ConfigurationManager.AppSettings["defaultPort"];
@@ -108,7 +110,7 @@ namespace SimpleSerial {
 		//Parses the message received to check which type of event it is
 		private void ParseTelegram( string telegram ) {
 			try {
-				var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)" );
+				var numAlpha = new Regex( "(?<Numeric>[0-9]*)(?<Alpha>[a-zA-Z]*)(\r\n|\n|\r)*" );
 				var match = numAlpha.Match( telegram );
 				var alpha = match.Groups["Alpha"].Value;
 				var num = match.Groups["Numeric"].Value;
@@ -124,8 +126,9 @@ namespace SimpleSerial {
 					Util.LogError( "Unrecognized alpha string: " + alpha );
 				}
 			}
-			catch ( Exception ) {
+			catch ( Exception e ) {
 				Util.LogError( "Error parsing telegram: " + telegram );
+				Util.LogError( "Telegram exception: " + e );
 			}
 		}
 	}

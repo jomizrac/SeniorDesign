@@ -3,7 +3,6 @@ using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
@@ -65,16 +64,16 @@ namespace SimpleSerial {
 		public void LogEvent( Product product, string eventType ) {
 			try {
 				var eventsTable = Table.LoadTable( client, EventsTableName );
-				var eventDoc = new Document();
-				eventDoc["ProductID"] = product.productID;
-				eventDoc["ProductName"] = product.name;
-				eventDoc["ProductLocation"] = product.slotID;
-				eventDoc["ShelfMAC"] = shelfMAC;
-				eventDoc["DeviceName"] = Environment.MachineName;
-				eventDoc["Timestamp"] = DateTime.Now.Ticks;
-				eventDoc["DateTime"] = DateTime.Now.ToString();
-				eventDoc["EventType"] = eventType;
-				eventsTable.BeginPutItem( eventDoc, PutItemCallback, eventDoc );
+				var doc = new Document();
+				doc["ProductID"] = product.productID;
+				doc["ProductName"] = product.name;
+				doc["ProductLocation"] = product.slotID;
+				doc["ShelfMAC"] = shelfMAC;
+				doc["DeviceName"] = Environment.MachineName;
+				doc["Timestamp"] = DateTime.Now.Ticks;
+				doc["DateTime"] = DateTime.Now.ToString();
+				doc["EventType"] = eventType;
+				eventsTable.BeginPutItem( doc, PutItemCallback, doc );
 			}
 			catch ( Exception ) {
 				Util.LogError( "Failed to BeginPutItem \"" + eventType + "\" event for: " + product.name );
@@ -88,10 +87,10 @@ namespace SimpleSerial {
 			}
 
 			var shelvesTable = Table.LoadTable( client, ShelvesTableName );
-			var shelfDoc = new Document();
-			shelfDoc["ShelfMAC"] = shelfMAC;
-			shelfDoc["Products"] = productStrings;
-			shelvesTable.PutItem( shelfDoc );
+			var doc = new Document();
+			doc["ShelfMAC"] = shelfMAC;
+			doc["Products"] = productStrings;
+			shelvesTable.PutItem( doc );
 		}
 
 		public List<string> getProductList() {
@@ -105,6 +104,33 @@ namespace SimpleSerial {
 			var productsTable = Table.LoadTable( client, ProductsTableName );
 			var doc = productsTable.GetItem( currentProductID );
 			return doc["Name"];
+		}
+
+		public List<Product> GetProductCatalog() {
+			var productsTable = Table.LoadTable( client, ProductsTableName );
+
+			ScanFilter scanFilter = new ScanFilter();
+			//			scanFilter.AddCondition( "ForumId", ScanOperator.Equal, 101 );
+			//			scanFilter.AddCondition( "Tags", ScanOperator.Contains, "sortkey" );
+
+			Search search = productsTable.Scan( scanFilter );
+
+			List<Product> products = new List<Product>();
+
+			List<Document> documentList = new List<Document>();
+			do {
+				documentList = search.GetNextSet();
+				foreach ( var document in documentList ) {
+					string name = document["Name"];
+					string type = document["Type"];
+					string upc = document["UPC"];
+					Product product = new Product( upc, name, 0 );
+					Util.LogInfo( product );
+					products.Add( product );
+				}
+			} while ( !search.IsDone );
+
+			return products;
 		}
 
 		private static void PutItemCallback( IAsyncResult asyncResult ) {
