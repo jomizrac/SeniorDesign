@@ -111,6 +111,7 @@
             this.button2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.Location = new System.Drawing.Point(25, 25);
+            this.button2.MaximumSize = new System.Drawing.Size(150, 150);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(150, 150);
             this.button2.TabIndex = 0;
