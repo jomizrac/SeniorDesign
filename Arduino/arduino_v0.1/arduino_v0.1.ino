@@ -292,7 +292,7 @@ void stopChaseEffect(){
   chaseLeader = 0;
 
   //code to reset the LEDs back to black
-  for(int i = LEDStart[chaseLeader - 1]; i <= LEDEnd[chaseLeader + 1]; i++){
+  for(int i = 0; i < NUM_LEDS; i++){
     leds[i] = CRGB::Black;
   }
   FastLED.show();
