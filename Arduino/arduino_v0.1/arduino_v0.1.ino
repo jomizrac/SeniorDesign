@@ -219,7 +219,9 @@ void parseCommandLED(String command){
     stopChaseEffect();
     deactivateSlot(slot);
   }else if(action == 'C'){
-  //  beginChaseEffect(0);
+    beginChaseEffect(0);
+  }else if(action == 'O'){
+    stopChaseEffect();
   }else{
     //do nothing. clear buffer. bad command
   }
