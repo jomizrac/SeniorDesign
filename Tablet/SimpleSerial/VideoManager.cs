@@ -85,7 +85,7 @@ namespace SimpleSerial {
 				if ( isPending > 0 ) {
 					isPending = 0; // No need for Interlocked here due to the only other place it being modified being locked
 					if ( queue.Count > 0 ) {
-						Player.Play( queue[0] );
+					    //Player.Play( queue[0] );
 					}
 				}
 				Thread.Sleep( 10 );
@@ -94,12 +94,12 @@ namespace SimpleSerial {
 
 		private void OnProductPickup( Product product ) {
 			if ( config.PlaybackMethod == PlaybackMethod.Immediate ) {
-				Player.Play( product );
+				//Player.Play( product );
 			}
 			else if ( config.PlaybackMethod == PlaybackMethod.Queued ) {
 				// If the queue is empty (no video currently playing), go ahead and start this video
 				if ( queue.Count == 0 ) {
-					Player.Play( product );
+					//Player.Play( product );
 				}
 
 				// Add it to the queue, regardless of whether the queue is empty or not
@@ -111,7 +111,7 @@ namespace SimpleSerial {
 			if ( config.PlaybackMethod == PlaybackMethod.Queued ) {
 				// If we put down the video that's currently playing, and there's another waiting in the queue...
 				if ( queue.Count > 1 && queue[0] == product ) {
-					Player.Play( queue[1] );
+					//Player.Play( queue[1] );
 				}
 
 				queue.Remove( product );
