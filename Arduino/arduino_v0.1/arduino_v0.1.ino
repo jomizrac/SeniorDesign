@@ -55,7 +55,6 @@ int chaseLeader = 0;
 //or will interfere with chaseEffect logic
 bool chaseRight = true;
 
-
 // defines for setting and clearing register bits
 #ifndef cbi
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
@@ -231,7 +230,7 @@ void parseCommandLED(String command){
     stopChaseEffect();
     deactivateSlot(slot);
   }else if(action == 'C'){
-    beginChaseEffect(0);
+  //  beginChaseEffect(0);
   }else if(action == 'O'){
     stopChaseEffect();
   }else{
@@ -241,7 +240,6 @@ void parseCommandLED(String command){
 
 void updateLighting(){
   if(chasingEffect){    //code for simulating the chase effect
-    chaseCounter == 0;
     if(chaseRight == true){
       leds[chaseLeader - 1] = CRGB::Black;
       if(chaseLeader >= NUM_LEDS - 2){
