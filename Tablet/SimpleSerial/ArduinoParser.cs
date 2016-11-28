@@ -73,8 +73,6 @@ namespace SimpleSerial {
 				foreach ( var item in searcher.Get() ) {
 					var desc = item["Description"].ToString();
 					var deviceId = item["DeviceID"].ToString();
-					Util.LogInfo( "desc = " + desc );
-					Util.LogInfo( "deviceId =" + deviceId );
 
 					if ( desc.Contains( "Arduino" ) ) {
 						Util.LogSuccess( "Autodetected Arduino on port: " + deviceId );

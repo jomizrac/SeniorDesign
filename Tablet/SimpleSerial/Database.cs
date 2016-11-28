@@ -112,8 +112,8 @@ namespace SimpleSerial {
 			var search = productsTable.Scan( scanFilter );
 			// scanFilter.AddCondition( "ForumId", ScanOperator.Equal, 101 );
 			// scanFilter.AddCondition( "Tags", ScanOperator.Contains, "sortkey" );
-			List<Product> products = new List<Product>();
-			List<Document> documentList = new List<Document>();
+			var products = new List<Product>();
+			var documentList = new List<Document>();
 			do {
 				documentList = search.GetNextSet();
 				foreach ( var document in documentList ) {

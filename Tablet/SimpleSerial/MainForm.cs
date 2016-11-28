@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace SimpleSerial {
@@ -15,6 +16,12 @@ namespace SimpleSerial {
 
 		public MainForm() {
 			InitializeComponent();
+
+			//			Button myTwentyFivePercentOpaqueButton = new Button();
+			//			myTwentyFivePercentOpaqueButton.Opacity = new Double();
+			//			myTwentyFivePercentOpaqueButton.Opacity = 0.25;
+
+			//			panel1.BackColor = Color.FromArgb( 200, Color.Black );
 
 			// TopMost = true;
 			FormBorderStyle = FormBorderStyle.None;
