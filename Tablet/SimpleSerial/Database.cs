@@ -108,15 +108,11 @@ namespace SimpleSerial {
 
 		public List<Product> GetProductCatalog() {
 			var productsTable = Table.LoadTable( client, ProductsTableName );
-
-			ScanFilter scanFilter = new ScanFilter();
-			//			scanFilter.AddCondition( "ForumId", ScanOperator.Equal, 101 );
-			//			scanFilter.AddCondition( "Tags", ScanOperator.Contains, "sortkey" );
-
-			Search search = productsTable.Scan( scanFilter );
-
+			var scanFilter = new ScanFilter();
+			var search = productsTable.Scan( scanFilter );
+			// scanFilter.AddCondition( "ForumId", ScanOperator.Equal, 101 );
+			// scanFilter.AddCondition( "Tags", ScanOperator.Contains, "sortkey" );
 			List<Product> products = new List<Product>();
-
 			List<Document> documentList = new List<Document>();
 			do {
 				documentList = search.GetNextSet();
@@ -125,7 +121,7 @@ namespace SimpleSerial {
 					string type = document["Type"];
 					string upc = document["UPC"];
 					Product product = new Product( upc, name, 0 );
-					Util.LogInfo( product );
+					// Util.LogInfo( product );
 					products.Add( product );
 				}
 			} while ( !search.IsDone );
