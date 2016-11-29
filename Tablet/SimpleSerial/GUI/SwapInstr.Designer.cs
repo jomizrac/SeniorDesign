@@ -95,6 +95,8 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
+            this.MaximumSize = new System.Drawing.Size(600, 400);
+            this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "SwapInstr";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Swap Instructions";
