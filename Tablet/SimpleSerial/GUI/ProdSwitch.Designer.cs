@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.button2 = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
@@ -41,6 +40,7 @@
             this.listView1 = new System.Windows.Forms.ListView();
             this.listView2 = new System.Windows.Forms.ListView();
             this.button1 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -70,17 +70,6 @@
             this.splitContainer1.Size = new System.Drawing.Size(584, 361);
             this.splitContainer1.SplitterDistance = 305;
             this.splitContainer1.TabIndex = 0;
-            // 
-            // button2
-            // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(0, 0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(100, 52);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "Back";
-            this.button2.UseVisualStyleBackColor = true;
             // 
             // splitContainer2
             // 
@@ -146,15 +135,16 @@
             // 
             // removeCurrent
             // 
+            this.removeCurrent.BackColor = System.Drawing.Color.Gray;
             this.removeCurrent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.removeCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.removeCurrent.Location = new System.Drawing.Point(7, 260);
-            this.removeCurrent.Margin = new System.Windows.Forms.Padding(7);
+            this.removeCurrent.Location = new System.Drawing.Point(0, 253);
+            this.removeCurrent.Margin = new System.Windows.Forms.Padding(0);
             this.removeCurrent.Name = "removeCurrent";
-            this.removeCurrent.Size = new System.Drawing.Size(174, 32);
+            this.removeCurrent.Size = new System.Drawing.Size(188, 46);
             this.removeCurrent.TabIndex = 2;
             this.removeCurrent.Text = "Remove";
-            this.removeCurrent.UseVisualStyleBackColor = true;
+            this.removeCurrent.UseVisualStyleBackColor = false;
             // 
             // tableLayoutPanel2
             // 
@@ -227,15 +217,27 @@
             // 
             // button1
             // 
+            this.button1.BackColor = System.Drawing.Color.Gray;
             this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(122, 258);
-            this.button1.Margin = new System.Windows.Forms.Padding(7);
+            this.button1.Location = new System.Drawing.Point(115, 251);
+            this.button1.Margin = new System.Windows.Forms.Padding(0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(248, 31);
+            this.button1.Size = new System.Drawing.Size(262, 45);
             this.button1.TabIndex = 4;
             this.button1.Text = "Add Product to Slot";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
+            // 
+            // button2
+            // 
+            this.button2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(0, 0);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(100, 52);
+            this.button2.TabIndex = 3;
+            this.button2.Text = "Back";
+            this.button2.UseVisualStyleBackColor = true;
             // 
             // ProdSwitch
             // 
