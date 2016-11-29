@@ -99,6 +99,12 @@
     <Compile Include="GUI\NewProdConf.Designer.cs">
       <DependentUpon>NewProdConf.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\ProdSwitch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\ProdSwitch.Designer.cs">
+      <DependentUpon>ProdSwitch.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\SwapInstr.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,6 +161,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\NewProdConf.resx">
       <DependentUpon>NewProdConf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\ProdSwitch.resx">
+      <DependentUpon>ProdSwitch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SwapInstr.resx">
       <DependentUpon>SwapInstr.cs</DependentUpon>

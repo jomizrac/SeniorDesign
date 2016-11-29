@@ -26,8 +26,8 @@ namespace SimpleSerial
 
         private void button1_Click(object sender, EventArgs e)
         {
-            SwapInstr swap = new SwapInstr();
-            swap.Show();
+            ProdSwitch prodSwitch = new ProdSwitch();
+            prodSwitch.Show();
             this.Close();
         }
 

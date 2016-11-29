@@ -57,5 +57,10 @@ namespace SimpleSerial.GUI
         {
 
         }
+
+        private void NewProd_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

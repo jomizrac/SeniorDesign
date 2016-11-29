@@ -47,5 +47,10 @@ namespace SimpleSerial {
 
 			last = 0;
 		}
-	}
+
+        private void ButtonForm_Load(object sender, EventArgs e)
+        {
+
+        }
+    }
 }
