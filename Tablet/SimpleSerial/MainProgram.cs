@@ -9,7 +9,8 @@ namespace SimpleSerial {
 	/// This class serves as the main point of logic for the ShelfRokr.
 	/// </summary>
 	internal class MainProgram {
-		public MainForm Form;
+		public MainForm MainForm;
+		public ButtonForm ButtonForm;
 
 		#region Singleton
 
@@ -34,7 +35,8 @@ namespace SimpleSerial {
 			// Setup the form for playing videos
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false ); // This must be called before MainForm is instantiated
-			Instance.Form = new MainForm();
+			Instance.MainForm = new MainForm();
+			Instance.ButtonForm = new ButtonForm();
 
 			Database.Instance.GetProductCatalog();
 
@@ -52,7 +54,7 @@ namespace SimpleSerial {
 			LocalStorage.Instance.SyncVideos();
 
 			// Temp way to set playback method
-			//			VideoManager.Instance.SetPlaybackMethod( VideoManager.PlaybackMethod.Queued );
+			// VideoManager.Instance.SetPlaybackMethod( VideoManager.PlaybackMethod.Queued );
 
 			// Initialize any singletons that have not been called yet
 			var db = Database.Instance;
@@ -63,10 +65,9 @@ namespace SimpleSerial {
 			var log = Logger.Instance;
 
 			Util.LogSuccess( "ShelfRokr startup complete!" + Environment.NewLine );
-						LogIn login = new LogIn();
-						login.Show();
-			            login.BringToFront();
-			Application.Run( Instance.Form );
+
+			Instance.MainForm.Show();
+			Application.Run( Instance.ButtonForm );
 			// Warning: no code after Application.Run()'s while-loop will be reached!
 		}
 

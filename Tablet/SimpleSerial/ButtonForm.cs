@@ -11,17 +11,24 @@ namespace SimpleSerial {
 
 	public partial class ButtonForm : Form {
 		private int last = 1;
-		private LogIn login = new LogIn();
 
 		public ButtonForm() {
 			InitializeComponent();
+
+			// TopMost = true;
+			// TopLevel = true;
+			FormBorderStyle = FormBorderStyle.None;
+			WindowState = FormWindowState.Maximized;
+		}
+
+		private void ButtonForm_Load( object sender, EventArgs e ) {
 		}
 
 		private void button1_Click( object sender, EventArgs e ) {
 			last = 1;
 		}
 
-		private void button2_Click( object sender, EventArgs e ) {
+		private void button2_Click_1( object sender, EventArgs e ) {
 			if ( last == 1 || last == 2 ) {
 				last = 2;
 			}
@@ -30,7 +37,7 @@ namespace SimpleSerial {
 			}
 		}
 
-		private void button3_Click( object sender, EventArgs e ) {
+		private void button3_Click_1( object sender, EventArgs e ) {
 			if ( last == 2 || last == 3 ) {
 				last = 3;
 			}
@@ -39,18 +46,16 @@ namespace SimpleSerial {
 			}
 		}
 
-		private void button4_Click( object sender, EventArgs e ) {
+		private void button4_Click_1( object sender, EventArgs e ) {
 			if ( last == 3 ) {
-				login.Show();
-				login.BringToFront();
+				Util.LogSuccess( "Displaying login screen." );
+
+				LogIn LoginForm = new LogIn();
+				LoginForm.Show();
+				LoginForm.BringToFront();
 			}
 
 			last = 0;
 		}
-
-        private void ButtonForm_Load(object sender, EventArgs e)
-        {
-
-        }
-    }
+	}
 }

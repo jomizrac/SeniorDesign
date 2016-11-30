@@ -16,18 +16,9 @@ namespace SimpleSerial {
 			InitializeComponent();
 
 			// TopMost = true;
-			//			TopLevel = true;
+			// TopLevel = true;
 			FormBorderStyle = FormBorderStyle.None;
 			WindowState = FormWindowState.Maximized;
-
-			var subForm = new ButtonForm();
-			//			subForm.TopLevel = false;
-			//			subForm.TopMost = true;
-			subForm.FormBorderStyle = FormBorderStyle.None;
-			subForm.WindowState = FormWindowState.Maximized;
-			//			Controls.Add( subForm );
-			subForm.Visible = true;
-			subForm.BringToFront();
 		}
 
 		private void axWindowsMediaPlayer1_Enter( object sender, EventArgs e ) {

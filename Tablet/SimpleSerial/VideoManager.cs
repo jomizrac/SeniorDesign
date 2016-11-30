@@ -36,7 +36,7 @@ namespace SimpleSerial {
 		private List<Product> queue = new List<Product>();
 		private int isPending;
 
-		public AxWindowsMediaPlayer Player { get { return MainProgram.Instance.Form.Player; } }
+		public AxWindowsMediaPlayer Player { get { return MainProgram.Instance.MainForm.Player; } }
 
 		private VideoManager() {
 			Deserialize();
