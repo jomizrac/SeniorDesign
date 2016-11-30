@@ -87,35 +87,11 @@
     <Compile Include="GUI\Menu.Designer.cs">
       <DependentUpon>Menu.cs</DependentUpon>
     </Compile>
-    <Compile Include="GUI\NewProd.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\NewProd.Designer.cs">
-      <DependentUpon>NewProd.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\NewProdConf.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\NewProdConf.Designer.cs">
-      <DependentUpon>NewProdConf.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\ProdSwitch.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\ProdSwitch.Designer.cs">
-      <DependentUpon>ProdSwitch.cs</DependentUpon>
-    </Compile>
     <Compile Include="GUI\ProductSwitch.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GUI\ProductSwitch.Designer.cs">
       <DependentUpon>ProductSwitch.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GUI\SwapInstr.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="GUI\SwapInstr.Designer.cs">
-      <DependentUpon>SwapInstr.cs</DependentUpon>
     </Compile>
     <Compile Include="GUI\VideoConf.cs">
       <SubType>Form</SubType>
@@ -162,20 +138,8 @@
     <EmbeddedResource Include="GUI\Menu.resx">
       <DependentUpon>Menu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GUI\NewProd.resx">
-      <DependentUpon>NewProd.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\NewProdConf.resx">
-      <DependentUpon>NewProdConf.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\ProdSwitch.resx">
-      <DependentUpon>ProdSwitch.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GUI\ProductSwitch.resx">
       <DependentUpon>ProductSwitch.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GUI\SwapInstr.resx">
-      <DependentUpon>SwapInstr.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\VideoConf.resx">
       <DependentUpon>VideoConf.cs</DependentUpon>
