@@ -13,10 +13,13 @@ namespace SimpleSerial {
 
 		public LogIn() {
 			InitializeComponent();
-		}
+           
+        }
 
 		private void LogIn_Load( object sender, EventArgs e ) {
-		}
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+        }
 
 		private void splitContainer1_Panel1_Paint( object sender, PaintEventArgs e ) {
 		}
