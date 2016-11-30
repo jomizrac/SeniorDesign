@@ -57,6 +57,7 @@ namespace SimpleSerial {
 
 		private void button4_Click( object sender, EventArgs e ) {
 			LocalStorage.Instance.SyncVideos();
+            button4.Text = "Videos have been synced";
 		}
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -72,6 +73,11 @@ namespace SimpleSerial {
             VideoInstr vid = new VideoInstr();
             vid.Show();
             vid.BringToFront();
+            this.Close();
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
             this.Close();
         }
     }

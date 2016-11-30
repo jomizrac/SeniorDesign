@@ -41,6 +41,7 @@ namespace SimpleSerial.GUI {
 		}
 
 		private void button1_Click( object sender, EventArgs e ) {
+
 		}
 
 		private void ProductSwitch_Load( object sender, EventArgs e ) {
@@ -51,5 +52,18 @@ namespace SimpleSerial.GUI {
 		private void ProductSwitch_Deactivate( object sender, EventArgs e ) {
 			this.Close();
 		}
-	}
+
+        private void backButton_Click(object sender, EventArgs e)
+        {
+            Menu menu = new Menu();
+            menu.Show();
+            menu.BringToFront();
+            this.Close();
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
 }
