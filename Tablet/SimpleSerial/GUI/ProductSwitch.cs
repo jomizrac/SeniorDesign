@@ -14,34 +14,22 @@ namespace SimpleSerial.GUI
         public ProductSwitch()
         {
             InitializeComponent();
-        }
 
-        private void ProductSwitch_Load(object sender, EventArgs e)
-        {
+            List<Product> localList = ShelfInventory.Instance.ProductList();
+            List<Product> catalogList = Database.Instance.GetProductCatalog();
 
-        }
+            foreach (var p in localList)
+            {
+                currentList.Items.Add("Slot: " + p.slotID + " " + p.name);
+            }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
+            foreach (var p in catalogList)
+            {
+                completeList.Items.Add(p.name);
+            }
         }
 
         private void currentList_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void label3_Click_1(object sender, EventArgs e)
         {
 
         }

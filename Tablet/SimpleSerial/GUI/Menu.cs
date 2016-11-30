@@ -26,7 +26,7 @@ namespace SimpleSerial
 
         private void button1_Click(object sender, EventArgs e)
         {
-            ProdSwitch prodSwitch = new ProdSwitch();
+            ProductSwitch prodSwitch = new ProductSwitch();
             prodSwitch.Show();
             this.Close();
         }

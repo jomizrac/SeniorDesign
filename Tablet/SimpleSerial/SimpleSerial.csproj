@@ -105,6 +105,12 @@
     <Compile Include="GUI\ProdSwitch.Designer.cs">
       <DependentUpon>ProdSwitch.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\ProductSwitch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\ProductSwitch.Designer.cs">
+      <DependentUpon>ProductSwitch.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\SwapInstr.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,6 +170,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\ProdSwitch.resx">
       <DependentUpon>ProdSwitch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\ProductSwitch.resx">
+      <DependentUpon>ProductSwitch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\SwapInstr.resx">
       <DependentUpon>SwapInstr.cs</DependentUpon>
