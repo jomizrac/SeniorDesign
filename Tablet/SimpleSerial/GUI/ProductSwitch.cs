@@ -23,6 +23,7 @@ namespace SimpleSerial.GUI
                 currentList.Items.Add("Slot: " + p.slotID + " " + p.name);
             }
 
+            completeList.Items.Add("None");
             foreach (var p in catalogList)
             {
                 completeList.Items.Add(p.name);
