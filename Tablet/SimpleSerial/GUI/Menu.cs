@@ -19,21 +19,21 @@ namespace SimpleSerial {
 		private void button2_Click( object sender, EventArgs e ) {
 			VideoInstr behavior = new VideoInstr();
 			behavior.Show();
-            behavior.BringToFront();
+			behavior.BringToFront();
 			this.Close();
 		}
 
 		private void button1_Click( object sender, EventArgs e ) {
 			ProductSwitch prodSwitch = new ProductSwitch();
 			prodSwitch.Show();
-            prodSwitch.BringToFront();
+			prodSwitch.BringToFront();
 			this.Close();
 		}
 
 		private void button3_Click( object sender, EventArgs e ) {
 			LogIn login = new LogIn();
 			login.Show();
-            login.BringToFront();
+			login.BringToFront();
 			this.Close();
 		}
 
@@ -48,6 +48,13 @@ namespace SimpleSerial {
 
 		private void Menu_Deactivate( object sender, EventArgs e ) {
 			this.Close();
+		}
+
+		private void splitContainer2_Panel1_Paint( object sender, PaintEventArgs e ) {
+		}
+
+		private void button4_Click( object sender, EventArgs e ) {
+			LocalStorage.Instance.SyncVideos();
 		}
 	}
 }
