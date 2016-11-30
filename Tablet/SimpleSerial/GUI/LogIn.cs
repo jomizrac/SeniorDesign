@@ -18,7 +18,7 @@ namespace SimpleSerial {
 		private void LogIn_Load( object sender, EventArgs e ) {
 		}
 
-		private void Test_Deactivate( object sender, EventArgs e ) {
+		private void OnFormDeactivate( object sender, EventArgs e ) {
 			this.Close();
 		}
 
