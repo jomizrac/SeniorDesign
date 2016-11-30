@@ -34,5 +34,23 @@ namespace SimpleSerial.GUI
         {
 
         }
+
+        private void completeList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void backButton_Click(object sender, EventArgs e)
+        {
+            Menu menu = new Menu();
+            menu.Show();
+            menu.BringToFront();
+            this.Close();
+        }
+
+        private void acceptButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

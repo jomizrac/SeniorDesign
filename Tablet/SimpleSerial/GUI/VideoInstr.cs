@@ -21,6 +21,7 @@ namespace SimpleSerial.GUI
         {
             Menu menu = new Menu();
             menu.Show();
+            menu.BringToFront();
             this.Close();
         }
 
@@ -36,6 +37,11 @@ namespace SimpleSerial.GUI
             VideoConf confirm = new VideoConf("interrupt");
             confirm.Show();
             this.Close();
+        }
+
+        private void VideoInstr_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
