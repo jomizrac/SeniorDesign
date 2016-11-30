@@ -8,44 +8,46 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace SimpleSerial
-{
-    public partial class Menu : Form
-    {
-        public Menu()
-        {
-            InitializeComponent();
-        }
+namespace SimpleSerial {
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            VideoInstr behavior = new VideoInstr();
-            behavior.Show();
-            this.Close();
-        }
+	public partial class Menu : Form {
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            ProductSwitch prodSwitch = new ProductSwitch();
-            prodSwitch.Show();
-            this.Close();
-        }
+		public Menu() {
+			InitializeComponent();
+		}
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            LogIn login = new LogIn();
-            login.Show();
-            this.Close();
-        }
+		private void button2_Click( object sender, EventArgs e ) {
+			VideoInstr behavior = new VideoInstr();
+			behavior.Show();
+            behavior.BringToFront();
+			this.Close();
+		}
 
-        private void splitContainer2_Panel2_Paint(object sender, PaintEventArgs e)
-        {
+		private void button1_Click( object sender, EventArgs e ) {
+			ProductSwitch prodSwitch = new ProductSwitch();
+			prodSwitch.Show();
+            prodSwitch.BringToFront();
+			this.Close();
+		}
 
-        }
+		private void button3_Click( object sender, EventArgs e ) {
+			LogIn login = new LogIn();
+			login.Show();
+            login.BringToFront();
+			this.Close();
+		}
 
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
+		private void splitContainer2_Panel2_Paint( object sender, PaintEventArgs e ) {
+		}
 
-        }
-    }
+		private void splitContainer1_Panel2_Paint( object sender, PaintEventArgs e ) {
+		}
+
+		private void Menu_Load( object sender, EventArgs e ) {
+		}
+
+		private void Menu_Deactivate( object sender, EventArgs e ) {
+			this.Close();
+		}
+	}
 }

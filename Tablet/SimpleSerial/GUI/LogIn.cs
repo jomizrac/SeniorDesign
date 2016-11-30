@@ -18,10 +18,6 @@ namespace SimpleSerial {
 		private void LogIn_Load( object sender, EventArgs e ) {
 		}
 
-		private void OnFormDeactivate( object sender, EventArgs e ) {
-			this.Close();
-		}
-
 		private void splitContainer1_Panel1_Paint( object sender, PaintEventArgs e ) {
 		}
 
@@ -37,10 +33,15 @@ namespace SimpleSerial {
 		private void button2_Click( object sender, EventArgs e ) {
 			Menu menu = new Menu();
 			menu.Show();
+            menu.BringToFront();
 			this.Close();
 		}
 
 		private void button1_Click( object sender, EventArgs e ) {
+			this.Close();
+		}
+
+		private void LogIn_Deactivate( object sender, EventArgs e ) {
 			this.Close();
 		}
 	}
