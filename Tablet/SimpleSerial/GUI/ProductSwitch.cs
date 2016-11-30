@@ -50,7 +50,13 @@ namespace SimpleSerial.GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            string item1 = currentList.SelectedItem.ToString();
+            string item2 = completeList.SelectedItem.ToString();
 
+            if(item1 != "" && item2 != "")
+            {
+                
+            }
         }
     }
 }
