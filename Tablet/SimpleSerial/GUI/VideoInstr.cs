@@ -38,10 +38,12 @@ namespace SimpleSerial.GUI {
 		}
 
 		private void VideoInstr_Load( object sender, EventArgs e ) {
-		}
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+        }
 
 		private void VideoInstr_Deactivate( object sender, EventArgs e ) {
 			this.Close();
 		}
-	}
+    }
 }

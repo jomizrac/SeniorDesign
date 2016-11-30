@@ -44,7 +44,9 @@ namespace SimpleSerial {
 		}
 
 		private void Menu_Load( object sender, EventArgs e ) {
-		}
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+        }
 
 		private void Menu_Deactivate( object sender, EventArgs e ) {
 			this.Close();
@@ -56,5 +58,21 @@ namespace SimpleSerial {
 		private void button4_Click( object sender, EventArgs e ) {
 			LocalStorage.Instance.SyncVideos();
 		}
-	}
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            ProductSwitch pSwitch = new ProductSwitch();
+            pSwitch.Show();
+            pSwitch.BringToFront();
+            this.Close();
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            VideoInstr vid = new VideoInstr();
+            vid.Show();
+            vid.BringToFront();
+            this.Close();
+        }
+    }
 }

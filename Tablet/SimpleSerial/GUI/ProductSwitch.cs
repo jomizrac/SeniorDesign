@@ -44,7 +44,9 @@ namespace SimpleSerial.GUI {
 		}
 
 		private void ProductSwitch_Load( object sender, EventArgs e ) {
-		}
+            this.FormBorderStyle = FormBorderStyle.None;
+            this.WindowState = FormWindowState.Maximized;
+        }
 
 		private void ProductSwitch_Deactivate( object sender, EventArgs e ) {
 			this.Close();
