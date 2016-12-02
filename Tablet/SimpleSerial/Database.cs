@@ -82,7 +82,7 @@ namespace SimpleSerial {
 		}
 
 		public void UpdateShelfInventory( List<Product> products ) {
-            //var context = new DynamoDBContext(client, new DynamoDBContextConfig { Conversion = DynamoDBEntryConversion.V2 });
+            var context = new DynamoDBContext(client);
             context.Save(new DynamoDBOperationConfig { Conversion = DynamoDBEntryConversion.V2 });
             List<string> productStrings = new List<string>();
 			foreach ( var product in products ) {
