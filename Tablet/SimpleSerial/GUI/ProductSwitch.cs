@@ -86,10 +86,9 @@ namespace SimpleSerial.GUI {
         {
             String pCurrent = currentList.SelectedItem.ToString();
             String pNew = completeList.SelectedItem.ToString();
-            button1.Text = "#" + pCurrent.Substring(6, 1) + "#";
 
             ShelfInventory.Instance.UpdateSlot(Int32.Parse(pCurrent.Substring(6, 1)), pNew.Substring(0,12));
-           // currentList.Refresh();
+            currentList.Refresh();
         }
     }
 }
