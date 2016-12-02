@@ -82,14 +82,12 @@ namespace SimpleSerial {
 		}
 
 		public void UpdateShelfInventory( List<Product> products ) {
-            var context = new DynamoDBContext(client);
-            context.Save(new DynamoDBOperationConfig { Conversion = DynamoDBEntryConversion.V2 });
             List<string> productStrings = new List<string>();
 			foreach ( var product in products ) {
 				productStrings.Add( product.productID );
 			}
 
-			var shelvesTable = Table.LoadTable( client, ShelvesTableName );
+			var shelvesTable = Table.LoadTable(client, ShelvesTableName, DynamoDBEntryConversion.V2);
 			var doc = new Document();
 			doc["ShelfMAC"] = shelfMAC;
 			doc["Products"] = productStrings;
