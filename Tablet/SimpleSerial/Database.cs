@@ -1,4 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using System;
@@ -81,7 +82,8 @@ namespace SimpleSerial {
 		}
 
 		public void UpdateShelfInventory( List<Product> products ) {
-			HashSet<string> productStrings = new HashSet<string>();
+            var context = new DynamoDBContext(client, new DynamoDBContextConfig { Conversion = DynamoDBEntryConversion.V2 });
+            List<string> productStrings = new List<string>();
 			foreach ( var product in products ) {
 				productStrings.Add( product.productID );
 			}
