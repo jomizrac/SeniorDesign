@@ -90,7 +90,7 @@ namespace SimpleSerial {
 			var doc = new Document();
 			doc["ShelfMAC"] = shelfMAC;
 			doc["Products"] = productStrings;
-			shelvesTable.PutItem( doc );
+			shelvesTable.UpdateItem( doc );
 		}
 
 		public List<string> getProductList() {

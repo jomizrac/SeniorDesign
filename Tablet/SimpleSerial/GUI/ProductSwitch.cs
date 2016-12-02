@@ -18,12 +18,12 @@ namespace SimpleSerial.GUI {
 			List<Product> catalogList = Database.Instance.GetProductCatalog();
 
 			foreach ( var p in localList ) {
-				currentList.Items.Add( "Slot: " + p.slotID + " " + p.name );
+				currentList.Items.Add( "Slot: " + p.slotID + " " + p.name);
 			}
 
-			completeList.Items.Add( "None" );
+			//completeList.Items.Add( "None" );
 			foreach ( var p in catalogList ) {
-				completeList.Items.Add( p.name );
+				completeList.Items.Add(p.productID + " " + p.name);
 			}
 		}
 
@@ -41,7 +41,13 @@ namespace SimpleSerial.GUI {
 		}
 
 		private void button1_Click( object sender, EventArgs e ) {
-
+            //String pCurrent = currentList.SelectedItem.ToString();
+            //String pNew = completeList.SelectedItem.ToString();
+            button1.Text = "Current List Updated";
+            
+            //ShelfInventory.Instance.UpdateSlot(Int32.Parse(pCurrent.Substring(6, 1)), pNew.Substring(0,11));
+            //currentList.Refresh();
+            
 		}
 
 		private void ProductSwitch_Load( object sender, EventArgs e ) {
@@ -64,6 +70,26 @@ namespace SimpleSerial.GUI {
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            String pCurrent = currentList.SelectedItem.ToString();
+            String pNew = completeList.SelectedItem.ToString();
+            button1.Text = "#" + pCurrent.Substring(6, 1) + "#";
+
+            ShelfInventory.Instance.UpdateSlot(Int32.Parse(pCurrent.Substring(6, 1)), pNew.Substring(0,12));
+           // currentList.Refresh();
         }
     }
 }

@@ -163,8 +163,9 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(282, 60);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Select prodcut to add:";
+            this.label2.Text = "Select product to add:";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // completeList
             // 
@@ -220,9 +221,10 @@
             this.button1.Location = new System.Drawing.Point(20, 20);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(248, 15);
-            this.button1.TabIndex = 6;
+            this.button1.TabIndex = 0;
             this.button1.Text = "Accept";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_2);
             // 
             // ProductSwitch
             // 
