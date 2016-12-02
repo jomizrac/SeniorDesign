@@ -82,7 +82,11 @@ namespace SimpleSerial.GUI {
             String pNew = completeList.SelectedItem.ToString();
 
             ShelfInventory.Instance.UpdateSlot(Int32.Parse(pCurrent.Substring(6, 1)), pNew.Substring(0,12));
-            currentList.Refresh();
+
+            Menu menu = new Menu();
+            menu.Show();
+            menu.BringToFront();
+            this.Close();
         }
     }
 }
