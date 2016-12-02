@@ -81,7 +81,7 @@ namespace SimpleSerial {
 		}
 
 		public void UpdateShelfInventory( List<Product> products ) {
-			List<string> productStrings = new List<string>();
+			HashSet<string> productStrings = new HashSet<string>();
 			foreach ( var product in products ) {
 				productStrings.Add( product.productID );
 			}
