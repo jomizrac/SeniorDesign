@@ -12,12 +12,11 @@ namespace SimpleSerial {
 
 	public partial class MainForm : Form {
 
-		public MainForm() {
-			InitializeComponent();
-
-			// TopMost = true;
-			// TopLevel = true;
-			FormBorderStyle = FormBorderStyle.None;
+        public MainForm() {
+            InitializeComponent();
+            // TopMost = true;
+            // TopLevel = true;
+            FormBorderStyle = FormBorderStyle.None;
 			WindowState = FormWindowState.Maximized;
 		}
 

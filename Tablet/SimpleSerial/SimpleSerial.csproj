@@ -93,6 +93,12 @@
     <Compile Include="GUI\ProductSwitch.Designer.cs">
       <DependentUpon>ProductSwitch.cs</DependentUpon>
     </Compile>
+    <Compile Include="GUI\Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GUI\Settings.Designer.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
     <Compile Include="GUI\VideoConf.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -140,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\ProductSwitch.resx">
       <DependentUpon>ProductSwitch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\Settings.resx">
+      <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GUI\VideoConf.resx">
       <DependentUpon>VideoConf.cs</DependentUpon>

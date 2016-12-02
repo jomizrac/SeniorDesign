@@ -59,7 +59,7 @@ namespace SimpleSerial {
 
         public void UpdateSlot( int slotIdx, string UPC)
         {
-            string name = Database.Instance.getProductName(Convert.ToString(UPC));
+            string name = Database.Instance.getProductName(UPC);
             Product newProduct = new Product(UPC, name, slotIdx);
             UpdateSlot(slotIdx, newProduct);
         }
