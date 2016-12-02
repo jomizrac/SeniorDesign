@@ -81,11 +81,10 @@ namespace SimpleSerial.GUI {
             String pCurrent = currentList.SelectedItem.ToString();
             String pNew = completeList.SelectedItem.ToString();
 
-            ShelfInventory.Instance.UpdateSlot(Int32.Parse(pCurrent.Substring(6, 1)), pNew.Substring(0,12));
-
             Menu menu = new Menu();
             menu.Show();
             menu.BringToFront();
+            ShelfInventory.Instance.UpdateSlot(Int32.Parse(pCurrent.Substring(6, 1)), pNew.Substring(0, 12));
             this.Close();
         }
     }
