@@ -70,9 +70,9 @@ namespace SimpleSerial {
 
         private void button2_Click_1(object sender, EventArgs e)
         {
-            VideoInstr vid = new VideoInstr();
-            vid.Show();
-            vid.BringToFront();
+            Settings settings = new Settings();
+            settings.Show();
+            settings.BringToFront();
             this.Close();
         }
 
