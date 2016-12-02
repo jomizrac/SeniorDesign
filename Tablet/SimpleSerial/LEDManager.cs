@@ -19,7 +19,9 @@ namespace SimpleSerial {
 			}
 		}
 
-		#endregion Singleton
+        #endregion Singleton
+
+        String LEDChase = "on";
 
 		private LEDManager() {
 			new Thread( () => Initialize() ).Start();
@@ -53,9 +55,25 @@ namespace SimpleSerial {
 
 		//timer for the chase event and send command
 		private void SendChaseCommand() {
-			string command = "LED C\n";
-			ArduinoParser.Instance.SendCommand( command );
+            if (LEDChase.Equals("on"))
+            {
+                string command = "LED C\n";
+                ArduinoParser.Instance.SendCommand(command);
+            }else
+            {
+                //no chase
+            }
 		}
+
+        public void TurnChaseOn()
+        {
+            LEDChase = "on";
+        }
+
+        public void TurnChaseOff()
+        {
+            LEDChase = "off";
+        }
 
         static void CurrentDomain_ProcessExit(object sender, EventArgs e) {
             string command = "LED O\n";

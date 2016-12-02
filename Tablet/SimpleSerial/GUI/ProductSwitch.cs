@@ -41,12 +41,6 @@ namespace SimpleSerial.GUI {
 		}
 
 		private void button1_Click( object sender, EventArgs e ) {
-            //String pCurrent = currentList.SelectedItem.ToString();
-            //String pNew = completeList.SelectedItem.ToString();
-            button1.Text = "Current List Updated";
-            
-            //ShelfInventory.Instance.UpdateSlot(Int32.Parse(pCurrent.Substring(6, 1)), pNew.Substring(0,11));
-            //currentList.Refresh();
             
 		}
 

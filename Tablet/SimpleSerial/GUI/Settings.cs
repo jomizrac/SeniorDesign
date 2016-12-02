@@ -16,6 +16,11 @@ namespace SimpleSerial.GUI
             InitializeComponent();
         }
 
+        private void ProductSwitch_Deactivate(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void Settings_Load(object sender, EventArgs e)
         {
             this.FormBorderStyle = FormBorderStyle.None;
@@ -42,7 +47,7 @@ namespace SimpleSerial.GUI
 
         private void button4_Click(object sender, EventArgs e)
         {
-            //set led chase to on
+            LEDManager.Instance.TurnChaseOn();
 
             Menu menu = new Menu();
             menu.Show();
@@ -52,7 +57,7 @@ namespace SimpleSerial.GUI
 
         private void button5_Click(object sender, EventArgs e)
         {
-            //set led chase to off
+            LEDManager.Instance.TurnChaseOff();
 
             Menu menu = new Menu();
             menu.Show();
