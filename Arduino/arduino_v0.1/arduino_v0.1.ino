@@ -83,17 +83,6 @@ void setup() {
   pinMode(SENSOR_EMITTER, OUTPUT);
   Serial.begin(57600);
 
-///////////for testing//////////
-  //beginChaseEffect(0);
-  //stopChaseEffect();
-//  activateSlot(0);
-//  activateSlot(1);
-//  activateSlot(2);
-//  activateSlot(3);
-//  activateSlot(4);
-//  activateSlot(5);
-//  activateSlot(6);
-///////////////////////////////
 }
 
 //arduino main loop
@@ -230,7 +219,7 @@ void parseCommandLED(String command){
     stopChaseEffect();
     deactivateSlot(slot);
   }else if(action == 'C'){
-  //  beginChaseEffect(0);
+    beginChaseEffect(0);
   }else if(action == 'O'){
     stopChaseEffect();
   }else{
